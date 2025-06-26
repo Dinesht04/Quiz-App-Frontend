@@ -81,7 +81,8 @@ export default function Quiz(){
       return(
         <div>
           QUiz Over
-          FInal SCore - {score} 
+          Personal SCore - {score} 
+          Overall SCore when quiz ended is console.logged. Have yet to track the state and display it propoerly
         </div>
       )
     }

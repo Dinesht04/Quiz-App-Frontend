@@ -18,13 +18,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {/* <GlobalContextProvider> */}
+        <GlobalContextProvider>
         <WebSocketProvider>
           <QuizContextProvider>
             {children}
           </QuizContextProvider>
         </WebSocketProvider>
-        {/* </GlobalContextProvider> */}
+        </GlobalContextProvider>
       </body>
     </html>
   );

@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Users, Plus, Play } from "lucide-react";
 import { redirect } from 'next/navigation';
 import { SignOut } from '../auth/AuthFunctions';
+import { useGlobalContext } from '@/app/providers/GlobalContext';
 
 
 type JoinRoomCardProps = {
@@ -24,6 +25,9 @@ type JoinRoomCardProps = {
 }
 
 export default function JoinRoomCard({ username, expires, SignOut }: JoinRoomCardProps) {
+  const {setUsername} = useGlobalContext();
+
+
   const roomIdRef = useRef<HTMLInputElement>(null);
 
   const handleJoinRoom = (): void => {
@@ -31,12 +35,14 @@ export default function JoinRoomCard({ username, expires, SignOut }: JoinRoomCar
       alert("Enter a Room ID first");
       return;
     }
+    setUsername(username);
     redirect(`Room/Lobby/${roomIdRef.current?.value}`)
   };
 
   const handleCreateRoom = (): void => {
     // Generating a random a room ID
     let r = (Math.random() + 1).toString(36).substring(7);
+    setUsername(username);
     redirect(`/Room/Lobby/${r}`);
   }
 

@@ -1,5 +1,6 @@
 "use client"
 
+import { useGlobalContext } from "@/app/providers/GlobalContext";
 import { Question, useQuizContext } from "@/app/providers/QuizContext";
 import { useSocket } from "@/app/providers/WebsocketContextProvider";
 import { Dispatch, SetStateAction,useState } from "react";
@@ -15,7 +16,7 @@ export default function QuestionCard({Question,setCurrentQuestion,roomId}:Questi
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const {socket} = useSocket();
     const {setQuizFinished} = useQuizContext()
-
+    const {username} = useGlobalContext();
     
 
     function setNextQuestion(currentQues:string|null){
@@ -49,7 +50,8 @@ export default function QuestionCard({Question,setCurrentQuestion,roomId}:Questi
             payload:{
                 "QuestionId":Question.id,
                 "Answer":option,
-                "roomId":roomId
+                "roomId":roomId,
+                "username":username
             }
         }
         socket?.send(JSON.stringify(payload))
