@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   Card,
   CardContent,
@@ -8,19 +8,19 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Users, 
-  Play, 
-  LogOut, 
-  UserPlus, 
+import {
+  Users,
+  Play,
+  LogOut,
+  UserPlus,
   Wifi,
   WifiOff,
   Trophy,
-  RefreshCcw
+  RefreshCcw,
 } from "lucide-react";
 import { Session } from "next-auth";
 import { redirect } from "next/navigation";
-import { useEffect, useRef,useState } from "react"
+import { useEffect, useRef, useState } from "react";
 import MembersList from "./MembersList";
 import { useSocket } from "@/app/providers/WebsocketContextProvider";
 import ConnectionStatus from "../Websocket/ConnectionStatus";
@@ -29,110 +29,107 @@ import { useQuizContext } from "@/app/providers/QuizContext";
 import Quiz from "../Quiz/Quiz";
 
 type Message = {
-    type:string,
-    payload: any,
-    status:string
-  }
+  type: string;
+  payload: any;
+  status: string;
+};
 
 type Props = {
-    session: Session|null;
-    roomid?:string
-  };
+  session: Session | null;
+  roomid?: string;
+};
 
-
-export default function  ({roomid,session}: Props){
-
-  if(!session){
-    console.log("No Session")
-    redirect("/")
+export default function ({ roomid, session }: Props) {
+  if (!session) {
+    console.log("No Session");
+    redirect("/");
   }
-
 
   const topicRef = useRef<HTMLInputElement>(null);
   const [clientList, setClientList] = useState<string[]>([]);
-  const [displayQuizTImer,setDisplayQuizTimer] = useState(false);
-  const {socket, isConnected} =  useSocket();
-  const {joinedRoom,setJoinedRoom, setQuestions,setRoomId,quizStarted,setScore} = useQuizContext();
-  
-  
-  console.log(session.user?.name)
+  const [displayQuizTImer, setDisplayQuizTimer] = useState(false);
+  const { socket, isConnected } = useSocket();
+  const {
+    joinedRoom,
+    setJoinedRoom,
+    setQuestions,
+    setRoomId,
+    quizStarted,
+    setScore,
+  } = useQuizContext();
+
+  console.log(session.user?.name);
 
   useEffect(() => {
     if (!socket || socket.readyState !== WebSocket.OPEN) {
       console.log("🕓 socket not ready yet");
       return;
     }
-  
+
     console.log("✅ Joining Room");
- 
-    
-    socket.onmessage = (e) =>{
-      const message : Message = JSON.parse(e.data)
-      if(message.type === "client-list"){
+
+    socket.onmessage = (e) => {
+      const message: Message = JSON.parse(e.data);
+      if (message.type === "client-list") {
         setJoinedRoom(true);
-        setRoomId(roomid)
-        setClientList(message.payload)
+        setRoomId(roomid);
+        setClientList(message.payload);
       }
-      if(message.type === "questions"){
+      if (message.type === "questions") {
         setQuestions(message.payload);
         setDisplayQuizTimer(true);
       }
-      if(message.type === "unauthorised"){
-        alert(message.payload.message)
+      if (message.type === "unauthorised") {
+        alert(message.payload.message);
       }
-      if(message.type === "leave"){
-        if(message.status === "successful"){
+      if (message.type === "leave") {
+        if (message.status === "successful") {
           setClientList([]);
           setRoomId("");
           setJoinedRoom(false);
         }
       }
-      if(message.type === "answer"){
-        if(message.payload.Correct){
-          console.log("correct answer")
-          setScore((score)=>score+1);
+      if (message.type === "answer") {
+        if (message.payload.Correct) {
+          console.log("correct answer");
+          setScore((score) => score + 1);
         }
       }
-      if(message.type === "score"){
-        
-          console.log("Quiz Finished")
-          console.log(message.payload)
+      if (message.type === "score") {
+        console.log("Quiz Finished");
+        console.log(message.payload);
       }
-    }
-  
-  }, [socket]);
-  
-
-
-function joinRoom(){
-  if(joinedRoom){
-    alert("ALREADY IN A ROOM")
-  }
-
-  if (socket && socket.readyState === WebSocket.OPEN){
-    const joinPayload = {
-      type: "join",
-      payload: {
-        roomId: roomid,
-        username: session?.user?.name,
-        expires: session?.expires,
-      },
     };
-  
-    socket.send(JSON.stringify(joinPayload));  
-  }
+  }, [socket]);
+
+  function joinRoom() {
+    if (joinedRoom) {
+      alert("ALREADY IN A ROOM");
+    }
+
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      const joinPayload = {
+        type: "join",
+        payload: {
+          roomId: roomid,
+          username: session?.user?.name,
+          expires: session?.expires,
+        },
+      };
+
+      socket.send(JSON.stringify(joinPayload));
+    }
   }
 
-function sendMessage(){
+  function sendMessage() {
     if (socket && socket.readyState === WebSocket.OPEN) {
-  
       const payload = {
         type: "message",
         payload: {
-          roomId: roomid, 
+          roomId: roomid,
           userName: session?.user?.name,
           message: "hi",
-          expires:session?.expires
+          expires: session?.expires,
         },
       };
       socket.send(JSON.stringify(payload));
@@ -140,184 +137,194 @@ function sendMessage(){
       console.warn("WebSocket not open or inputs are not ready.");
       alert("Not connected to the server. Please wait or refresh.");
     }
-  };  
+  }
 
-
-    function LeaveRoom(){
-        if (socket && socket.readyState === WebSocket.OPEN) {
-          const payload = {
-            type: "leave",
-            payload: {
-              roomId: roomid, 
-              userName: session?.user?.name,
-              expires:session?.expires
-            },
-            
-          };
-          socket.send(JSON.stringify(payload));
-        } else {
-          console.warn("WebSocket not open or username input is not ready.");
-          alert("Not connected to the server. Please wait or refresh.");
-        }
-      }
-  
-
-      function startQuiz(){
-
-        // if(!topicRef.current?.value){
-        //     alert("Enter a TOpic FIrst")
-        //     return
-        // }
-
-        if (socket && socket.readyState === WebSocket.OPEN) {
-          const payload = {
-            type: "start",
-            payload: {
-              roomId: roomid, 
+  function LeaveRoom() {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      const payload = {
+        type: "leave",
+        payload: {
+          roomId: roomid,
           userName: session?.user?.name,
-              expires:session?.expires,
-              topic:"Web Development"
-            },
-            
-          };
-          socket.send(JSON.stringify(payload));
-        } else {
-          console.warn("WebSocket not open or username input is not ready.");
-          alert("Not connected to the server. Please wait or refresh.");
-        }
-      }
-    
-    if(quizStarted){
-      return <Quiz/>
+          expires: session?.expires,
+        },
+      };
+      socket.send(JSON.stringify(payload));
+    } else {
+      console.warn("WebSocket not open or username input is not ready.");
+      alert("Not connected to the server. Please wait or refresh.");
     }
+  }
 
-    if (displayQuizTImer){
-      return <QuizStartTimer/>
+  function startQuiz() {
+    // if(!topicRef.current?.value){
+    //     alert("Enter a TOpic FIrst")
+    //     return
+    // }
+
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      const payload = {
+        type: "start",
+        payload: {
+          roomId: roomid,
+          userName: session?.user?.name,
+          expires: session?.expires,
+          topic: "Web Development",
+        },
+      };
+      socket.send(JSON.stringify(payload));
+    } else {
+      console.warn("WebSocket not open or username input is not ready.");
+      alert("Not connected to the server. Please wait or refresh.");
     }
+  }
 
-    return (
-        <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 px-4 py-8">
-          <Card className="w-full max-w-2xl bg-white/80 backdrop-blur-sm shadow-2xl border border-white/20 rounded-3xl overflow-hidden">
-            <CardHeader className="text-center space-y-4 pb-6">
-              <div className="w-16 h-16 mx-auto bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                <Users className="w-8 h-8 text-white" />
-              </div>
-              <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent">
-                Room: {roomid}
-              </CardTitle>
-              <CardDescription className="text-gray-600 text-lg">
-                {joinedRoom ? clientList.length==1 ? 
-                "You're in the room! Waiting for other players...": 
-                "You're in the room! Waiting host to start the game..." : 
-                "Ready to join the quiz room?"}
-              </CardDescription>
-              
-              {/* Connection Status */}
-              <div className="flex items-center justify-center space-x-2">
-                {isConnected ? (
-                  <>
-                    <Wifi className="w-5 h-5 text-green-500" />
-                    <Badge variant="secondary" className="bg-green-100 text-green-700 border-green-200">
-                      Connected
-                    </Badge>
-                  </>
-                ) : (
-                  <>
-                    <WifiOff className="w-5 h-5 text-red-500" />
-                    <Badge variant="secondary" className="bg-red-100 text-red-700 border-red-200">
-                      Disconnected
-                    </Badge>
-                    <Badge onClick={()=>{
-                      window.location.reload()
-                      }}  
-                      variant="destructive" className="bg-red-100 text-red-700 border-red-200 shadow-lg hover:shadow-xl hover:cursor-pointer transform hover:scale-105 transition-all duration-300 ">
-                      Refresh 
-                      <RefreshCcw className="w-5 h-5 text-green-800"/>
-                    </Badge>
+  if (quizStarted) {
+    return <Quiz />;
+  }
 
-                  </>
-                )}
-              </div>
-            </CardHeader>
-            
-            <CardContent className="space-y-6 px-8">
-              {/* Main Action Button */}
-              {!joinedRoom ? (
-                <Button
-                  onClick={joinRoom}
-                  disabled={!isConnected}
-                  size="lg"
-                  className="w-full h-14 bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 disabled:from-gray-400 disabled:to-gray-500 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 font-semibold text-lg"
+  if (displayQuizTImer) {
+    return <QuizStartTimer />;
+  }
+
+  return (
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 px-4 py-8">
+      <Card className="w-full max-w-2xl bg-white/80 backdrop-blur-sm shadow-2xl border border-white/20 rounded-3xl overflow-hidden">
+        <CardHeader className="text-center space-y-4 pb-6">
+          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+            <Users className="w-8 h-8 text-white" />
+          </div>
+          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent">
+            Room: {roomid}
+          </CardTitle>
+          <CardDescription className="text-gray-600 text-lg">
+            {joinedRoom
+              ? clientList.length == 1
+                ? "You're in the room! Waiting for other players..."
+                : "You're in the room! Waiting host to start the game..."
+              : "Ready to join the quiz room?"}
+          </CardDescription>
+
+          {/* Connection Status */}
+          <div className="flex items-center justify-center space-x-2">
+            {isConnected ? (
+              <>
+                <Wifi className="w-5 h-5 text-green-500" />
+                <Badge
+                  variant="secondary"
+                  className="bg-green-100 text-green-700 border-green-200"
                 >
-                  <UserPlus className="w-6 h-6 mr-3" />
-                  Join Room
-                </Button>
-              ) : (
-                <Button
-                  onClick={LeaveRoom}
-                  disabled={!isConnected}
-                  size="lg"
-                  className="w-full h-14 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 disabled:from-gray-400 disabled:to-gray-500 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 font-semibold text-lg"
+                  Connected
+                </Badge>
+              </>
+            ) : (
+              <>
+                <WifiOff className="w-5 h-5 text-red-500" />
+                <Badge
+                  variant="secondary"
+                  className="bg-red-100 text-red-700 border-red-200"
                 >
-                  <LogOut className="w-6 h-6 mr-3" />
-                  Leave Room
-                </Button>
-              )}
-    
-              {/* Secondary Actions */}
-              <div className="grid grid-cols-2 gap-4">
-                <Button
-                  onClick={joinRoom}
-                  disabled={!isConnected}
-                  variant="outline"
-                  size="lg"
-                  className="h-12 border-2 border-blue-300 hover:border-blue-500 hover:bg-blue-50 text-blue-600 hover:text-blue-700 rounded-full shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 font-medium"
+                  Disconnected
+                </Badge>
+                <Badge
+                  onClick={() => {
+                    window.location.reload();
+                  }}
+                  variant="destructive"
+                  className="bg-red-100 text-red-700 border-red-200 shadow-lg hover:shadow-xl hover:cursor-pointer transform hover:scale-105 transition-all duration-300 "
                 >
-                  <UserPlus className="w-5 h-5 mr-2" />
-                  Rejoin
-                </Button>
-                
-                <Button
-                  onClick={startQuiz}
-                  disabled={!isConnected || !joinedRoom}
-                  size="lg"
-                  className="h-12 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 disabled:from-gray-400 disabled:to-gray-500 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 font-semibold"
-                >
-                  <Trophy className="w-5 h-5 mr-2" />
-                  Start Quiz
-                </Button>
-              </div>
-    
-              {/* Members List */}
-              {clientList && clientList.length > 0 && (
-                <div className="space-y-3">
-                  <h3 className="text-lg font-semibold text-gray-800 flex items-center">
-                    <Users className="w-5 h-5 mr-2 text-blue-500" />
-                    Players in Room ({clientList.length})
-                  </h3>
-                  <div className="bg-gray-50 rounded-2xl p-4 space-y-2 max-h-40 overflow-y-auto">
-                    {clientList.map((client, index) => (
-                      <div key={client} className="flex items-center space-x-3 p-2 bg-white rounded-lg shadow-sm">
-                        <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                          {client}
-                        </div>
-                        <span className="text-gray-700 font-medium">{client}</span>
-                        {index === 0 && (
-                          <Badge variant="secondary" className="bg-yellow-100 text-yellow-700 border-yellow-200 text-xs">
-                            Host
-                          </Badge>
-                        )}
-                      </div>
-                    ))}
+                  Refresh
+                  <RefreshCcw className="w-5 h-5 text-green-800" />
+                </Badge>
+              </>
+            )}
+          </div>
+        </CardHeader>
+
+        <CardContent className="space-y-6 px-8">
+          {/* Main Action Button */}
+          {!joinedRoom ? (
+            <Button
+              onClick={joinRoom}
+              disabled={!isConnected}
+              size="lg"
+              className="w-full h-14 bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 disabled:from-gray-400 disabled:to-gray-500 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 font-semibold text-lg"
+            >
+              <UserPlus className="w-6 h-6 mr-3" />
+              Join Room
+            </Button>
+          ) : (
+            <Button
+              onClick={LeaveRoom}
+              disabled={!isConnected}
+              size="lg"
+              className="w-full h-14 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 disabled:from-gray-400 disabled:to-gray-500 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 font-semibold text-lg"
+            >
+              <LogOut className="w-6 h-6 mr-3" />
+              Leave Room
+            </Button>
+          )}
+
+          {/* Secondary Actions */}
+          <div className="grid grid-cols-2 gap-4">
+            <Button
+              onClick={joinRoom}
+              disabled={!isConnected}
+              variant="outline"
+              size="lg"
+              className="h-12 border-2 border-blue-300 hover:border-blue-500 hover:bg-blue-50 text-blue-600 hover:text-blue-700 rounded-full shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 font-medium"
+            >
+              <UserPlus className="w-5 h-5 mr-2" />
+              Rejoin
+            </Button>
+
+            <Button
+              onClick={startQuiz}
+              disabled={!isConnected || !joinedRoom}
+              size="lg"
+              className="h-12 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 disabled:from-gray-400 disabled:to-gray-500 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 font-semibold"
+            >
+              <Trophy className="w-5 h-5 mr-2" />
+              Start Quiz
+            </Button>
+          </div>
+
+          {/* Members List */}
+          {clientList && clientList.length > 0 && (
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold text-gray-800 flex items-center">
+                <Users className="w-5 h-5 mr-2 text-blue-500" />
+                Players in Room ({clientList.length})
+              </h3>
+              <div className="bg-gray-50 rounded-2xl p-4 space-y-2 max-h-40 overflow-y-auto">
+                {clientList.map((client, index) => (
+                  <div
+                    key={`${client}-${index}`}
+                    className="flex items-center space-x-3 p-2 bg-white rounded-lg shadow-sm"
+                  >
+                    <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                      {client}
+                    </div>
+                    <span className="text-gray-700 font-medium">{client}</span>
+                    {index === 0 && (
+                      <Badge
+                        variant="secondary"
+                        className="bg-yellow-100 text-yellow-700 border-yellow-200 text-xs"
+                      >
+                        Host
+                      </Badge>
+                    )}
                   </div>
-                </div>
-              )}
-            </CardContent>
-    
-            {/* Floating Elements */}
-            <div className="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full opacity-20 animate-pulse"></div>
-            <div className="absolute -bottom-6 -left-6 w-12 h-12 bg-gradient-to-br from-green-400 to-blue-500 rounded-full opacity-20 animate-pulse delay-1000"></div>
-          </Card>
-        </div>
-      );
+                ))}
+              </div>
+            </div>
+          )}
+        </CardContent>
+
+        {/* Floating Elements */}
+        <div className="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full opacity-20 animate-pulse"></div>
+        <div className="absolute -bottom-6 -left-6 w-12 h-12 bg-gradient-to-br from-green-400 to-blue-500 rounded-full opacity-20 animate-pulse delay-1000"></div>
+      </Card>
+    </div>
+  );
 }
