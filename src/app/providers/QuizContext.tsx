@@ -1,4 +1,5 @@
 'use client';
+
 import {
   useContext,
   createContext,
@@ -7,6 +8,7 @@ import {
   Dispatch,
   SetStateAction,
 } from 'react';
+import { chatMessage } from "../components/Cards/ChatCard";
 
 export type Question = {
   id: 'q1' | 'q2' | 'q3' | 'q4' | 'q5';
@@ -28,6 +30,8 @@ interface QuizContextType {
   setQuizFinished: Dispatch<SetStateAction<boolean>>;
   score: number;
   setScore: Dispatch<SetStateAction<number>>;
+  chatMessages:chatMessage[],
+  setChatMessages:Dispatch<SetStateAction<chatMessage[]>>
 }
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
@@ -43,6 +47,7 @@ export default function QuizContextProvider({
   const [quizFinished, setQuizFinished] = useState(false);
   const [questions, setQuestions] = useState<Question[] | undefined>(undefined);
   const [score, setScore] = useState<number>(0);
+  const [chatMessages,setChatMessages] = useState<chatMessage[]>([]);
 
   const contextValue = {
     joinedRoom,
@@ -57,13 +62,13 @@ export default function QuizContextProvider({
     setScore,
     quizFinished,
     setQuizFinished,
+    chatMessages,
+    setChatMessages
   };
 
   return (
     <QuizContext.Provider value={contextValue}>{children}</QuizContext.Provider>
   );
-}
-
 // Custom hook to consume the WebSocket context
 export const useQuizContext = () => {
   const context = useContext(QuizContext);

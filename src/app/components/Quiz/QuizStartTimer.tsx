@@ -8,12 +8,11 @@ export default function QuizStartTimer() {
 
   useEffect(() => {
     if (seconds <= 0) {
-      console.log('Quiz Started');
-      setQuizStarted(true);
-      redirect('/Quiz');
-      return;
-    }
-
+        console.log("Quiz Started");
+        setQuizStarted(true);
+        redirect('/Quiz')
+    };
+  
     const timer = setInterval(() => {
       setSeconds((prev) => {
         if (prev <= 1) {

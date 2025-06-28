@@ -8,6 +8,7 @@ import {
   ReactNode,
 } from 'react';
 import { getSocket } from '@/lib/websocket';
+import { toast } from 'sonner';
 
 type WebSocketContextType = {
   socket: WebSocket | null;
@@ -30,14 +31,28 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
     let ws = getSocket();
 
     ws.onopen = () => {
-      console.log('✅ Connected to WebSocket');
+      console.log("✅ Connected to WebSocket");
+      toast("✅ Connected to Server", {
+        position:"top-right",
+        richColors:true,
+        description: new Date().toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', hour: 'numeric', minute: '2-digit', hour12: true }).replace(',', '').replace(',', ' at'),
+      })
       socketRef.current = ws;
       setSocket(ws);
       setIsConnected(true);
     };
 
     ws.onclose = () => {
-      console.log('❌ Disconnected from WebSocket');
+      console.log("❌ Disconnected from WebSocket");
+      toast("❌ Disconnected from Server", {
+        position:"top-right",
+        richColors:true,
+        description: new Date().toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', hour: 'numeric', minute: '2-digit', hour12: true }).replace(',', '').replace(',', ' at'),
+        action: {
+          label: "Reconnect",
+          onClick: () => window.location.reload(),
+        },
+      })
       socketRef.current = null;
       setIsConnected(false);
     };

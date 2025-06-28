@@ -1,8 +1,7 @@
-import JoinRoomCard from '@/app/components/Cards/JoinRoom';
-import Room from '@/app/components/Cards/Room';
-import ConnectionStatus from '@/app/components/Websocket/ConnectionStatus';
-import { auth } from '@/lib/auth';
-import { redirect } from 'next/navigation';
+
+import Room from "@/app/components/Cards/Room"
+import { auth } from "@/lib/auth"
+import { redirect } from "next/navigation"
 
 export default async function Page({
   params,
@@ -19,7 +18,6 @@ export default async function Page({
 
   return (
     <div>
-      {/* <ConnectionStatus/> */}
       <Room roomid={slug} session={session} />
     </div>
   );
