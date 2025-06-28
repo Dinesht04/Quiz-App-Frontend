@@ -181,10 +181,6 @@ export default function ({ roomid, session }: Props) {
       }
 
     };
-
-    return()=>{
-      setJoinedRoom(false);
-    }
   }, [socket]);
 
   function joinRoom() {
@@ -256,8 +252,11 @@ export default function ({ roomid, session }: Props) {
     }
 
     if(!topicRef.current?.value){
-        alert("Enter a TOpic FIrst")
-        return
+      toast(`Enter a Topic First`, {
+        position:"top-right",
+        richColors:true,
+      })        
+      return;
     }
 
     if (socket && socket.readyState === WebSocket.OPEN) {
@@ -267,7 +266,8 @@ export default function ({ roomid, session }: Props) {
           roomId: roomid,
           userName: session?.user?.name,
           expires: session?.expires,
-          topic: "Web Development",
+          topic: topicRef.current.value,
+          difficulty: difficulty
         },
       };
       socket.send(JSON.stringify(payload));

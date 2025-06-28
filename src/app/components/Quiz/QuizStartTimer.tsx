@@ -11,7 +11,6 @@ export default function QuizStartTimer() {
         console.log("Quiz Started");
         setQuizStarted(true);
         redirect('/Quiz')
-        return;
     };
   
     const timer = setInterval(() => {
