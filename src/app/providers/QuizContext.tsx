@@ -19,6 +19,8 @@ interface QuizContextType {
     setQuizStarted: Dispatch<SetStateAction<boolean>>,
     quizFinished: boolean, 
     setQuizFinished: Dispatch<SetStateAction<boolean>>,
+    isHost:boolean,
+    setIsHost:Dispatch<SetStateAction<boolean>>,
     score:number,
     setScore:Dispatch<SetStateAction<number>>
 }
@@ -30,6 +32,7 @@ export default function QuizContextProvider({ children }: { children: ReactNode 
         const [joinedRoom, setJoinedRoom] = useState(false);
         const [quizStarted, setQuizStarted] = useState(false);
         const [quizFinished, setQuizFinished] = useState(false);
+        const [isHost,setIsHost] = useState(false);
         const [questions,setQuestions] = useState<Question[]|undefined>(undefined);
         const [score,setScore] = useState<number>(0);
 
@@ -45,7 +48,9 @@ export default function QuizContextProvider({ children }: { children: ReactNode 
             score,
             setScore,
             quizFinished,
-            setQuizFinished
+            setQuizFinished,
+            isHost,
+            setIsHost
         };
         
             return (

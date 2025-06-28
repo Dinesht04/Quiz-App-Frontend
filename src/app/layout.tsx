@@ -3,7 +3,7 @@ import "./globals.css";
 import GlobalContextProvider from "./providers/GlobalContext";
 import { WebSocketProvider } from "./providers/WebsocketContextProvider";
 import QuizContextProvider from "./providers/QuizContext";
-
+import { Toaster } from "@/components/ui/sonner"
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -22,6 +22,7 @@ export default function RootLayout({
         <WebSocketProvider>
           <QuizContextProvider>
             {children}
+            <Toaster />
           </QuizContextProvider>
         </WebSocketProvider>
         </GlobalContextProvider>
