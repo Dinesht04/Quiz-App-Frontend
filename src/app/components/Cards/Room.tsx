@@ -37,6 +37,7 @@ import QuizStartTimer from "../Quiz/QuizStartTimer";
 import { useQuizContext } from "@/app/providers/QuizContext";
 import Quiz from "../Quiz/Quiz";
 import { toast } from "sonner";
+import ChatCard from "./ChatCard";
 
 
 
@@ -97,7 +98,8 @@ export default function ({ roomid, session }: Props) {
     quizStarted,
     setScore,
     setIsHost,
-    isHost
+    isHost,
+    setChatMessages
   } = useQuizContext();
 
 
@@ -107,10 +109,11 @@ export default function ({ roomid, session }: Props) {
       return;
     }
 
-    console.log("✅ Joining Room");
 
     socket.onmessage = (e) => {
       const message: Message = JSON.parse(e.data);
+      console.log("Checking for message type in Lobby")
+      console.log(message)
       if(message.type === "join"){
         if(message.status === "successful"){
           toast(`✅ Joined Room ${roomid} Successfully`, {
@@ -155,6 +158,7 @@ export default function ({ roomid, session }: Props) {
           setJoinedRoom(false);
         }
       }
+      //SHould move answer and score to somewhere else
       if (message.type === "answer") {
         if (message.payload.Correct) {
           console.log("correct answer");
@@ -165,7 +169,22 @@ export default function ({ roomid, session }: Props) {
         console.log("Quiz Finished");
         console.log(message.payload);
       }
+      if(message.type === "message"){
+        console.log(message.payload)
+        const newMessage = {
+          username:message.payload.username,
+          message:message.payload.message,
+          time:message.payload.time
+        }
+
+         setChatMessages((messages)=>[...messages,newMessage])
+      }
+
     };
+
+    return()=>{
+      setJoinedRoom(false);
+    }
   }, [socket]);
 
   function joinRoom() {
@@ -322,8 +341,9 @@ export default function ({ roomid, session }: Props) {
 
         <CardContent className="space-y-6 px-8">
 
-           {/* Topic and Difficulty Section */}
-           <div className="space-y-4">
+          {joinedRoom ? isHost ? (
+            <div className="space-y-4">
+            {/* Topic and Difficulty Section */}
             <div className="space-y-2">
               <Label htmlFor="topic" className="text-sm font-semibold text-gray-700 flex items-center">
                 <BookOpen className="w-4 h-4 mr-2 text-purple-500" />
@@ -332,7 +352,7 @@ export default function ({ roomid, session }: Props) {
               <Input
                 id="topic"
                 ref={topicRef}
-                placeholder="Enter your quiz topic (e.g., Space, History, Movies...)"
+                placeholder="Enter your niche quiz topic (e.g., Japanese Motorsport History, 9/11, Anant Ambani...)"
                 className="h-12 rounded-full border-2 border-purple-200 focus:border-purple-400 bg-white/70"
               />
             </div>
@@ -340,11 +360,7 @@ export default function ({ roomid, session }: Props) {
             <div className="space-y-3">
             <Label className="text-sm font-semibold text-gray-700">
               Difficulty Level:
-              {difficulty > 0 && (
-                <span className={`ml-2 font-bold ${difficultyColors[difficulty - 1]}`}>
-                  {difficultyNames[difficulty - 1]}
-                </span>
-              )}
+              
             </Label>
 
               <div className="px-3">
@@ -356,7 +372,7 @@ export default function ({ roomid, session }: Props) {
                     value[0] >= 40 && value[0] < 60 ? setDifficulty(3) :
                     value[0] >= 60 && value[0] < 80 ? setDifficulty(4) :
                     setDifficulty(5)
-                   }
+                  }
                   }
                   defaultValue={[40]}
                   max={100}
@@ -366,16 +382,27 @@ export default function ({ roomid, session }: Props) {
                   sliderColor={sliderDifficultyColors[difficulty - 1]}
                 />
 
-                <div className="flex justify-between text-xs text-gray-500 mt-2">
-                  <span>Easy</span>
-                  <span>Medium</span>
-                  <span>Hard</span>
-                  <span>Expert</span>
-                  <span>Insane</span>
+                <div className="flex justify-center text-md text-gray-500 mt-2">
+                {difficulty > 0 && (
+                <span className={`ml-2 font-bold ${difficultyColors[difficulty - 1]}`}>
+                  {difficultyNames[difficulty - 1]}
+                </span>
+              )}
                 </div>
               </div>
             </div>
           </div>
+          ) : 
+            <div>
+              The Host is choosing the Topic and Difficulty, Kindly remain Patient.
+            </div>
+           : 
+          <div>
+            Join the Room!
+          </div>
+      }
+  
+          
 
           {/* Main Action Button */}
           {!joinedRoom ? (
@@ -460,6 +487,11 @@ export default function ({ roomid, session }: Props) {
         <div className="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full opacity-20 animate-pulse"></div>
         <div className="absolute -bottom-6 -left-6 w-12 h-12 bg-gradient-to-br from-green-400 to-blue-500 rounded-full opacity-20 animate-pulse delay-1000"></div>
       </Card>
+      {joinedRoom && (
+              <ChatCard roomid={roomid} session={session} />
+
+      )}
+
           </div>
   );
 }

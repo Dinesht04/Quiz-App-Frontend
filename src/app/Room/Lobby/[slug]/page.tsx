@@ -1,6 +1,4 @@
-import JoinRoomCard from "@/app/components/Cards/JoinRoom"
 import Room from "@/app/components/Cards/Room"
-import ConnectionStatus from "@/app/components/Websocket/ConnectionStatus"
 import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
 
