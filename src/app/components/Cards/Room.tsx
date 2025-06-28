@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import {
   Card,
   CardContent,
@@ -13,7 +13,6 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
-
 import {
   Users,
   Play,
@@ -38,7 +37,6 @@ import { useQuizContext } from "@/app/providers/QuizContext";
 import Quiz from "../Quiz/Quiz";
 import { toast } from "sonner";
 import ChatCard from "./ChatCard";
-
 
 
 export type Message = {
@@ -80,8 +78,8 @@ const sliderDifficultyColors = [
 
 export default function ({ roomid, session }: Props) {
   if (!session) {
-    console.log("No Session");
-    redirect("/");
+    console.log('No Session');
+    redirect('/');
   }
 
   const topicRef = useRef<HTMLInputElement>(null);
@@ -105,9 +103,10 @@ export default function ({ roomid, session }: Props) {
 
   useEffect(() => {
     if (!socket || socket.readyState !== WebSocket.OPEN) {
-      console.log("🕓 socket not ready yet");
+      console.log('🕓 socket not ready yet');
       return;
     }
+
 
 
     socket.onmessage = (e) => {
@@ -136,13 +135,14 @@ export default function ({ roomid, session }: Props) {
         })
         setClientList(message.payload);
       }
-      if (message.type === "questions") {
+      if (message.type === 'questions') {
         setQuestions(message.payload);
         setDisplayQuizTimer(true);
       }
-      if (message.type === "unauthorised") {
+      if (message.type === 'unauthorised') {
         alert(message.payload.message);
       }
+
       if (message.type === "leave") {
         if (message.status === "successful") {
           toast(`Left Room ${roomid} successfully`, {
@@ -154,19 +154,19 @@ export default function ({ roomid, session }: Props) {
               onClick: () => joinRoom(),
           }})
           setClientList([]);
-          setRoomId("");
+          setRoomId('');
           setJoinedRoom(false);
         }
       }
       //SHould move answer and score to somewhere else
       if (message.type === "answer") {
         if (message.payload.Correct) {
-          console.log("correct answer");
+          console.log('correct answer');
           setScore((score) => score + 1);
         }
       }
-      if (message.type === "score") {
-        console.log("Quiz Finished");
+      if (message.type === 'score') {
+        console.log('Quiz Finished');
         console.log(message.payload);
       }
       if(message.type === "message"){
@@ -194,7 +194,7 @@ export default function ({ roomid, session }: Props) {
 
     if (socket && socket.readyState === WebSocket.OPEN) {
       const joinPayload = {
-        type: "join",
+        type: 'join',
         payload: {
           roomId: roomid,
           username: session?.user?.name,
@@ -209,25 +209,25 @@ export default function ({ roomid, session }: Props) {
   function sendMessage() {
     if (socket && socket.readyState === WebSocket.OPEN) {
       const payload = {
-        type: "message",
+        type: 'message',
         payload: {
           roomId: roomid,
           userName: session?.user?.name,
-          message: "hi",
+          message: 'hi',
           expires: session?.expires,
         },
       };
       socket.send(JSON.stringify(payload));
     } else {
-      console.warn("WebSocket not open or inputs are not ready.");
-      alert("Not connected to the server. Please wait or refresh.");
+      console.warn('WebSocket not open or inputs are not ready.');
+      alert('Not connected to the server. Please wait or refresh.');
     }
   }
 
   function LeaveRoom() {
     if (socket && socket.readyState === WebSocket.OPEN) {
       const payload = {
-        type: "leave",
+        type: 'leave',
         payload: {
           roomId: roomid,
           userName: session?.user?.name,
@@ -236,8 +236,8 @@ export default function ({ roomid, session }: Props) {
       };
       socket.send(JSON.stringify(payload));
     } else {
-      console.warn("WebSocket not open or username input is not ready.");
-      alert("Not connected to the server. Please wait or refresh.");
+      console.warn('WebSocket not open or username input is not ready.');
+      alert('Not connected to the server. Please wait or refresh.');
     }
   }
 
@@ -261,7 +261,7 @@ export default function ({ roomid, session }: Props) {
 
     if (socket && socket.readyState === WebSocket.OPEN) {
       const payload = {
-        type: "start",
+        type: 'start',
         payload: {
           roomId: roomid,
           userName: session?.user?.name,
@@ -272,8 +272,8 @@ export default function ({ roomid, session }: Props) {
       };
       socket.send(JSON.stringify(payload));
     } else {
-      console.warn("WebSocket not open or username input is not ready.");
-      alert("Not connected to the server. Please wait or refresh.");
+      console.warn('WebSocket not open or username input is not ready.');
+      alert('Not connected to the server. Please wait or refresh.');
     }
   }
 
@@ -300,7 +300,7 @@ export default function ({ roomid, session }: Props) {
               ? clientList.length == 1
                 ? "You're in the room! Waiting for other players..."
                 : "You're in the room! Waiting host to start the game..."
-              : "Ready to join the quiz room?"}
+              : 'Ready to join the quiz room?'}
           </CardDescription>
 
           {/* Connection Status */}

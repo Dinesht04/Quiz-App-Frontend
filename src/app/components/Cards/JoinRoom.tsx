@@ -1,5 +1,5 @@
 // components/JoinRoomCard.tsx
-"use client"
+'use client';
 
 import React, { useRef } from 'react';
 import {
@@ -9,34 +9,36 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Users, Plus, Play } from "lucide-react";
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Users, Plus, Play } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { SignOut } from '../auth/AuthFunctions';
 import { useGlobalContext } from '@/app/providers/GlobalContext';
 
-
 type JoinRoomCardProps = {
   username: string;
   expires: string;
-  SignOut: React.JSX.Element
-}
+  SignOut: React.JSX.Element;
+};
 
-export default function JoinRoomCard({ username, expires, SignOut }: JoinRoomCardProps) {
-  const {setUsername} = useGlobalContext();
-
+export default function JoinRoomCard({
+  username,
+  expires,
+  SignOut,
+}: JoinRoomCardProps) {
+  const { setUsername } = useGlobalContext();
 
   const roomIdRef = useRef<HTMLInputElement>(null);
 
   const handleJoinRoom = (): void => {
     if (!roomIdRef.current?.value) {
-      alert("Enter a Room ID first");
+      alert('Enter a Room ID first');
       return;
     }
     setUsername(username);
-    redirect(`Room/Lobby/${roomIdRef.current?.value}`)
+    redirect(`Room/Lobby/${roomIdRef.current?.value}`);
   };
 
   const handleCreateRoom = (): void => {
@@ -44,7 +46,7 @@ export default function JoinRoomCard({ username, expires, SignOut }: JoinRoomCar
     let r = (Math.random() + 1).toString(36).substring(7);
     setUsername(username);
     redirect(`/Room/Lobby/${r}`);
-  }
+  };
 
   return (
     <div className="flex justify-center items-center">
@@ -60,7 +62,7 @@ export default function JoinRoomCard({ username, expires, SignOut }: JoinRoomCar
             Join an existing room or create your own quiz adventure
           </CardDescription>
         </CardHeader>
-        
+
         <CardContent className="space-y-6 px-8">
           <div className="space-y-3">
             <label className="text-sm font-medium text-gray-700 block">
@@ -108,10 +110,9 @@ export default function JoinRoomCard({ username, expires, SignOut }: JoinRoomCar
         {username && (
           <div className="px-8 pb-2">
             <div className="text-center text-sm text-gray-500">
-              Playing as: <span className="font-medium text-blue-600">{username}</span>
-              <span className='mt-2'>              
-              {SignOut}
-              </span>
+              Playing as:{' '}
+              <span className="font-medium text-blue-600">{username}</span>
+              <span className="mt-2">{SignOut}</span>
             </div>
           </div>
         )}

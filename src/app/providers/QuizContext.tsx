@@ -1,77 +1,79 @@
 'use client';
-import { useContext,createContext,ReactNode, useState, Dispatch, SetStateAction } from "react";
+
+import {
+  useContext,
+  createContext,
+  ReactNode,
+  useState,
+  Dispatch,
+  SetStateAction,
+} from 'react';
 import { chatMessage } from "../components/Cards/ChatCard";
 
 export type Question = {
-    id:"q1"|"q2"|"q3"|"q4"|"q5",
-    prompt:string,
-    options:string[],
-    correct:string;
-}
+  id: 'q1' | 'q2' | 'q3' | 'q4' | 'q5';
+  prompt: string;
+  options: string[];
+  correct: string;
+};
 
 interface QuizContextType {
-    joinedRoom: boolean,
-    setJoinedRoom:Dispatch<SetStateAction<boolean>>,
-    questions:Question[]|undefined,
-    setQuestions:Dispatch<SetStateAction<Question[]|undefined>>,
-    roomId:string | undefined,
-    setRoomId:Dispatch<SetStateAction<string | undefined>>,
-    quizStarted: boolean, 
-    setQuizStarted: Dispatch<SetStateAction<boolean>>,
-    quizFinished: boolean, 
-    setQuizFinished: Dispatch<SetStateAction<boolean>>,
-    isHost:boolean,
-    setIsHost:Dispatch<SetStateAction<boolean>>,
-    score:number,
-    setScore:Dispatch<SetStateAction<number>>,
-    chatMessages:chatMessage[],
-    setChatMessages:Dispatch<SetStateAction<chatMessage[]>>
+  joinedRoom: boolean;
+  setJoinedRoom: Dispatch<SetStateAction<boolean>>;
+  questions: Question[] | undefined;
+  setQuestions: Dispatch<SetStateAction<Question[] | undefined>>;
+  roomId: string | undefined;
+  setRoomId: Dispatch<SetStateAction<string | undefined>>;
+  quizStarted: boolean;
+  setQuizStarted: Dispatch<SetStateAction<boolean>>;
+  quizFinished: boolean;
+  setQuizFinished: Dispatch<SetStateAction<boolean>>;
+  score: number;
+  setScore: Dispatch<SetStateAction<number>>;
+  chatMessages:chatMessage[],
+  setChatMessages:Dispatch<SetStateAction<chatMessage[]>>
 }
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
 
-export default function QuizContextProvider({ children }: { children: ReactNode }){
-        const [roomId,setRoomId] = useState<string | undefined>()
-        const [joinedRoom, setJoinedRoom] = useState(false);
-        const [quizStarted, setQuizStarted] = useState(false);
-        const [quizFinished, setQuizFinished] = useState(false);
-        const [isHost,setIsHost] = useState(false);
-        const [questions,setQuestions] = useState<Question[]|undefined>(undefined);
-        const [score,setScore] = useState<number>(0);
-        const [chatMessages,setChatMessages] = useState<chatMessage[]>([]);
-        
+export default function QuizContextProvider({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  const [roomId, setRoomId] = useState<string | undefined>();
+  const [joinedRoom, setJoinedRoom] = useState(false);
+  const [quizStarted, setQuizStarted] = useState(false);
+  const [quizFinished, setQuizFinished] = useState(false);
+  const [questions, setQuestions] = useState<Question[] | undefined>(undefined);
+  const [score, setScore] = useState<number>(0);
+  const [chatMessages,setChatMessages] = useState<chatMessage[]>([]);
 
-        const contextValue = {
-            joinedRoom,
-            setJoinedRoom,
-            questions,
-            setQuestions,
-            roomId,
-            setRoomId,
-            quizStarted,
-            setQuizStarted,
-            score,
-            setScore,
-            quizFinished,
-            setQuizFinished,
-            isHost,
-            setIsHost,
-            chatMessages,
-            setChatMessages
-        };
-        
-            return (
-                <QuizContext.Provider value={contextValue}>
-                    {children}
-                </QuizContext.Provider>
-            );
-}
+  const contextValue = {
+    joinedRoom,
+    setJoinedRoom,
+    questions,
+    setQuestions,
+    roomId,
+    setRoomId,
+    quizStarted,
+    setQuizStarted,
+    score,
+    setScore,
+    quizFinished,
+    setQuizFinished,
+    chatMessages,
+    setChatMessages
+  };
 
+  return (
+    <QuizContext.Provider value={contextValue}>{children}</QuizContext.Provider>
+  );
 // Custom hook to consume the WebSocket context
 export const useQuizContext = () => {
-    const context = useContext(QuizContext);
-    if (context === undefined) {
-        throw new Error('useQuizContext must be used within a QuizContextProvider');
-    }
-    return context;
+  const context = useContext(QuizContext);
+  if (context === undefined) {
+    throw new Error('useQuizContext must be used within a QuizContextProvider');
+  }
+  return context;
 };
