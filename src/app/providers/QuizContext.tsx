@@ -28,6 +28,8 @@ interface QuizContextType {
   setQuizStarted: Dispatch<SetStateAction<boolean>>;
   quizFinished: boolean;
   setQuizFinished: Dispatch<SetStateAction<boolean>>;
+  isHost: boolean;
+  setIsHost: Dispatch<SetStateAction<boolean>>;
   score: number;
   setScore: Dispatch<SetStateAction<number>>;
   chatMessages:chatMessage[],
@@ -35,6 +37,7 @@ interface QuizContextType {
 }
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
+
 
 export default function QuizContextProvider({
   children,
@@ -48,6 +51,7 @@ export default function QuizContextProvider({
   const [questions, setQuestions] = useState<Question[] | undefined>(undefined);
   const [score, setScore] = useState<number>(0);
   const [chatMessages,setChatMessages] = useState<chatMessage[]>([]);
+  const [isHost,setIsHost] = useState<boolean>(false);
 
   const contextValue = {
     joinedRoom,
@@ -63,12 +67,16 @@ export default function QuizContextProvider({
     quizFinished,
     setQuizFinished,
     chatMessages,
-    setChatMessages
+    setChatMessages,
+    isHost,
+    setIsHost
   };
 
   return (
     <QuizContext.Provider value={contextValue}>{children}</QuizContext.Provider>
   );
+}
+
 // Custom hook to consume the WebSocket context
 export const useQuizContext = () => {
   const context = useContext(QuizContext);

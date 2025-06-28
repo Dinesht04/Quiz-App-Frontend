@@ -12,7 +12,7 @@ export default function QuizStartTimer() {
         setQuizStarted(true);
         redirect('/Quiz')
     };
-  
+
     const timer = setInterval(() => {
       setSeconds((prev) => {
         if (prev <= 1) {

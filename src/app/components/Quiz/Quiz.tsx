@@ -5,11 +5,6 @@ import { redirect } from "next/navigation";
 import { useState } from "react";
 import QuestionCard from "../Cards/QuestionCard";
 
-export default function Quiz(){
-    const {questions,joinedRoom,quizStarted,score,roomId} = useQuizContext();
-    const [currentQuestion,setCurrentQuestion] = useState<string>("q1")
-
-
 export default function Quiz() {
   const { questions, joinedRoom, quizStarted, score, roomId } =
     useQuizContext();
