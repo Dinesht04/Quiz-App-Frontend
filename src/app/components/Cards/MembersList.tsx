@@ -1,7 +1,6 @@
-
 type MemberListProps = {
-    clientList: string[]
-}
+  clientList: string[];
+};
 
 export default function MemberList({ clientList }: MemberListProps) {
   return (
@@ -50,7 +49,9 @@ export default function MemberList({ clientList }: MemberListProps) {
               </table>
             </div>
           ) : (
-            <p className="text-center text-gray-500 py-8">No members in the room yet.</p>
+            <p className="text-center text-gray-500 py-8">
+              No members in the room yet.
+            </p>
           )}
         </div>
       </div>

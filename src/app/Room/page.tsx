@@ -1,5 +1,5 @@
-import { auth } from "@/lib/auth"
-import Room from "../components/Cards/Room";
+import { auth } from '@/lib/auth';
+import Room from '../components/Cards/Room';
 
 // To Do
 // Room create/join , lobby and game Component.
@@ -10,16 +10,12 @@ import Room from "../components/Cards/Room";
 
 // Need a way to store and send to backend if the user is host or not
 
-
-
-export default async function(){
-
+export default async function () {
   const session = await auth();
 
-  return(
+  return (
     <div>
       <Room session={session} />
     </div>
-  )
- 
+  );
 }
