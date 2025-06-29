@@ -97,7 +97,8 @@ export default function ({ roomid, session }: Props) {
     setScore,
     setIsHost,
     isHost,
-    setChatMessages
+    setChatMessages,
+    setFinalScore
   } = useQuizContext();
 
 
@@ -111,8 +112,6 @@ export default function ({ roomid, session }: Props) {
 
     socket.onmessage = (e) => {
       const message: Message = JSON.parse(e.data);
-      console.log("Checking for message type in Lobby")
-      console.log(message)
       if(message.type === "join"){
         if(message.status === "successful"){
           toast(`✅ Joined Room ${roomid} Successfully`, {
@@ -161,13 +160,13 @@ export default function ({ roomid, session }: Props) {
       //SHould move answer and score to somewhere else
       if (message.type === "answer") {
         if (message.payload.Correct) {
-          console.log('correct answer');
+          //TO-DO Toast here?
           setScore((score) => score + 1);
         }
       }
       if (message.type === 'score') {
-        console.log('Quiz Finished');
-        console.log(message.payload);
+        //TO-DO Toast here? ('Quiz Finished');
+        setFinalScore(message.payload);
       }
       if(message.type === "message"){
         console.log(message.payload)
@@ -255,7 +254,7 @@ export default function ({ roomid, session }: Props) {
       toast(`Enter a Topic First`, {
         position:"top-right",
         richColors:true,
-      })        
+      })
       return;
     }
 
@@ -356,11 +355,11 @@ export default function ({ roomid, session }: Props) {
                 className="h-12 rounded-full border-2 border-purple-200 focus:border-purple-400 bg-white/70"
               />
             </div>
-            
+
             <div className="space-y-3">
             <Label className="text-sm font-semibold text-gray-700">
               Difficulty Level:
-              
+
             </Label>
 
               <div className="px-3">
@@ -392,17 +391,17 @@ export default function ({ roomid, session }: Props) {
               </div>
             </div>
           </div>
-          ) : 
+          ) :
             <div>
               The Host is choosing the Topic and Difficulty, Kindly remain Patient.
             </div>
-           : 
+           :
           <div>
             Join the Room!
           </div>
       }
-  
-          
+
+
 
           {/* Main Action Button */}
           {!joinedRoom ? (
