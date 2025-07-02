@@ -1,14 +1,11 @@
-import { signIn, signOut } from '@/lib/auth';
 import { Button } from '@/components/ui/button';
 import { LogIn, LogOut } from 'lucide-react';
+import { signInAction, signOutAction } from '@/app/actions/auth';
 
 export function SignIn() {
   return (
     <form
-      action={async () => {
-        'use server';
-        await signIn();
-      }}
+      action={signInAction}
     >
       <Button
         type="submit"
@@ -25,10 +22,7 @@ export function SignIn() {
 export function SignOut() {
   return (
     <form
-      action={async () => {
-        'use server';
-        await signOut();
-      }}
+      action={signOutAction}
     >
       <Button
         type="submit"

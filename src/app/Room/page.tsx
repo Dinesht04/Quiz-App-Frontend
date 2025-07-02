@@ -1,5 +1,6 @@
 import { auth } from '@/lib/auth';
-import Room from '../components/Cards/Room';
+import RoomAuthGate from '../components/auth/RoomAuthGate';
+import { redirect } from 'next/navigation';
 
 // To Do
 // Room create/join , lobby and game Component.
@@ -11,11 +12,12 @@ import Room from '../components/Cards/Room';
 // Need a way to store and send to backend if the user is host or not
 
 export default async function () {
-  const session = await auth();
+
+  redirect('/')
 
   return (
     <div>
-      <Room session={session} />
+      {/* <RoomAuthGate session={session} /> */}
     </div>
   );
 }

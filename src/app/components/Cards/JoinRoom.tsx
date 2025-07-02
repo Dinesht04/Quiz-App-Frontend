@@ -20,7 +20,7 @@ import { useGlobalContext } from '@/app/providers/GlobalContext';
 type JoinRoomCardProps = {
   username: string;
   expires: string;
-  SignOut: React.JSX.Element;
+  SignOut?: React.JSX.Element;
 };
 
 export default function JoinRoomCard({
@@ -112,7 +112,7 @@ export default function JoinRoomCard({
             <div className="text-center text-sm text-gray-500">
               Playing as:{' '}
               <span className="font-medium text-blue-600">{username}</span>
-              <span className="mt-2">{SignOut}</span>
+              {SignOut && <span className="mt-2">{SignOut}</span>}
             </div>
           </div>
         )}

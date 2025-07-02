@@ -15,6 +15,8 @@ interface GlobalContextType {
   setExpires: Dispatch<SetStateAction<string>>;
   setUsername: Dispatch<SetStateAction<string>>;
   setRoomId: Dispatch<SetStateAction<string>>;
+  isGuest:boolean;
+  setIsGuest: Dispatch<SetStateAction<boolean>>;
 }
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
@@ -27,6 +29,7 @@ export default function GlobalContextProvider({
   const [username, setUsername] = useState('');
   const [roomId, setRoomId] = useState('');
   const [expires, setExpires] = useState('');
+  const [isGuest, setIsGuest] = useState<boolean>(false);
 
   const contextValue = {
     username,
@@ -35,6 +38,8 @@ export default function GlobalContextProvider({
     setRoomId,
     expires,
     setExpires,
+    isGuest,
+    setIsGuest
   };
 
   return (

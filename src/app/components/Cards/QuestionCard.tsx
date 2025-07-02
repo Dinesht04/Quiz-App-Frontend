@@ -21,7 +21,7 @@ export default function QuestionCard({
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [isAnswered, setIsAnswered] = useState(false);
   const { socket } = useSocket();
-  const { setQuizFinished } = useQuizContext();
+  const { setQuestionsCompleted } = useQuizContext();
   const { username } = useGlobalContext();
 
   function setNextQuestion(currentQues: string | null) {
@@ -41,7 +41,7 @@ export default function QuestionCard({
       case 'q5':
         setCurrentQuestion('over');
         finishQuiz();
-        setQuizFinished(true);
+        setQuestionsCompleted(true);
         break;
       default:
         setCurrentQuestion('idk');

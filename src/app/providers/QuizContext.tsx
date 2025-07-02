@@ -33,6 +33,8 @@ interface QuizContextType {
   setQuizStarted: Dispatch<SetStateAction<boolean>>;
   quizFinished: boolean;
   setQuizFinished: Dispatch<SetStateAction<boolean>>;
+  questionsCompleted: boolean;
+  setQuestionsCompleted: Dispatch<SetStateAction<boolean>>;
   isHost: boolean;
   setIsHost: Dispatch<SetStateAction<boolean>>;
   score: number;
@@ -55,6 +57,7 @@ export default function QuizContextProvider({
   const [joinedRoom, setJoinedRoom] = useState(false);
   const [quizStarted, setQuizStarted] = useState(false);
   const [quizFinished, setQuizFinished] = useState(false);
+  const [questionsCompleted, setQuestionsCompleted] = useState(false);
   const [questions, setQuestions] = useState<Question[] | undefined>(undefined);
   const [score, setScore] = useState<number>(0);
   const [chatMessages,setChatMessages] = useState<chatMessage[]>([]);
@@ -79,7 +82,9 @@ export default function QuizContextProvider({
     isHost,
     setIsHost,
     finalScore,
-    setFinalScore
+    setFinalScore,
+    questionsCompleted,
+    setQuestionsCompleted
   };
 
   return (

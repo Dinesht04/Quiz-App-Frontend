@@ -98,7 +98,8 @@ export default function ({ roomid, session }: Props) {
     setIsHost,
     isHost,
     setChatMessages,
-    setFinalScore
+    setFinalScore,
+    setQuizFinished
   } = useQuizContext();
 
 
@@ -164,10 +165,11 @@ export default function ({ roomid, session }: Props) {
           setScore((score) => score + 1);
         }
       }
-      if (message.type === 'score') {
-        //TO-DO Toast here? ('Quiz Finished');
-        setFinalScore(message.payload);
-      }
+      // if (message.type === 'score') {
+      //   //TO-DO Toast here? ('Quiz Finished');
+      //   setFinalScore(message.payload);
+      // }
+
       if(message.type === "message"){
         console.log(message.payload)
         const newMessage = {
@@ -177,6 +179,14 @@ export default function ({ roomid, session }: Props) {
         }
 
          setChatMessages((messages)=>[...messages,newMessage])
+      }
+      if (message.type === "live-score") {
+        console.log("Current Scores",message.payload)
+      }
+      if (message.type === "final-score") {
+        console.log("Final score of the quiz",message.payload.finalScores)
+        setFinalScore(message.payload.finalScores);
+        setQuizFinished(true);
       }
 
     };
