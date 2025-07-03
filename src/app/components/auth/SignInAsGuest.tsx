@@ -20,7 +20,7 @@ export function SignInAsGuest({callbackUrl}:SignInAsGuestProps){
         setUsername(guestUsernameGenerator());
         setExpires(getGuestExpires());
         setIsGuest(true);
-        redirect(callbackUrl)
+        redirect("http://172.25.235.135:3000/")
       }}
     >
       <Button
