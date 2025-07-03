@@ -14,6 +14,7 @@ import {
   CardTitle
 
  } from "@/components/ui/card";
+import LiveScores from "./LiveScores";
 
 type score = {
   username:string,
@@ -23,7 +24,7 @@ type score = {
 //finalScore is an array of score, ie, score[].
 
 export default function Quiz() {
-  const { questions, joinedRoom, quizStarted, score, roomId, finalScore } =
+  const { questions, joinedRoom, quizStarted, score, roomId, finalScore, quizFinished } =
     useQuizContext();
   const [currentQuestion, setCurrentQuestion] = useState<string>('q1');
 
@@ -56,7 +57,7 @@ export default function Quiz() {
             </div>
           </div>
 
-          {finalScore.length > 0 ? (
+          {quizFinished ? (
             <Card className="bg-white/90 backdrop-blur-sm shadow-2xl border-0 rounded-3xl overflow-hidden">
               <CardHeader className="bg-gradient-to-r from-purple-500 to-blue-500 text-white py-8">
                 <CardTitle className="text-3xl font-bold text-center flex items-center justify-center gap-3">
@@ -133,6 +134,7 @@ export default function Quiz() {
                 <div className="mt-6 flex justify-center">
                   <div className="animate-spin w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full"></div>
                 </div>
+                <LiveScores/>
               </CardContent>
             </Card>
           )}
@@ -173,6 +175,7 @@ export default function Quiz() {
             );
           }
         })}
+        <LiveScores/>
       </div>
 
       {/* Floating Background Elements */}

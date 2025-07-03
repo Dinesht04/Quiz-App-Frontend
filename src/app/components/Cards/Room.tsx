@@ -99,7 +99,8 @@ export default function ({ roomid, session }: Props) {
     isHost,
     setChatMessages,
     setFinalScore,
-    setQuizFinished
+    setQuizFinished,
+    setLiveScore
   } = useQuizContext();
 
 
@@ -181,12 +182,19 @@ export default function ({ roomid, session }: Props) {
          setChatMessages((messages)=>[...messages,newMessage])
       }
       if (message.type === "live-score") {
-        console.log("Current Scores",message.payload)
+        console.log("Current Scores",message.payload.liveScore)
+        setLiveScore(message.payload.liveScore);
+
       }
       if (message.type === "final-score") {
         console.log("Final score of the quiz",message.payload.finalScores)
         setFinalScore(message.payload.finalScores);
         setQuizFinished(true);
+        toast(`Quiz has Ended!`, {
+          position:"top-right",
+          richColors:true,
+          description: new Date().toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', hour: 'numeric', minute: '2-digit', hour12: true }).replace(',', '').replace(',', ' at'),
+          })
       }
 
     };
@@ -212,24 +220,6 @@ export default function ({ roomid, session }: Props) {
       };
 
       socket.send(JSON.stringify(joinPayload));
-    }
-  }
-
-  function sendMessage() {
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      const payload = {
-        type: 'message',
-        payload: {
-          roomId: roomid,
-          userName: session?.user?.name,
-          message: 'hi',
-          expires: session?.expires,
-        },
-      };
-      socket.send(JSON.stringify(payload));
-    } else {
-      console.warn('WebSocket not open or inputs are not ready.');
-      alert('Not connected to the server. Please wait or refresh.');
     }
   }
 
@@ -448,8 +438,8 @@ export default function ({ roomid, session }: Props) {
               <UserPlus className="w-5 h-5 mr-2" />
               Rejoin
             </Button>
-
-            <Button
+          {isHost && (
+              <Button
               onClick={startQuiz}
               disabled={!isConnected || !joinedRoom}
               size="lg"
@@ -458,6 +448,8 @@ export default function ({ roomid, session }: Props) {
               <Trophy className="w-5 h-5 mr-2" />
               Start Quiz
             </Button>
+          )}
+
           </div>
 
           {/* Members List */}

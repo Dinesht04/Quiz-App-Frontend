@@ -22,6 +22,7 @@ export type score = {
   score:string
 }
 
+
 interface QuizContextType {
   joinedRoom: boolean;
   setJoinedRoom: Dispatch<SetStateAction<boolean>>;
@@ -43,6 +44,8 @@ interface QuizContextType {
   setChatMessages:Dispatch<SetStateAction<chatMessage[]>>,
   finalScore:score[],
   setFinalScore:Dispatch<SetStateAction<score[]>>
+  liveScore:score[];
+  setLiveScore:Dispatch<SetStateAction<score[]>>
 }
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
@@ -63,6 +66,7 @@ export default function QuizContextProvider({
   const [chatMessages,setChatMessages] = useState<chatMessage[]>([]);
   const [isHost,setIsHost] = useState<boolean>(false);
   const [finalScore,setFinalScore] = useState<score[]>([]);
+  const [liveScore,setLiveScore] = useState<score[]>([]);
 
   const contextValue = {
     joinedRoom,
@@ -84,7 +88,9 @@ export default function QuizContextProvider({
     finalScore,
     setFinalScore,
     questionsCompleted,
-    setQuestionsCompleted
+    setQuestionsCompleted,
+    liveScore,
+    setLiveScore
   };
 
   return (
