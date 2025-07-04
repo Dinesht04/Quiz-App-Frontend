@@ -1,13 +1,12 @@
-"use client"
-import { useGlobalContext } from "@/app/providers/GlobalContext"
+'use client';
+import { useGlobalContext } from '@/app/providers/GlobalContext';
 
-export default function UsernameCard(){
+export default function UsernameCard() {
+  const { username } = useGlobalContext();
 
-  const {username} = useGlobalContext();
-
-  return(
+  return (
     <div>
-        {username && (
+      {username && (
         <div className="px-8 pb-2">
           <div className="text-center text-sm text-gray-500">
             Playing as:{' '}
@@ -16,5 +15,5 @@ export default function UsernameCard(){
         </div>
       )}
     </div>
-    )
+  );
 }

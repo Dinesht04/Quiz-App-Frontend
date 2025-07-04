@@ -15,7 +15,7 @@ interface GlobalContextType {
   setExpires: Dispatch<SetStateAction<string>>;
   setUsername: Dispatch<SetStateAction<string>>;
   setRoomId: Dispatch<SetStateAction<string>>;
-  isGuest:boolean;
+  isGuest: boolean;
   setIsGuest: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -39,7 +39,7 @@ export default function GlobalContextProvider({
     expires,
     setExpires,
     isGuest,
-    setIsGuest
+    setIsGuest,
   };
 
   return (

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { redirect } from 'next/navigation';
 import { useQuizContext } from '@/app/providers/QuizContext';
@@ -10,10 +9,10 @@ export default function QuizStartTimer() {
 
   useEffect(() => {
     if (seconds <= 0) {
-        console.log("Quiz Started");
-        setQuizStarted(true);
-        redirect('/Quiz')
-    };
+      console.log('Quiz Started');
+      setQuizStarted(true);
+      redirect('/Quiz');
+    }
 
     const timer = setInterval(() => {
       setSeconds((prev) => {
@@ -31,13 +30,13 @@ export default function QuizStartTimer() {
   const getCountdownText = () => {
     switch (seconds) {
       case 3:
-        return "Get Ready!";
+        return 'Get Ready!';
       case 2:
-        return "Set!";
+        return 'Set!';
       case 1:
-        return "GO!";
+        return 'GO!';
       default:
-        return "Quiz Starting...";
+        return 'Quiz Starting...';
     }
   };
 
@@ -65,9 +64,7 @@ export default function QuizStartTimer() {
       {/* Main Content */}
       <div className="text-center space-y-8 z-10">
         {/* Icon */}
-        <div className="flex justify-center">
-          {getIcon()}
-        </div>
+        <div className="flex justify-center">{getIcon()}</div>
 
         {/* Countdown Number */}
         <div className="relative">
@@ -76,7 +73,8 @@ export default function QuizStartTimer() {
               seconds <= 3 ? 'animate-pulse scale-110' : 'scale-100'
             }`}
             style={{
-              textShadow: '0 0 50px rgba(255,255,255,0.3), 0 0 100px rgba(255,255,255,0.2)'
+              textShadow:
+                '0 0 50px rgba(255,255,255,0.3), 0 0 100px rgba(255,255,255,0.2)',
             }}
           >
             {seconds > 0 ? seconds : '🚀'}
@@ -94,7 +92,9 @@ export default function QuizStartTimer() {
             {getCountdownText()}
           </h1>
           <p className="text-xl text-white/80 animate-fade-in delay-300">
-            {seconds > 0 ? "Prepare yourself for an epic quiz battle!" : "Let's go!"}
+            {seconds > 0
+              ? 'Prepare yourself for an epic quiz battle!'
+              : "Let's go!"}
           </p>
         </div>
 
@@ -117,7 +117,7 @@ export default function QuizStartTimer() {
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
               animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${3 + Math.random() * 2}s`
+              animationDuration: `${3 + Math.random() * 2}s`,
             }}
           ></div>
         ))}
