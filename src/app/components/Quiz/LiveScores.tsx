@@ -2,10 +2,12 @@
 import { useQuizContext } from "@/app/providers/QuizContext";
 import { Trophy, Flag, Users, Crown } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useGlobalContext } from "@/app/providers/GlobalContext";
 
 export default function LiveScores() {
   const { liveScore } = useQuizContext();
-
+  const {username} = useGlobalContext()
+  //@ts-ignore
   const players = liveScore?.map(([username, questionsAnswered]) => ({
     username,
     questionsAnswered: Number(questionsAnswered),
@@ -42,6 +44,8 @@ export default function LiveScores() {
       </Card>
     );
   }
+
+
 
   return (
     <Card className="bg-white/95 backdrop-blur-sm shadow-2xl border-0 rounded-3xl overflow-hidden">
@@ -144,6 +148,7 @@ export default function LiveScores() {
                 <div>
                   <h4 className="font-bold text-gray-800 flex items-center gap-2">
                     {player.username}
+                    {player.username === username ? <span> (Me)</span> :null}
                     {index === 0 && player.questionsAnswered > 0 && (
                       <Crown className="w-4 h-4 text-yellow-500" />
                     )}
