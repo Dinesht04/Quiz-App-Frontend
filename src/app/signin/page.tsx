@@ -1,43 +1,86 @@
-import { redirect } from 'next/navigation';
-import { signIn, providerMap } from '@/lib/auth';
-import { AuthError } from 'next-auth';
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import { signIn } from 'next-auth/react';
+import { getProviders, getCsrfToken } from 'next-auth/react';
 import { SignInAsGuest } from '../components/auth/SignInAsGuest';
+
 
 const SIGNIN_ERROR_URL = '/error';
 
-export default async function SignInPage({
+
+interface Provider {
+  id: string;
+  name: string;
+  type: string;
+  signinUrl: string;
+  callbackUrl: string;
+}
+
+export default function SignInPage({
   searchParams,
 }: {
   searchParams: Promise<{ callbackUrl?: string }>;
 }) {
-  const callbackUrl = (await searchParams).callbackUrl ?? '';
+  const resolvedSearchParams = React.use(searchParams);
+
+  const [providers, setProviders] = useState<Record<string, Provider> | null>(
+    null,
+  );
+  const [csrfToken, setCsrfToken] = useState<string | null>(null);
+
+  const callbackUrl = resolvedSearchParams.callbackUrl ?? '/';
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const fetchedProviders = await getProviders();
+      const fetchedCsrfToken = await getCsrfToken();
+      setProviders(fetchedProviders);
+      setCsrfToken(fetchedCsrfToken);
+    };
+    fetchData();
+  }, []);
+
+  if (!providers || !csrfToken) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p>Loading authentication options...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-4 p-8 max-w-md mx-auto bg-white shadow-lg rounded-lg mt-10">
+      <h1 className="text-3xl font-bold text-center mb-6">Sign In</h1>
+
       <SignInAsGuest callbackUrl={callbackUrl} />
 
-      {Object.values(providerMap).map((provider) => (
-        <form
-          key={provider.id}
-          action={async () => {
-            'use server';
-            try {
-              await signIn(provider.id, {
-                redirectTo: callbackUrl,
-              });
-            } catch (error) {
-              if (error instanceof AuthError) {
-                return redirect(`${SIGNIN_ERROR_URL}?error=${error.type}`);
+      <div className="border-t border-gray-200 pt-6 mt-6">
+        <p className="text-center text-gray-600 mb-4">Or sign in with:</p>
+        {Object.values(providers).map((provider) => (
+          <form
+            key={provider.id}
+            action={async () => {
+              try {
+                await signIn(provider.id, {
+                  callbackUrl: callbackUrl,
+                });
+              } catch (error: any) {
+                console.error('Sign-in error:', error);
               }
-              throw error;
-            }
-          }}
-        >
-          <button type="submit">
-            <span>Sign in with {provider.name}</span>
-          </button>
-        </form>
-      ))}
+            }}
+            className="mb-4"
+          >
+            <input type="hidden" name="csrfToken" defaultValue={csrfToken} />
+            <button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-md transition duration-300 ease-in-out shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+            >
+              <span>Sign in with {provider.name}</span>
+            </button>
+          </form>
+        ))}
+      </div>
     </div>
   );
 }
