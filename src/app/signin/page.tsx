@@ -8,9 +8,10 @@ const SIGNIN_ERROR_URL = "/error"
 export default async function SignInPage({
   searchParams,
 }: {
-  searchParams?: { callbackUrl?: string }
+  searchParams: Promise<{ callbackUrl?: string }>
 }) {
-  const callbackUrl = searchParams?.callbackUrl ?? "";
+
+  const callbackUrl = (await searchParams).callbackUrl ?? "";
 
   return (
     <div className="flex flex-col gap-2">
