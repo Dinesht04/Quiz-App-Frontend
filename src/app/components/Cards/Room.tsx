@@ -37,6 +37,7 @@ import { useQuizContext } from "@/app/providers/QuizContext";
 import Quiz from "../Quiz/Quiz";
 import { toast } from "sonner";
 import ChatCard from "./ChatCard";
+import { LoadingButton } from "@/components/ui/LoadingButton";
 
 
 export type Message = {
@@ -84,6 +85,8 @@ export default function ({ roomid, session }: Props) {
 
   const topicRef = useRef<HTMLInputElement>(null);
   const [difficulty,setDifficulty] = useState<number>(2)
+  const [loading,setLoading] = useState(false)
+
 
   const [clientList, setClientList] = useState<string[]>([]);
   const [displayQuizTImer, setDisplayQuizTimer] = useState(false);
@@ -102,6 +105,7 @@ export default function ({ roomid, session }: Props) {
     setQuizFinished,
     setLiveScore
   } = useQuizContext();
+
 
 
   useEffect(() => {
@@ -126,22 +130,37 @@ export default function ({ roomid, session }: Props) {
           if(message.host === true){
             setIsHost(true);
           }
+        } else {
+          toast(`Sorry! Couldn't join Room ${roomid} Successfully!`, {
+            position:"top-right",
+            richColors:true,
+            description: new Date().toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', hour: 'numeric', minute: '2-digit', hour12: true }).replace(',', '').replace(',', ' at'),
+          })
         }
       }
       if (message.type === "client-list") {
-        toast(`Lobby List Updated!`, {
+          //Can I write logic such that it doesn't on initial render?
+          if(clientList.length !== 0){
+            toast(`Lobby List Updated!`, {
+              position:"top-right",
+              richColors:true,
+              description: new Date().toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', hour: 'numeric', minute: '2-digit', hour12: true }).replace(',', '').replace(',', ' at'),
+            })
+          }
+          setClientList(message.payload);
+        }
+
+      if (message.type === 'questions') {
+        setQuestions(message.payload);
+        setDisplayQuizTimer(true);
+        setLoading(false);
+      }
+      if (message.type === 'unauthorised') {
+        toast(`message.payload.message`, {
           position:"top-right",
           richColors:true,
           description: new Date().toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', hour: 'numeric', minute: '2-digit', hour12: true }).replace(',', '').replace(',', ' at'),
         })
-        setClientList(message.payload);
-      }
-      if (message.type === 'questions') {
-        setQuestions(message.payload);
-        setDisplayQuizTimer(true);
-      }
-      if (message.type === 'unauthorised') {
-        alert(message.payload.message);
       }
 
       if (message.type === "leave") {
@@ -163,26 +182,24 @@ export default function ({ roomid, session }: Props) {
       if (message.type === "answer") {
         if (message.payload.Correct) {
           //TO-DO Toast here?
+          toast(`Correct Answer!!`, {
+            position:"top-right",
+            richColors:true,
+            })
           setScore((score) => score + 1);
         }
       }
-      // if (message.type === 'score') {
-      //   //TO-DO Toast here? ('Quiz Finished');
-      //   setFinalScore(message.payload);
-      // }
+
 
       if(message.type === "message"){
-        console.log(message.payload)
         const newMessage = {
           username:message.payload.username,
           message:message.payload.message,
           time:message.payload.time
         }
-
          setChatMessages((messages)=>[...messages,newMessage])
       }
       if (message.type === "live-score") {
-        console.log("Current Scores",message.payload.liveScore)
         setLiveScore(message.payload.liveScore);
 
       }
@@ -270,9 +287,17 @@ export default function ({ roomid, session }: Props) {
         },
       };
       socket.send(JSON.stringify(payload));
+      toast(`✅ Request for questions Sent!, Please Wait`, {
+        position:"top-right",
+        richColors:true,
+        description: new Date().toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', hour: 'numeric', minute: '2-digit', hour12: true }).replace(',', '').replace(',', ' at'),
+      })
+      setLoading(true);
     } else {
       console.warn('WebSocket not open or username input is not ready.');
-      alert('Not connected to the server. Please wait or refresh.');
+      toast(`Not connected to the server. Please wait or refresh.`, {
+        position:"top-right",
+        richColors:true,})
     }
   }
 
@@ -439,15 +464,22 @@ export default function ({ roomid, session }: Props) {
               Rejoin
             </Button>
           {isHost && (
+            <div>
+            { loading ? (
+                <LoadingButton />
+              ) :
               <Button
               onClick={startQuiz}
               disabled={!isConnected || !joinedRoom}
               size="lg"
+
               className="h-12 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 disabled:from-gray-400 disabled:to-gray-500 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 font-semibold"
             >
               <Trophy className="w-5 h-5 mr-2" />
               Start Quiz
-            </Button>
+            </Button>}
+          </div>
+
           )}
 
           </div>

@@ -15,6 +15,7 @@ import {
 
  } from "@/components/ui/card";
 import LiveScores from "./LiveScores";
+import { useGlobalContext } from "@/app/providers/GlobalContext";
 
 type score = {
   username:string,
@@ -26,6 +27,8 @@ type score = {
 export default function Quiz() {
   const { questions, joinedRoom, quizStarted, score, roomId, finalScore, quizFinished } =
     useQuizContext();
+  const {username} = useGlobalContext();
+
   const [currentQuestion, setCurrentQuestion] = useState<string>('q1');
 
   if (!joinedRoom || !quizStarted) {
@@ -100,6 +103,7 @@ export default function Quiz() {
                           <div>
                             <h3 className="text-xl font-bold text-gray-800">
                               {player.username}
+                              {player.username === username ? <span>(Me)</span> :null}
                             </h3>
                             {index === 0 && (
                               <Badge className="bg-yellow-200 text-yellow-800 border-yellow-300">
