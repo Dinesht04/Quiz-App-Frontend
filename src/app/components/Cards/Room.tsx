@@ -5,14 +5,14 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Slider } from "@/components/ui/slider";
-import { Textarea } from "@/components/ui/textarea";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Slider } from '@/components/ui/slider';
+import { Textarea } from '@/components/ui/textarea';
+import { ScrollArea } from '@radix-ui/react-scroll-area';
 import {
   Users,
   Play,
@@ -25,25 +25,24 @@ import {
   MessageCircle,
   BookOpen,
   Send,
-} from "lucide-react";
-import { Session } from "next-auth";
-import { redirect } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import MembersList from "./MembersList";
-import { useSocket } from "@/app/providers/WebsocketContextProvider";
-import ConnectionStatus from "../Websocket/ConnectionStatus";
-import QuizStartTimer from "../Quiz/QuizStartTimer";
-import { useQuizContext } from "@/app/providers/QuizContext";
-import Quiz from "../Quiz/Quiz";
-import { toast } from "sonner";
-import ChatCard from "./ChatCard";
-
+} from 'lucide-react';
+import { Session } from 'next-auth';
+import { redirect } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
+import MembersList from './MembersList';
+import { useSocket } from '@/app/providers/WebsocketContextProvider';
+import ConnectionStatus from '../Websocket/ConnectionStatus';
+import QuizStartTimer from '../Quiz/QuizStartTimer';
+import { useQuizContext } from '@/app/providers/QuizContext';
+import Quiz from '../Quiz/Quiz';
+import { toast } from 'sonner';
+import ChatCard from './ChatCard';
 
 export type Message = {
   type: string;
   payload: any;
   status: string;
-  host?:boolean;
+  host?: boolean;
 };
 
 type Props = {
@@ -52,28 +51,27 @@ type Props = {
 };
 
 const difficultyNames = [
-  "Kiddie Pool", // 1
-  "Warm-up", // 2
-  "Getting Spicy", // 3
-  "Brain Melter", // 4
-  "Impossible Mode" // 5
+  'Kiddie Pool', // 1
+  'Warm-up', // 2
+  'Getting Spicy', // 3
+  'Brain Melter', // 4
+  'Impossible Mode', // 5
 ];
 
 const difficultyColors = [
-  "text-green-500",    // 1 - Easy
-  "text-lime-500",     // 2
-  "text-yellow-500",   // 3
-  "text-orange-500",   // 4
-  "text-red-600"       // 5 - Hard
+  'text-green-500', // 1 - Easy
+  'text-lime-500', // 2
+  'text-yellow-500', // 3
+  'text-orange-500', // 4
+  'text-red-600', // 5 - Hard
 ];
 
-
 const sliderDifficultyColors = [
-  "bg-green-500",    // 1 - Easy
-  "bg-lime-500",     // 2
-  "bg-yellow-500",   // 3
-  "bg-orange-500",   // 4
-  "bg-red-600"       // 5 - Hard
+  'bg-green-500', // 1 - Easy
+  'bg-lime-500', // 2
+  'bg-yellow-500', // 3
+  'bg-orange-500', // 4
+  'bg-red-600', // 5 - Hard
 ];
 
 export default function ({ roomid, session }: Props) {
@@ -83,7 +81,7 @@ export default function ({ roomid, session }: Props) {
   }
 
   const topicRef = useRef<HTMLInputElement>(null);
-  const [difficulty,setDifficulty] = useState<number>(2)
+  const [difficulty, setDifficulty] = useState<number>(2);
 
   const [clientList, setClientList] = useState<string[]>([]);
   const [displayQuizTImer, setDisplayQuizTimer] = useState(false);
@@ -100,9 +98,8 @@ export default function ({ roomid, session }: Props) {
     setChatMessages,
     setFinalScore,
     setQuizFinished,
-    setLiveScore
+    setLiveScore,
   } = useQuizContext();
-
 
   useEffect(() => {
     if (!socket || socket.readyState !== WebSocket.OPEN) {
@@ -110,30 +107,50 @@ export default function ({ roomid, session }: Props) {
       return;
     }
 
-
-
     socket.onmessage = (e) => {
       const message: Message = JSON.parse(e.data);
-      if(message.type === "join"){
-        if(message.status === "successful"){
+      if (message.type === 'join') {
+        if (message.status === 'successful') {
           toast(`✅ Joined Room ${roomid} Successfully`, {
-            position:"top-right",
-            richColors:true,
-            description: new Date().toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', hour: 'numeric', minute: '2-digit', hour12: true }).replace(',', '').replace(',', ' at'),
-          })
+            position: 'top-right',
+            richColors: true,
+            description: new Date()
+              .toLocaleString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: '2-digit',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true,
+              })
+              .replace(',', '')
+              .replace(',', ' at'),
+          });
           setJoinedRoom(true);
           setRoomId(roomid);
-          if(message.host === true){
+          if (message.host === true) {
             setIsHost(true);
           }
         }
       }
-      if (message.type === "client-list") {
+      if (message.type === 'client-list') {
         toast(`Lobby List Updated!`, {
-          position:"top-right",
-          richColors:true,
-          description: new Date().toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', hour: 'numeric', minute: '2-digit', hour12: true }).replace(',', '').replace(',', ' at'),
-        })
+          position: 'top-right',
+          richColors: true,
+          description: new Date()
+            .toLocaleString('en-US', {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: '2-digit',
+              hour: 'numeric',
+              minute: '2-digit',
+              hour12: true,
+            })
+            .replace(',', '')
+            .replace(',', ' at'),
+        });
         setClientList(message.payload);
       }
       if (message.type === 'questions') {
@@ -144,23 +161,35 @@ export default function ({ roomid, session }: Props) {
         alert(message.payload.message);
       }
 
-      if (message.type === "leave") {
-        if (message.status === "successful") {
+      if (message.type === 'leave') {
+        if (message.status === 'successful') {
           toast(`Left Room ${roomid} successfully`, {
-            position:"top-right",
-            richColors:true,
-            description: new Date().toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', hour: 'numeric', minute: '2-digit', hour12: true }).replace(',', '').replace(',', ' at'),
+            position: 'top-right',
+            richColors: true,
+            description: new Date()
+              .toLocaleString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: '2-digit',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true,
+              })
+              .replace(',', '')
+              .replace(',', ' at'),
             action: {
-              label: "Re-Join",
+              label: 'Re-Join',
               onClick: () => joinRoom(),
-          }})
+            },
+          });
           setClientList([]);
           setRoomId('');
           setJoinedRoom(false);
         }
       }
       //SHould move answer and score to somewhere else
-      if (message.type === "answer") {
+      if (message.type === 'answer') {
         if (message.payload.Correct) {
           //TO-DO Toast here?
           setScore((score) => score + 1);
@@ -171,41 +200,50 @@ export default function ({ roomid, session }: Props) {
       //   setFinalScore(message.payload);
       // }
 
-      if(message.type === "message"){
-        console.log(message.payload)
+      if (message.type === 'message') {
+        console.log(message.payload);
         const newMessage = {
-          username:message.payload.username,
-          message:message.payload.message,
-          time:message.payload.time
-        }
+          username: message.payload.username,
+          message: message.payload.message,
+          time: message.payload.time,
+        };
 
-         setChatMessages((messages)=>[...messages,newMessage])
+        setChatMessages((messages) => [...messages, newMessage]);
       }
-      if (message.type === "live-score") {
-        console.log("Current Scores",message.payload.liveScore)
+      if (message.type === 'live-score') {
+        console.log('Current Scores', message.payload.liveScore);
         setLiveScore(message.payload.liveScore);
-
       }
-      if (message.type === "final-score") {
-        console.log("Final score of the quiz",message.payload.finalScores)
+      if (message.type === 'final-score') {
+        console.log('Final score of the quiz', message.payload.finalScores);
         setFinalScore(message.payload.finalScores);
         setQuizFinished(true);
         toast(`Quiz has Ended!`, {
-          position:"top-right",
-          richColors:true,
-          description: new Date().toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', hour: 'numeric', minute: '2-digit', hour12: true }).replace(',', '').replace(',', ' at'),
-          })
+          position: 'top-right',
+          richColors: true,
+          description: new Date()
+            .toLocaleString('en-US', {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: '2-digit',
+              hour: 'numeric',
+              minute: '2-digit',
+              hour12: true,
+            })
+            .replace(',', '')
+            .replace(',', ' at'),
+        });
       }
-
     };
   }, [socket]);
 
   function joinRoom() {
     if (joinedRoom) {
       toast(`Already in the Room!`, {
-        position:"top-right",
-        richColors:true,
-      })
+        position: 'top-right',
+        richColors: true,
+      });
       return;
     }
 
@@ -241,20 +279,19 @@ export default function ({ roomid, session }: Props) {
   }
 
   function startQuiz() {
-
-    if(!isHost){
+    if (!isHost) {
       toast(`Only the Host can start the Game!`, {
-        position:"top-right",
-        richColors:true,
-      })
+        position: 'top-right',
+        richColors: true,
+      });
       return;
     }
 
-    if(!topicRef.current?.value){
+    if (!topicRef.current?.value) {
       toast(`Enter a Topic First`, {
-        position:"top-right",
-        richColors:true,
-      })
+        position: 'top-right',
+        richColors: true,
+      });
       return;
     }
 
@@ -266,7 +303,7 @@ export default function ({ roomid, session }: Props) {
           userName: session?.user?.name,
           expires: session?.expires,
           topic: topicRef.current.value,
-          difficulty: difficulty
+          difficulty: difficulty,
         },
       };
       socket.send(JSON.stringify(payload));
@@ -339,69 +376,75 @@ export default function ({ roomid, session }: Props) {
         </CardHeader>
 
         <CardContent className="space-y-6 px-8">
+          {joinedRoom ? (
+            isHost ? (
+              <div className="space-y-4">
+                {/* Topic and Difficulty Section */}
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="topic"
+                    className="text-sm font-semibold text-gray-700 flex items-center"
+                  >
+                    <BookOpen className="w-4 h-4 mr-2 text-purple-500" />
+                    Quiz Topic
+                  </Label>
+                  <Input
+                    id="topic"
+                    ref={topicRef}
+                    placeholder="Enter your niche quiz topic (e.g., Japanese Motorsport History, 9/11, Anant Ambani...)"
+                    className="h-12 rounded-full border-2 border-purple-200 focus:border-purple-400 bg-white/70"
+                  />
+                </div>
 
-          {joinedRoom ? isHost ? (
-            <div className="space-y-4">
-            {/* Topic and Difficulty Section */}
-            <div className="space-y-2">
-              <Label htmlFor="topic" className="text-sm font-semibold text-gray-700 flex items-center">
-                <BookOpen className="w-4 h-4 mr-2 text-purple-500" />
-                Quiz Topic
-              </Label>
-              <Input
-                id="topic"
-                ref={topicRef}
-                placeholder="Enter your niche quiz topic (e.g., Japanese Motorsport History, 9/11, Anant Ambani...)"
-                className="h-12 rounded-full border-2 border-purple-200 focus:border-purple-400 bg-white/70"
-              />
-            </div>
+                <div className="space-y-3">
+                  <Label className="text-sm font-semibold text-gray-700">
+                    Difficulty Level:
+                  </Label>
 
-            <div className="space-y-3">
-            <Label className="text-sm font-semibold text-gray-700">
-              Difficulty Level:
+                  <div className="px-3">
+                    <Slider
+                      // value={[difficulty]}
+                      onValueChange={(value) => {
+                        value[0] > 0 && value[0] < 20
+                          ? setDifficulty(1)
+                          : value[0] >= 20 && value[0] < 40
+                            ? setDifficulty(2)
+                            : value[0] >= 40 && value[0] < 60
+                              ? setDifficulty(3)
+                              : value[0] >= 60 && value[0] < 80
+                                ? setDifficulty(4)
+                                : setDifficulty(5);
+                      }}
+                      defaultValue={[40]}
+                      max={100}
+                      min={1}
+                      step={1}
+                      className={`w-full `}
+                      // @ts-ignore
+                      sliderColor={sliderDifficultyColors[difficulty - 1]}
+                    />
 
-            </Label>
-
-              <div className="px-3">
-                <Slider
-                  // value={[difficulty]}
-                  onValueChange={(value) => {
-                    value[0] > 0 && value[0] < 20 ? setDifficulty(1) :
-                    value[0] >= 20 && value[0] < 40 ? setDifficulty(2) :
-                    value[0] >= 40 && value[0] < 60 ? setDifficulty(3) :
-                    value[0] >= 60 && value[0] < 80 ? setDifficulty(4) :
-                    setDifficulty(5)
-                  }
-                  }
-                  defaultValue={[40]}
-                  max={100}
-                  min={1}
-                  step={1}
-                  className={`w-full `}
-                  sliderColor={sliderDifficultyColors[difficulty - 1]}
-                />
-
-                <div className="flex justify-center text-md text-gray-500 mt-2">
-                {difficulty > 0 && (
-                <span className={`ml-2 font-bold ${difficultyColors[difficulty - 1]}`}>
-                  {difficultyNames[difficulty - 1]}
-                </span>
-              )}
+                    <div className="flex justify-center text-md text-gray-500 mt-2">
+                      {difficulty > 0 && (
+                        <span
+                          className={`ml-2 font-bold ${difficultyColors[difficulty - 1]}`}
+                        >
+                          {difficultyNames[difficulty - 1]}
+                        </span>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-          ) :
-            <div>
-              The Host is choosing the Topic and Difficulty, Kindly remain Patient.
-            </div>
-           :
-          <div>
-            Join the Room!
-          </div>
-      }
-
-
+            ) : (
+              <div>
+                The Host is choosing the Topic and Difficulty, Kindly remain
+                Patient.
+              </div>
+            )
+          ) : (
+            <div>Join the Room!</div>
+          )}
 
           {/* Main Action Button */}
           {!joinedRoom ? (
@@ -438,18 +481,17 @@ export default function ({ roomid, session }: Props) {
               <UserPlus className="w-5 h-5 mr-2" />
               Rejoin
             </Button>
-          {isHost && (
+            {isHost && (
               <Button
-              onClick={startQuiz}
-              disabled={!isConnected || !joinedRoom}
-              size="lg"
-              className="h-12 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 disabled:from-gray-400 disabled:to-gray-500 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 font-semibold"
-            >
-              <Trophy className="w-5 h-5 mr-2" />
-              Start Quiz
-            </Button>
-          )}
-
+                onClick={startQuiz}
+                disabled={!isConnected || !joinedRoom}
+                size="lg"
+                className="h-12 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 disabled:from-gray-400 disabled:to-gray-500 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 font-semibold"
+              >
+                <Trophy className="w-5 h-5 mr-2" />
+                Start Quiz
+              </Button>
+            )}
           </div>
 
           {/* Members List */}
@@ -488,11 +530,7 @@ export default function ({ roomid, session }: Props) {
         <div className="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full opacity-20 animate-pulse"></div>
         <div className="absolute -bottom-6 -left-6 w-12 h-12 bg-gradient-to-br from-green-400 to-blue-500 rounded-full opacity-20 animate-pulse delay-1000"></div>
       </Card>
-      {joinedRoom && (
-              <ChatCard roomid={roomid} session={session} />
-
-      )}
-
-          </div>
+      {joinedRoom && <ChatCard roomid={roomid} session={session} />}
+    </div>
   );
 }
