@@ -5,6 +5,10 @@ import { signIn } from 'next-auth/react';
 import { getProviders, getCsrfToken } from 'next-auth/react';
 import { SignInAsGuest } from '../components/auth/SignInAsGuest';
 
+
+const SIGNIN_ERROR_URL = '/error';
+
+
 interface Provider {
   id: string;
   name: string;

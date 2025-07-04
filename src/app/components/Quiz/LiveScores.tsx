@@ -1,18 +1,22 @@
-
-import { useQuizContext } from "@/app/providers/QuizContext";
-import { Trophy, Flag, Users, Crown } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useQuizContext } from '@/app/providers/QuizContext';
+import { Trophy, Flag, Users, Crown } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useGlobalContext } from '@/app/providers/GlobalContext';
 
 export default function LiveScores() {
   const { liveScore } = useQuizContext();
-
-  const players = liveScore?.map(([username, questionsAnswered]) => ({
-    username,
-    questionsAnswered: Number(questionsAnswered),
-  })) || [];
+  const { username } = useGlobalContext();
+  const players =
+    //@ts-ignore
+    liveScore?.map(([username, questionsAnswered]) => ({
+      username,
+      questionsAnswered: Number(questionsAnswered),
+    })) || [];
 
   // Sort players by progress (descending)
-  const sortedPlayers = [...players].sort((a, b) => b.questionsAnswered - a.questionsAnswered);
+  const sortedPlayers = [...players].sort(
+    (a, b) => b.questionsAnswered - a.questionsAnswered,
+  );
 
   // Generate vibrant colors for each player
   const getPlayerColor = (index: number) => {
@@ -66,10 +70,15 @@ export default function LiveScores() {
               <div
                 key={milestone}
                 className="absolute top-0 bottom-0 flex items-center justify-center"
-                style={{ left: `${(milestone / 5) * 100}%`, transform: 'translateX(-50%)' }}
+                style={{
+                  left: `${(milestone / 5) * 100}%`,
+                  transform: 'translateX(-50%)',
+                }}
               >
                 <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full border-4 border-white shadow-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-xs">{milestone}</span>
+                  <span className="text-white font-bold text-xs">
+                    {milestone}
+                  </span>
                 </div>
               </div>
             ))}
@@ -90,7 +99,9 @@ export default function LiveScores() {
                   zIndex: 10 - index,
                 }}
               >
-                <div className={`relative w-12 h-12 ${getPlayerColor(index)} rounded-full border-4 border-white shadow-xl animate-bounce`}>
+                <div
+                  className={`relative w-12 h-12 ${getPlayerColor(index)} rounded-full border-4 border-white shadow-xl animate-bounce`}
+                >
                   <div className="absolute inset-0 bg-white/20 rounded-full animate-pulse"></div>
                   <div className="absolute inset-2 bg-white/30 rounded-full"></div>
 
@@ -135,7 +146,9 @@ export default function LiveScores() {
               }`}
             >
               <div className="flex items-center space-x-4">
-                <div className={`w-10 h-10 ${getPlayerColor(index)} rounded-full border-2 border-white shadow-lg flex items-center justify-center`}>
+                <div
+                  className={`w-10 h-10 ${getPlayerColor(index)} rounded-full border-2 border-white shadow-lg flex items-center justify-center`}
+                >
                   <span className="text-white font-bold">
                     {player.username.charAt(0).toUpperCase()}
                   </span>
@@ -144,6 +157,7 @@ export default function LiveScores() {
                 <div>
                   <h4 className="font-bold text-gray-800 flex items-center gap-2">
                     {player.username}
+                    {player.username === username ? <span> (Me)</span> : null}
                     {index === 0 && player.questionsAnswered > 0 && (
                       <Crown className="w-4 h-4 text-yellow-500" />
                     )}
@@ -161,7 +175,9 @@ export default function LiveScores() {
                 <div className="w-16 bg-gray-200 rounded-full h-2 mt-1">
                   <div
                     className={`h-2 rounded-full transition-all duration-500 ${getPlayerColor(index)}`}
-                    style={{ width: `${(player.questionsAnswered / 5) * 100}%` }}
+                    style={{
+                      width: `${(player.questionsAnswered / 5) * 100}%`,
+                    }}
                   ></div>
                 </div>
               </div>
