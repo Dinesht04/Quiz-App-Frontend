@@ -36,7 +36,7 @@ export default function QuestionCard({
         setCurrentQuestion('q4');
         break;
       case 'q4':
-       setCurrentQuestion('q5');
+        setCurrentQuestion('q5');
         break;
       case 'q5':
         setCurrentQuestion('over');
@@ -58,7 +58,7 @@ export default function QuestionCard({
         roomId: roomId,
         username: username,
       },
-    }
+    };
     socket?.send(JSON.stringify(payload));
   }
 
@@ -86,7 +86,6 @@ export default function QuestionCard({
   // Get question number for display
   const questionNumber = Question.id.replace('q', '');
 
-
   return (
     <div className="w-full max-w-4xl mx-auto">
       <Card className="bg-white/95 backdrop-blur-sm shadow-2xl border-0 rounded-3xl overflow-hidden">
@@ -101,11 +100,15 @@ export default function QuestionCard({
                 <Brain className="w-6 h-6 text-white" />
               </div>
               <div>
-                <p className="text-white/80 text-sm font-medium">Question {questionNumber} of 5</p>
+                <p className="text-white/80 text-sm font-medium">
+                  Question {questionNumber} of 5
+                </p>
                 <div className="w-32 h-2 bg-white/20 rounded-full mt-1">
                   <div
                     className="h-full bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full transition-all duration-500"
-                    style={{ width: `${(parseInt(questionNumber) / 5) * 100}%` }}
+                    style={{
+                      width: `${(parseInt(questionNumber) / 5) * 100}%`,
+                    }}
                   ></div>
                 </div>
               </div>
@@ -137,27 +140,31 @@ export default function QuestionCard({
                     isSelected && isAnswered
                       ? 'bg-gradient-to-r from-green-100 to-blue-100 border-green-400 shadow-lg'
                       : isAnswered
-                      ? 'bg-gray-100 border-gray-200 opacity-50 cursor-not-allowed'
-                      : 'bg-gradient-to-r from-gray-50 to-white border-gray-200 hover:border-purple-300 hover:shadow-lg hover:bg-gradient-to-r hover:from-purple-50 hover:to-blue-50'
+                        ? 'bg-gray-100 border-gray-200 opacity-50 cursor-not-allowed'
+                        : 'bg-gradient-to-r from-gray-50 to-white border-gray-200 hover:border-purple-300 hover:shadow-lg hover:bg-gradient-to-r hover:from-purple-50 hover:to-blue-50'
                   }`}
                 >
                   <div className="flex items-center space-x-4 text-left">
-                    <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300 ${
-                      isSelected && isAnswered
-                        ? 'bg-green-500 text-white'
-                        : isAnswered
-                        ? 'bg-gray-300 text-gray-500'
-                        : 'bg-gradient-to-r from-purple-500 to-blue-500 text-white group-hover:from-purple-600 group-hover:to-blue-600'
-                    }`}>
+                    <div
+                      className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300 ${
+                        isSelected && isAnswered
+                          ? 'bg-green-500 text-white'
+                          : isAnswered
+                            ? 'bg-gray-300 text-gray-500'
+                            : 'bg-gradient-to-r from-purple-500 to-blue-500 text-white group-hover:from-purple-600 group-hover:to-blue-600'
+                      }`}
+                    >
                       {optionLabels[index]}
                     </div>
-                    <div className={`text-lg font-medium transition-colors duration-300 ${
-                      isSelected && isAnswered
-                        ? 'text-green-800'
-                        : isAnswered
-                        ? 'text-gray-500'
-                        : 'text-gray-800 group-hover:text-purple-700'
-                    }`}>
+                    <div
+                      className={`text-lg font-medium transition-colors duration-300 ${
+                        isSelected && isAnswered
+                          ? 'text-green-800'
+                          : isAnswered
+                            ? 'text-gray-500'
+                            : 'text-gray-800 group-hover:text-purple-700'
+                      }`}
+                    >
                       {option}
                     </div>
                     {isSelected && isAnswered && (
@@ -175,7 +182,9 @@ export default function QuestionCard({
             <div className="mt-8 text-center">
               <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-green-100 to-blue-100 px-6 py-3 rounded-full">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-green-700 font-semibold">Answer submitted! Moving to next question...</span>
+                <span className="text-green-700 font-semibold">
+                  Answer submitted! Moving to next question...
+                </span>
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse delay-300"></div>
               </div>
             </div>

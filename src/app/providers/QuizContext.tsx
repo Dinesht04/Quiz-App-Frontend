@@ -8,7 +8,7 @@ import {
   Dispatch,
   SetStateAction,
 } from 'react';
-import { chatMessage } from "../components/Cards/ChatCard";
+import { chatMessage } from '../components/Cards/ChatCard';
 
 export type Question = {
   id: 'q1' | 'q2' | 'q3' | 'q4' | 'q5';
@@ -18,10 +18,9 @@ export type Question = {
 };
 
 export type score = {
-  username:string,
-  score:string
-}
-
+  username: string;
+  score: string;
+};
 
 interface QuizContextType {
   joinedRoom: boolean;
@@ -40,16 +39,15 @@ interface QuizContextType {
   setIsHost: Dispatch<SetStateAction<boolean>>;
   score: number;
   setScore: Dispatch<SetStateAction<number>>;
-  chatMessages:chatMessage[],
-  setChatMessages:Dispatch<SetStateAction<chatMessage[]>>,
-  finalScore:score[],
-  setFinalScore:Dispatch<SetStateAction<score[]>>
-  liveScore:score[];
-  setLiveScore:Dispatch<SetStateAction<score[]>>
+  chatMessages: chatMessage[];
+  setChatMessages: Dispatch<SetStateAction<chatMessage[]>>;
+  finalScore: score[];
+  setFinalScore: Dispatch<SetStateAction<score[]>>;
+  liveScore: score[];
+  setLiveScore: Dispatch<SetStateAction<score[]>>;
 }
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
-
 
 export default function QuizContextProvider({
   children,
@@ -63,10 +61,10 @@ export default function QuizContextProvider({
   const [questionsCompleted, setQuestionsCompleted] = useState(false);
   const [questions, setQuestions] = useState<Question[] | undefined>(undefined);
   const [score, setScore] = useState<number>(0);
-  const [chatMessages,setChatMessages] = useState<chatMessage[]>([]);
-  const [isHost,setIsHost] = useState<boolean>(false);
-  const [finalScore,setFinalScore] = useState<score[]>([]);
-  const [liveScore,setLiveScore] = useState<score[]>([]);
+  const [chatMessages, setChatMessages] = useState<chatMessage[]>([]);
+  const [isHost, setIsHost] = useState<boolean>(false);
+  const [finalScore, setFinalScore] = useState<score[]>([]);
+  const [liveScore, setLiveScore] = useState<score[]>([]);
 
   const contextValue = {
     joinedRoom,
@@ -90,7 +88,7 @@ export default function QuizContextProvider({
     questionsCompleted,
     setQuestionsCompleted,
     liveScore,
-    setLiveScore
+    setLiveScore,
   };
 
   return (

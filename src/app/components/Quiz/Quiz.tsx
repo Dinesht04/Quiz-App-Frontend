@@ -1,33 +1,34 @@
 //Quiz.tsx
-"use client"
+'use client';
 
-import { useQuizContext } from "@/app/providers/QuizContext"
-import { redirect } from "next/navigation";
-import { useState } from "react";
-import QuestionCard from "../Cards/QuestionCard";
-import { Badge, Crown, Star, Trophy, Users, Zap } from "lucide-react";
+import { useQuizContext } from '@/app/providers/QuizContext';
+import { redirect } from 'next/navigation';
+import { useState } from 'react';
+import QuestionCard from '../Cards/QuestionCard';
+import { Badge, Crown, Star, Trophy, Users, Zap } from 'lucide-react';
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle
-
- } from "@/components/ui/card";
-import LiveScores from "./LiveScores";
-import { useGlobalContext } from "@/app/providers/GlobalContext";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import LiveScores from './LiveScores';
+import { useGlobalContext } from '@/app/providers/GlobalContext';
 
 type score = {
-  username:string,
-  score:string
-}
+  username: string;
+  score: string;
+};
 
 //finalScore is an array of score, ie, score[].
 
 export default function Quiz() {
-  const { questions, joinedRoom, quizStarted, score, roomId, finalScore, quizFinished } =
-    useQuizContext();
-  const {username} = useGlobalContext();
+  const {
+    questions,
+    joinedRoom,
+    quizStarted,
+    score,
+    roomId,
+    finalScore,
+    quizFinished,
+  } = useQuizContext();
+  const { username } = useGlobalContext();
 
   const [currentQuestion, setCurrentQuestion] = useState<string>('q1');
 
@@ -80,10 +81,10 @@ export default function Quiz() {
                           index === 0
                             ? 'bg-gradient-to-r from-yellow-100 to-orange-100 border-2 border-yellow-300'
                             : index === 1
-                            ? 'bg-gradient-to-r from-gray-100 to-gray-200 border-2 border-gray-300'
-                            : index === 2
-                            ? 'bg-gradient-to-r from-orange-100 to-red-100 border-2 border-orange-300'
-                            : 'bg-gradient-to-r from-blue-50 to-purple-50 border border-gray-200'
+                              ? 'bg-gradient-to-r from-gray-100 to-gray-200 border-2 border-gray-300'
+                              : index === 2
+                                ? 'bg-gradient-to-r from-orange-100 to-red-100 border-2 border-orange-300'
+                                : 'bg-gradient-to-r from-blue-50 to-purple-50 border border-gray-200'
                         }`}
                       >
                         <div className="flex items-center space-x-4">
@@ -92,10 +93,10 @@ export default function Quiz() {
                               index === 0
                                 ? 'bg-yellow-400 text-yellow-800'
                                 : index === 1
-                                ? 'bg-gray-400 text-gray-800'
-                                : index === 2
-                                ? 'bg-orange-400 text-orange-800'
-                                : 'bg-blue-400 text-blue-800'
+                                  ? 'bg-gray-400 text-gray-800'
+                                  : index === 2
+                                    ? 'bg-orange-400 text-orange-800'
+                                    : 'bg-blue-400 text-blue-800'
                             }`}
                           >
                             {index + 1}
@@ -103,7 +104,9 @@ export default function Quiz() {
                           <div>
                             <h3 className="text-xl font-bold text-gray-800">
                               {player.username}
-                              {player.username === username ? <span>(Me)</span> :null}
+                              {player.username === username ? (
+                                <span>(Me)</span>
+                              ) : null}
                             </h3>
                             {index === 0 && (
                               <Badge className="bg-yellow-200 text-yellow-800 border-yellow-300">
@@ -133,12 +136,13 @@ export default function Quiz() {
                   Waiting for Others...
                 </h3>
                 <p className="text-gray-600 text-lg">
-                  The room is still in progress. Results will appear when everyone finishes!
+                  The room is still in progress. Results will appear when
+                  everyone finishes!
                 </p>
                 <div className="mt-6 flex justify-center">
                   <div className="animate-spin w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full"></div>
                 </div>
-                <LiveScores/>
+                <LiveScores />
               </CardContent>
             </Card>
           )}
@@ -179,7 +183,7 @@ export default function Quiz() {
             );
           }
         })}
-        <LiveScores/>
+        <LiveScores />
       </div>
 
       {/* Floating Background Elements */}

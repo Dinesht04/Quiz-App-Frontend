@@ -12,12 +12,7 @@ import { redirect } from 'next/navigation';
 // Need a way to store and send to backend if the user is host or not
 
 export default async function () {
+  redirect('/');
 
-  redirect('/')
-
-  return (
-    <div>
-      {/* <RoomAuthGate session={session} /> */}
-    </div>
-  );
+  return <div>{/* <RoomAuthGate session={session} /> */}</div>;
 }
