@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import { Button } from '@/components/ui/button';
 import { useGlobalContext } from '@/app/providers/GlobalContext';
@@ -7,20 +7,19 @@ import { redirect } from 'next/navigation';
 import { LogIn } from 'lucide-react';
 
 type SignInAsGuestProps = {
-  callbackUrl:string
-}
+  callbackUrl: string;
+};
 
-export function SignInAsGuest({callbackUrl}:SignInAsGuestProps){
+export function SignInAsGuest({ callbackUrl }: SignInAsGuestProps) {
+  const { setUsername, setExpires, setIsGuest } = useGlobalContext();
 
-  const {setUsername,setExpires,setIsGuest} = useGlobalContext()
-
-  return(
+  return (
     <form
       action={async () => {
         setUsername(guestUsernameGenerator());
         setExpires(getGuestExpires());
         setIsGuest(true);
-        redirect("http://172.25.235.135:3000/")
+        redirect('http://localhost:3000/');
       }}
     >
       <Button
@@ -33,5 +32,5 @@ export function SignInAsGuest({callbackUrl}:SignInAsGuestProps){
         Continue as Guest
       </Button>
     </form>
-  )
+  );
 }
