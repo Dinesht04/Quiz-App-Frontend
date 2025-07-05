@@ -4,9 +4,7 @@ import { signInAction, signOutAction } from '@/app/actions/auth';
 
 export function SignIn() {
   return (
-    <form
-      action={signInAction}
-    >
+    <form action={signInAction}>
       <Button
         type="submit"
         size="lg"
@@ -21,9 +19,7 @@ export function SignIn() {
 
 export function SignOut() {
   return (
-    <form
-      action={signOutAction}
-    >
+    <form action={signOutAction}>
       <Button
         type="submit"
         variant="outline"

@@ -19,7 +19,7 @@ export function SignInAsGuest({ callbackUrl }: SignInAsGuestProps) {
         setUsername(guestUsernameGenerator());
         setExpires(getGuestExpires());
         setIsGuest(true);
-        redirect('http://localhost:3000/');
+        redirect(callbackUrl);
       }}
     >
       <Button
