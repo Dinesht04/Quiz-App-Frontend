@@ -12,6 +12,7 @@
   "dependencies": {
     "@auth/neon-adapter": "^1.9.1",
     "@auth/prisma-adapter": "^2.9.1",
+    "@epic-web/invariant": "^1.0.0",
     "@neondatabase/serverless": "^1.0.0",
     "@prisma/client": "^6.9.0",
     "@radix-ui/react-label": "^2.1.7",
@@ -29,6 +30,7 @@
     "react-dom": "^19.0.0",
     "sonner": "^2.0.5",
     "tailwind-merge": "^3.3.0",
+    "turndown": "^7.2.0",
     "ws": "^8.18.2"
   },
   "devDependencies": {
@@ -37,6 +39,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/turndown": "^5.0.5",
     "eslint": "^9.30.0",
     "eslint-config-next": "15.3.3",
     "prettier": "^3.6.2",

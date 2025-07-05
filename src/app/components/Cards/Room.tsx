@@ -38,6 +38,7 @@ import Quiz from '../Quiz/Quiz';
 import { toast } from 'sonner';
 import ChatCard from './ChatCard';
 import { LoadingButton } from '@/components/ui/LoadingButton';
+import { CopyButton } from '@/components/CopyButton';
 
 export type Message = {
   type: string;
@@ -154,7 +155,6 @@ export default function ({ roomid, session }: Props) {
         }
       }
       if (message.type === 'client-list') {
-
         //Can I write logic such that it doesn't on initial render?
         if (clientList.length !== 0) {
           toast(`Lobby List Updated!`, {
@@ -241,7 +241,6 @@ export default function ({ roomid, session }: Props) {
       }
 
       if (message.type === 'message') {
-
         const newMessage = {
           username: message.payload.username,
           message: message.payload.message,
@@ -249,11 +248,11 @@ export default function ({ roomid, session }: Props) {
         };
         setChatMessages((messages) => [...messages, newMessage]);
       }
-      
+
       if (message.type === 'live-score') {
         setLiveScore(message.payload.liveScore);
       }
-      
+
       if (message.type === 'final-score') {
         console.log('Final score of the quiz', message.payload.finalScores);
         setFinalScore(message.payload.finalScores);
@@ -397,6 +396,11 @@ export default function ({ roomid, session }: Props) {
                 ? "You're in the room! Waiting for other players..."
                 : "You're in the room! Waiting host to start the game..."
               : 'Ready to join the quiz room?'}
+            <br />
+            <CopyButton
+              className="mt-4"
+              text={`http://${process.env.FRONTEND_PRODUCTION_URL}/Room/Lobby/${roomid}`}
+            />
           </CardDescription>
 
           {/* Connection Status */}
@@ -542,7 +546,6 @@ export default function ({ roomid, session }: Props) {
               Rejoin
             </Button>
             {isHost && (
-
               <div>
                 {loading ? (
                   <LoadingButton />
