@@ -399,7 +399,7 @@ export default function ({ roomid, session }: Props) {
             <br />
             <CopyButton
               className="mt-4"
-              text={`http://${process.env.FRONTEND_PRODUCTION_URL}/Room/Lobby/${roomid}`}
+              text={`${process.env.NEXT_PUBLIC_FRONTEND_PRODUCTION_URL}/Room/Lobby/${roomid}`}
             />
           </CardDescription>
 

@@ -1,9 +1,10 @@
-// lib/WebSocketSingleton.ts
 let socket: WebSocket | null = null;
 
 export function getSocket(): WebSocket {
+  //console.log(process.env.NEXT_PUBLIC_WEBSOCKET_SERVER_URL);
+
   if (!socket || socket.readyState === WebSocket.CLOSED) {
-    socket = new WebSocket(`ws://${process.env.WEBSOCKET_SERVER_URL}localhost:8080`);
+    socket = new WebSocket(`${process.env.NEXT_PUBLIC_WEBSOCKET_SERVER_URL}`);
   }
   return socket;
 }
