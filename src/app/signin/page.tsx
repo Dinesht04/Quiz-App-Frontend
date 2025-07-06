@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { getProviders, getCsrfToken } from 'next-auth/react';
 import { SignInAsGuest } from '../components/auth/SignInAsGuest';
+import AuthPage from '../components/sign-in';
 
 const SIGNIN_ERROR_URL = '/error';
 
@@ -65,6 +66,8 @@ export default function SignInPage({
       <h1 className="text-3xl font-bold text-center mb-6">Sign In</h1>
 
       <SignInAsGuest callbackUrl={callbackUrl} />
+      <AuthPage/>
+
 
       <div className="border-t border-gray-200 pt-6 mt-6">
         <p className="text-center text-gray-600 mb-4">Or sign in with:</p>
