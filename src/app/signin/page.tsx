@@ -5,9 +5,7 @@ import { signIn } from 'next-auth/react';
 import { getProviders, getCsrfToken } from 'next-auth/react';
 import { SignInAsGuest } from '../components/auth/SignInAsGuest';
 
-
 const SIGNIN_ERROR_URL = '/error';
-
 
 interface Provider {
   id: string;
@@ -43,8 +41,21 @@ export default function SignInPage({
 
   if (!providers || !csrfToken) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <p>Loading authentication options...</p>
+      <div className="flex justify-center items-center h-screen bg-gray-100">
+        <div className="flex flex-col gap-4 p-8 max-w-md mx-auto bg-white shadow-lg rounded-lg mt-10 w-full animate-pulse">
+          <div className="h-10 bg-gray-200 rounded w-3/4 mx-auto mb-6"></div>{' '}
+          {/* Skeleton for title */}
+          {/* Skeleton for SignInAsGuest */}
+          <div className="h-12 bg-gray-200 rounded-md w-full mb-4"></div>
+          <div className="border-t border-gray-200 pt-6 mt-6">
+            <div className="h-6 bg-gray-200 rounded w-1/2 mx-auto mb-4"></div>{' '}
+            {/* Skeleton for "Or sign in with:" */}
+            {/* Skeletons for provider buttons (assuming 2-3 providers) */}
+            <div className="h-12 bg-gray-200 rounded-md w-full mb-4"></div>
+            <div className="h-12 bg-gray-200 rounded-md w-full mb-4"></div>
+            <div className="h-12 bg-gray-200 rounded-md w-full"></div>
+          </div>
+        </div>
       </div>
     );
   }
