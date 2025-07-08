@@ -21,21 +21,18 @@ export function SignInAsGuest({ callbackUrl }: SignInAsGuestProps) {
         setIsGuest(true);
         redirect('/Dashboard');
       }}
-      className='flex justify-center'
+      className="flex justify-center"
     >
       <Button
-                      variant="outline"
-                      type="submit"
-                      className="w-full mx-12 py-4 border-2 border-[#A9F99E] text-[#A9F99E] hover:bg-[#A9F99E] hover:text-black font-semibold rounded-xl text-lg bg-transparent transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                    >
-
-                        <>
-                          <Users className="w-5 h-5 mr-3" />
-                          Continue as Guest
-                        </>
-
-                    </Button>
-
+        variant="outline"
+        type="submit"
+        className="w-full mx-12 py-4 border-2 border-[#A9F99E] text-[#A9F99E] hover:bg-[#A9F99E] hover:text-black font-semibold rounded-xl text-lg bg-transparent transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+      >
+        <>
+          <Users className="w-5 h-5 mr-3" />
+          Continue as Guest
+        </>
+      </Button>
     </form>
   );
 }
