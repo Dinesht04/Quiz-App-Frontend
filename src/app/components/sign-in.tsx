@@ -25,6 +25,7 @@ import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 import { useGlobalContext } from '../providers/GlobalContext';
+import { setMyCookie } from '../actions/cookies';
 
 interface Provider {
   id: string;
@@ -58,7 +59,7 @@ export default function AuthPage({
   const [usernameTimeoutId, setUsernameTimeoutId] =
     useState<NodeJS.Timeout | null>(null);
 
-  const { setIsGuest, setUsername } = useGlobalContext();
+  const { setIsGuest, setUsername, setCookie } = useGlobalContext();
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -85,8 +86,8 @@ export default function AuthPage({
   const handleGuestClick = () => {
     setShowUsernameInput(true);
     setErrorMessage('');
-    setUsernameStatus('idle'); // Reset username status when showing input
-    setCurrUsername(''); // Clear previous username
+    setUsernameStatus('idle');
+    setCurrUsername('');
   };
 
   const checkUsernameAvailability = async (usernameToCheck: string) => {
@@ -136,7 +137,6 @@ export default function AuthPage({
       clearTimeout(usernameTimeoutId);
     }
 
-    // Set a new timeout
     if (newUsername.trim().length >= 3) {
       const newTimeoutId = setTimeout(() => {
         checkUsernameAvailability(newUsername);
@@ -166,10 +166,14 @@ export default function AuthPage({
       const data = await response.json();
 
       if (response.ok) {
-        // Store user session or redirect
-        localStorage.setItem('guestUser', data.user.id);
-        localStorage.setItem('guestUsername', data.user.name);
+        await setMyCookie({
+          guestUser: data.user.id,
+          guestUsername: data.user.name,
+        });
         setUsername(data.user.name);
+        setIsGuest(true);
+        setCookie(true);
+        redirect('/Dashboard');
       } else {
         setErrorMessage(data.error || 'Failed to create guest user.');
         if (data.error === 'Username already taken') {
@@ -178,12 +182,10 @@ export default function AuthPage({
       }
     } catch (error) {
       console.log(error);
-
       setErrorMessage('Network error. Please try again.');
     } finally {
       setIsCreatingUser(false);
-      setIsGuest(true);
-      redirect('/Dashboard');
+      // No need to set setIsGuest and redirect here, already done in the 'if (response.ok)' block
     }
   };
 
@@ -374,7 +376,7 @@ export default function AuthPage({
                         />
                         <Button
                           type="submit"
-                          className="w-full py-4 bg-white hover:bg-gray-100 text-black font-semibold rounded-xl text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                          className=" w-full py-6 bg-white hover:bg-gray-100 text-black font-semibold rounded-xl text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                           disabled={isGoogleLoading}
                         >
                           {isGoogleLoading ? (
@@ -405,7 +407,7 @@ export default function AuthPage({
                     )}
 
                     {/* Divider */}
-                    <div className="relative my-2">
+                    <div className="relative my-6">
                       <div className="absolute inset-0 flex items-center">
                         <div className="w-full border-t border-gray-600"></div>
                       </div>
@@ -422,7 +424,7 @@ export default function AuthPage({
                         variant="outline"
                         type="button"
                         onClick={handleGuestClick}
-                        className="w-full py-4 border-2 border-[#A9F99E] text-[#A9F99E] hover:bg-[#A9F99E] hover:text-black font-semibold rounded-xl text-lg bg-transparent transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                        className="w-full py-6 border-2 border-[#A9F99E] text-[#A9F99E] hover:bg-[#A9F99E] hover:text-black font-semibold rounded-xl text-lg bg-transparent transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                       >
                         <Users className="w-5 h-5 mr-3" />
                         Continue as Guest
@@ -436,12 +438,12 @@ export default function AuthPage({
                           <input
                             id="guest-username"
                             type="text"
-                            placeholder="Choose a guest username (min 3 chars)"
+                            placeholder="Choose a guest username (min 5 chars)"
                             value={username}
                             onChange={handleUsernameChange}
                             className="w-full px-4 py-3 bg-gray-700 text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-[#A9F99E] transition-colors"
                             disabled={isCheckingUsername || isCreatingUser}
-                            minLength={3} // Added minLength for better UX
+                            minLength={5} // Added minLength for better UX
                           />
                           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                             {getUsernameStatusIcon()}
@@ -457,7 +459,7 @@ export default function AuthPage({
                             usernameStatus !== 'available' ||
                             !username.trim() ||
                             isCreatingUser ||
-                            username.trim().length < 3 // Disable if username is too short
+                            username.trim().length < 5
                           }
                         >
                           {isCreatingUser ? (
