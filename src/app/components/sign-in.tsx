@@ -15,18 +15,46 @@ import {
   Target,
   Crown,
   Globe,
+  Check,
+  X,
+  Loader2,
+  User,
+  LogIn,
 } from 'lucide-react';
 import Link from 'next/link';
+import { signIn } from 'next-auth/react';
 
-type AuthPage = {
-  SignInPage: React.JSX.Element;
+interface Provider {
+  id: string;
+  name: string;
+  type: string;
+  signinUrl: string;
+  callbackUrl: string;
+}
+
+type AuthPageProps = {
+  providers: Record<string, Provider> | null;
+  csrfToken: string | null;
+  callbackUrl: string;
 };
 
-export default function AuthPage({ SignInPage }: AuthPage) {
+export default function AuthPage({
+  providers,
+  csrfToken,
+  callbackUrl,
+}: AuthPageProps) {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isLoading, setIsLoading] = useState(false);
-  const [guestLoading, setGuestLoading] = useState(false);
-
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [showUsernameInput, setShowUsernameInput] = useState(false);
+  const [username, setUsername] = useState('');
+  const [isCheckingUsername, setIsCheckingUsername] = useState(false);
+  const [usernameStatus, setUsernameStatus] = useState<
+    'idle' | 'checking' | 'available' | 'taken' | 'error'
+  >('idle');
+  const [isCreatingUser, setIsCreatingUser] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [usernameTimeoutId, setUsernameTimeoutId] =
+    useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -35,6 +63,135 @@ export default function AuthPage({ SignInPage }: AuthPage) {
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
+
+  const handleGoogleSignIn = async (providerId: string) => {
+    setIsGoogleLoading(true);
+    try {
+      await signIn(providerId, {
+        redirectTo: `http://${process.env.NEXT_PUBLIC_FRONTEND_PRODUCTION_URL}/Dashboard`,
+      });
+    } catch (error) {
+      console.error('Google sign-in failed:', error);
+      setErrorMessage('Google sign-in failed. Please try again.');
+    } finally {
+      setIsGoogleLoading(false);
+    }
+  };
+
+  const handleGuestClick = () => {
+    setShowUsernameInput(true);
+    setErrorMessage('');
+    setUsernameStatus('idle'); // Reset username status when showing input
+    setUsername(''); // Clear previous username
+  };
+
+  const checkUsernameAvailability = async (usernameToCheck: string) => {
+    if (!usernameToCheck.trim() || usernameToCheck.length < 3) {
+      setUsernameStatus('idle');
+      return;
+    }
+
+    setIsCheckingUsername(true);
+    setUsernameStatus('checking');
+
+    try {
+      const response = await fetch('/api/check-username', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: usernameToCheck.trim() }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setUsernameStatus(data.available ? 'available' : 'taken');
+        if (!data.available) {
+          setErrorMessage('Username is already taken. Please try another one.');
+        } else {
+          setErrorMessage('');
+        }
+      } else {
+        setUsernameStatus('error');
+        setErrorMessage(data.error || 'Error checking username availability');
+      }
+    } catch (error) {
+      setUsernameStatus('error');
+      setErrorMessage('Network error. Please try again.');
+    } finally {
+      setIsCheckingUsername(false);
+    }
+  };
+
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newUsername = e.target.value;
+    setUsername(newUsername);
+
+    if (usernameTimeoutId) {
+      clearTimeout(usernameTimeoutId);
+    }
+
+    // Set a new timeout
+    if (newUsername.trim().length >= 3) {
+      const newTimeoutId = setTimeout(() => {
+        checkUsernameAvailability(newUsername);
+      }, 1500);
+      setUsernameTimeoutId(newTimeoutId);
+    } else {
+      setUsernameStatus('idle'); // Reset status if username is too short
+      setErrorMessage('');
+    }
+  };
+
+  const createGuestUser = async () => {
+    if (usernameStatus !== 'available' || !username.trim()) return;
+
+    setIsCreatingUser(true);
+    setErrorMessage('');
+
+    try {
+      const response = await fetch('/api/create-guest-user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: username.trim() }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Store user session or redirect
+        localStorage.setItem('guestUser', JSON.stringify(data.user.id));
+        window.location.href = '/Dashboard'; // Redirect to dashboard after guest login
+      } else {
+        setErrorMessage(data.error || 'Failed to create guest user.');
+        if (data.error === 'Username already taken') {
+          setUsernameStatus('taken');
+        }
+      }
+    } catch (error) {
+      setErrorMessage('Network error. Please try again.');
+    } finally {
+      setIsCreatingUser(false);
+    }
+  };
+
+  const getUsernameStatusIcon = () => {
+    switch (usernameStatus) {
+      case 'checking':
+        return <Loader2 className="w-5 h-5 text-gray-400 animate-spin" />;
+      case 'available':
+        return <Check className="w-5 h-5 text-green-400" />;
+      case 'taken':
+        return <X className="w-5 h-5 text-red-400" />;
+      case 'error':
+        return <X className="w-5 h-5 text-red-400" />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
@@ -92,7 +249,7 @@ export default function AuthPage({ SignInPage }: AuthPage) {
       </div>
 
       {/* Navigation */}
-      <nav className="relative z-10 flex items-center justify-between p-6  ">
+      <nav className="relative z-10 flex items-center justify-between p-6">
         <Link href="/" className="flex items-center space-x-3 group">
           <div className="w-10 h-10 bg-gradient-to-br from-[#A9F99E] to-[#7DD3FC] rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
             <Brain className="w-6 h-6 text-black" />
@@ -191,8 +348,119 @@ export default function AuthPage({ SignInPage }: AuthPage) {
                       Choose your path to quiz mastery
                     </p>
                   </div>
-                  {/* SIGN IN Options */}
-                  {SignInPage}
+
+                  {/* Dynamic Sign-in Options */}
+                  <div className="flex flex-col space-y-4">
+                    {/* Google Sign-in Button */}
+                    {providers && providers.google && (
+                      <form
+                        action={async () =>
+                          await handleGoogleSignIn(providers.google.id)
+                        }
+                      >
+                        <input
+                          type="hidden"
+                          name="csrfToken"
+                          defaultValue={csrfToken || ''}
+                        />
+                        <Button
+                          type="submit"
+                          className="w-full py-4 bg-white hover:bg-gray-100 text-black font-semibold rounded-xl text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                          disabled={isGoogleLoading}
+                        >
+                          {isGoogleLoading ? (
+                            <Loader2 className="w-5 h-5 mr-3 animate-spin" />
+                          ) : (
+                            <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
+                              <path
+                                fill="#4285F4"
+                                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                              />
+                              <path
+                                fill="#34A853"
+                                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                              />
+                              <path
+                                fill="#FBBC05"
+                                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                              />
+                              <path
+                                fill="#EA4335"
+                                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                              />
+                            </svg>
+                          )}
+                          Continue with Google
+                        </Button>
+                      </form>
+                    )}
+
+                    {/* Divider */}
+                    <div className="relative my-2">
+                      <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-gray-600"></div>
+                      </div>
+                      <div className="relative flex justify-center text-sm">
+                        <span className="px-4 bg-gray-800 text-gray-400">
+                          or
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Guest Sign-in / Username Input */}
+                    {!showUsernameInput ? (
+                      <Button
+                        variant="outline"
+                        type="button"
+                        onClick={handleGuestClick}
+                        className="w-full py-4 border-2 border-[#A9F99E] text-[#A9F99E] hover:bg-[#A9F99E] hover:text-black font-semibold rounded-xl text-lg bg-transparent transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                      >
+                        <Users className="w-5 h-5 mr-3" />
+                        Continue as Guest
+                      </Button>
+                    ) : (
+                      <div className="flex flex-col space-y-4">
+                        <label htmlFor="guest-username" className="sr-only">
+                          Enter Guest Username
+                        </label>
+                        <div className="relative">
+                          <input
+                            id="guest-username"
+                            type="text"
+                            placeholder="Choose a guest username (min 3 chars)"
+                            value={username}
+                            onChange={handleUsernameChange}
+                            className="w-full px-4 py-3 bg-gray-700 text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-[#A9F99E] transition-colors"
+                            disabled={isCheckingUsername || isCreatingUser}
+                            minLength={3} // Added minLength for better UX
+                          />
+                          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            {getUsernameStatusIcon()}
+                          </div>
+                        </div>
+                        {errorMessage && (
+                          <p className="text-red-400 text-sm">{errorMessage}</p>
+                        )}
+                        <Button
+                          onClick={createGuestUser}
+                          className="w-full py-4 bg-[#A9F99E] hover:bg-[#A9F99E]/90 text-black font-semibold rounded-xl text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                          disabled={
+                            usernameStatus !== 'available' ||
+                            !username.trim() ||
+                            isCreatingUser ||
+                            username.trim().length < 3 // Disable if username is too short
+                          }
+                        >
+                          {isCreatingUser ? (
+                            <Loader2 className="w-5 h-5 mr-3 animate-spin" />
+                          ) : (
+                            <LogIn className="w-5 h-5 mr-3" />
+                          )}
+                          Start as Guest
+                        </Button>
+                      </div>
+                    )}
+                  </div>
 
                   {/* Benefits */}
                   <div className="mt-8 pt-6 border-t border-gray-700">
