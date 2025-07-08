@@ -1,5 +1,6 @@
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge, Brain, Crown, Rocket, Star, TrendingUp } from "lucide-react";
+import { Brain, Crown, Rocket, Star, TrendingUp } from "lucide-react";
 
 export default function TrendingTopics(){
 
@@ -38,6 +39,7 @@ export default function TrendingTopics(){
                         </div>
                       </div>
                       <Badge
+                        //@ts-ignore
                         variant="outline"
                         className="border-[#A9F99E]/30 text-[#A9F99E] bg-[#A9F99E]/10 font-semibold"
                       >
