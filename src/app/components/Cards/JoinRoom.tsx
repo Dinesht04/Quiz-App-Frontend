@@ -113,7 +113,7 @@ export default function JoinRoomCard({
             <div className="text-center text-sm text-gray-500">
               Playing as:{' '}
               <span className="font-medium text-blue-600">{username}</span>
-              {SignOut && <span className="mt-2">{SignOut}</span>}
+              {/* {SignOut && <span className="mt-2">{SignOut}</span>} */}
             </div>
           </div>
         )}

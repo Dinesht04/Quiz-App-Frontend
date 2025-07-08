@@ -3,6 +3,7 @@ import { Crown, Flame, LogOut, Settings } from "lucide-react";
 import { useGlobalContext } from "../providers/GlobalContext";
 import { useSession } from "next-auth/react";
 import { Badge } from "@/components/ui/badge";
+import { signOutAction } from "../actions/auth";
 
 export default function Statistics({session}: any){
 
@@ -15,7 +16,17 @@ export default function Statistics({session}: any){
     level: 12,
   }
 
-  const {username, isGuest} = useGlobalContext()
+  const {username, isGuest,setIsGuest} = useGlobalContext()
+
+  function handleLogOut(isGuest:boolean){
+    if(isGuest){
+      setIsGuest(false);
+      //locally remove guest
+    }
+    else{
+      signOutAction();
+    }
+  }
 
 
   return(
@@ -31,7 +42,9 @@ export default function Statistics({session}: any){
               </Badge>
 
               <div>
-                <Button variant="ghost" size="icon" className="text-gray-400 w-fit px-2 hover:text-white hover:bg-white/10">
+                <Button variant="ghost" size="icon" className="text-gray-400 w-fit px-2 hover:text-white hover:bg-white/10"
+                  onClick={() => handleLogOut(isGuest)}
+                >
                 <span>
 
 

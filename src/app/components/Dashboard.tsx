@@ -11,7 +11,7 @@ import TrendingTopics from "./TrendingTopics"
 import { Play, Plus, Rocket, Sparkles, Users, Zap } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { NewJoinRoomCard } from "./Cards/JoinRoom"
+import JoinRoomCard, { NewJoinRoomCard } from "./Cards/JoinRoom"
 import { useGlobalContext } from "../providers/GlobalContext"
 import { useSession } from "next-auth/react"
 
@@ -49,10 +49,10 @@ export default function Dashboard({session,isGuest}:DashboardProps) {
             {/* checking if guest user or not, if session exists then not. setting username accordingly. */}
             {
               session && session.data?.user?.name ?
-              <NewJoinRoomCard
+              <JoinRoomCard
               username={session.data?.user?.name}
               /> :
-              <NewJoinRoomCard
+              <JoinRoomCard
               username={username}
               />
             }
@@ -66,7 +66,7 @@ export default function Dashboard({session,isGuest}:DashboardProps) {
             {/* Enhanced User Stats */}
             <BattleStatistics/>
             {/* Enhanced Trending Topics */}
-            <TrendingTopics/>
+            {/* <TrendingTopics/> */}
           </div>
         </div>
       </div>
