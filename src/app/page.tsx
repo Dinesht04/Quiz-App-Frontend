@@ -53,19 +53,15 @@ function SignInFunction({
 
   if (!providers || !csrfToken) {
     return (
-      <div className="flex justify-center items-center bg-gray-100">
-        <div className="flex flex-col gap-4 p-8 max-w-md mx-auto bg-white shadow-lg rounded-lg mt-10 w-full animate-pulse">
-          <div className="h-10 bg-gray-200 rounded w-3/4 mx-auto mb-6"></div>{' '}
+      <div className="flex justify-center items-center bg-gradient-to-br from-gray-800/80 to-gray-900/80">
+        <div className="flex flex-col gap-4 p-8 max-w-md mx-auto bg-gradient-to-br from-gray-800/80 to-gray-900/80 shadow-lg rounded-lg mt-10 w-full animate-pulse">
           {/* Skeleton for title */}
           {/* Skeleton for SignInAsGuest */}
           <div className="h-12 bg-gray-200 rounded-md w-full mb-4"></div>
           <div className="border-t border-gray-200 pt-6 mt-6">
-            <div className="h-6 bg-gray-200 rounded w-1/2 mx-auto mb-4"></div>{' '}
             {/* Skeleton for "Or sign in with:" */}
             {/* Skeletons for provider buttons (assuming 2-3 providers) */}
             <div className="h-12 bg-gray-200 rounded-md w-full mb-4"></div>
-            <div className="h-12 bg-gray-200 rounded-md w-full mb-4"></div>
-            <div className="h-12 bg-gray-200 rounded-md w-full"></div>
           </div>
         </div>
       </div>
@@ -80,8 +76,9 @@ function SignInFunction({
             key={provider.id}
             action={async () => {
               try {
+                console.log()
                 await signIn(provider.id, {
-                  callbackUrl: callbackUrl,
+                  redirectTo: `http://${process.env.NEXT_PUBLIC_FRONTEND_PRODUCTION_URL}/Dashboard`,
                 });
               } catch (error: any) {
                 console.error('Sign-in error:', error);

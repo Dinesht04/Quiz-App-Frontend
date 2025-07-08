@@ -19,7 +19,7 @@ export function SignInAsGuest({ callbackUrl }: SignInAsGuestProps) {
         setUsername(guestUsernameGenerator());
         setExpires(getGuestExpires());
         setIsGuest(true);
-        redirect(callbackUrl);
+        redirect('/Dashboard');
       }}
       className='flex justify-center'
     >

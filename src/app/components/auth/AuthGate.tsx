@@ -7,12 +7,13 @@ import JoinRoomCard from '../Cards/JoinRoom';
 import { SignOut } from './AuthFunctions';
 import { useGlobalContext } from '@/app/providers/GlobalContext';
 import GuestComponent from '../GuestComponent';
+import { redirect } from 'next/navigation';
 
 export default function AuthGate({ session }: { session: any }) {
   const { isGuest } = useGlobalContext();
 
   if ((!session || !session.user || !session.user.name) && !isGuest) {
-    return <SignInCard />;
+    redirect('/');
   }
 
   if (isGuest) {

@@ -27,6 +27,7 @@ export default function AuthPage({ SignInPage }: AuthPage) {
   const [isLoading, setIsLoading] = useState(false);
   const [guestLoading, setGuestLoading] = useState(false);
 
+
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
@@ -34,24 +35,6 @@ export default function AuthPage({ SignInPage }: AuthPage) {
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
-
-  const handleGoogleSignIn = async () => {
-    setIsLoading(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setIsLoading(false);
-    // Redirect to dashboard
-    window.location.href = '/';
-  };
-
-  const handleGuestContinue = async () => {
-    setGuestLoading(true);
-    // Simulate guest setup
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    setGuestLoading(false);
-    // Redirect to dashboard
-    window.location.href = '/';
-  };
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
@@ -208,7 +191,7 @@ export default function AuthPage({ SignInPage }: AuthPage) {
                       Choose your path to quiz mastery
                     </p>
                   </div>
-
+                  {/* SIGN IN Options */}
                   {SignInPage}
 
                   {/* Benefits */}
