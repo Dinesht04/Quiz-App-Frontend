@@ -16,12 +16,15 @@ export default function Statistics({session}: any){
     level: 12,
   }
 
-  const {username, isGuest,setIsGuest} = useGlobalContext()
+  const {username, isGuest,setIsGuest, setCookie} = useGlobalContext()
 
   function handleLogOut(isGuest:boolean){
     if(isGuest){
       setIsGuest(false);
       //locally remove guest
+      localStorage.removeItem('guestUser')
+      localStorage.removeItem('guestUsername')
+      setCookie(false);
     }
     else{
       signOutAction();
@@ -42,7 +45,7 @@ export default function Statistics({session}: any){
               </Badge>
 
               <div>
-                <Button variant="ghost" size="icon" className="text-gray-400 w-fit px-2 hover:text-white hover:bg-white/10"
+                <Button variant="ghost" size="icon" className="text-gray-400 w-fit hover:cursor-pointer px-2 hover:text-white hover:bg-white/10"
                   onClick={() => handleLogOut(isGuest)}
                 >
                 <span>
