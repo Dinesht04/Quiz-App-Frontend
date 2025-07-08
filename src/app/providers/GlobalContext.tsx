@@ -6,6 +6,7 @@ import {
   useState,
   Dispatch,
   SetStateAction,
+  useEffect,
 } from 'react';
 
 interface GlobalContextType {
@@ -30,6 +31,12 @@ export default function GlobalContextProvider({
   const [roomId, setRoomId] = useState('');
   const [expires, setExpires] = useState('');
   const [isGuest, setIsGuest] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (localStorage.getItem('guestUser')) {
+      setIsGuest(true);
+    }
+  }, []);
 
   const contextValue = {
     username,

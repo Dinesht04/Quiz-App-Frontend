@@ -23,6 +23,8 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
+import { redirect } from 'next/navigation';
+import { useGlobalContext } from '../providers/GlobalContext';
 
 interface Provider {
   id: string;
@@ -46,7 +48,7 @@ export default function AuthPage({
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [showUsernameInput, setShowUsernameInput] = useState(false);
-  const [username, setUsername] = useState('');
+  const [username, setCurrUsername] = useState('');
   const [isCheckingUsername, setIsCheckingUsername] = useState(false);
   const [usernameStatus, setUsernameStatus] = useState<
     'idle' | 'checking' | 'available' | 'taken' | 'error'
@@ -55,6 +57,8 @@ export default function AuthPage({
   const [errorMessage, setErrorMessage] = useState('');
   const [usernameTimeoutId, setUsernameTimeoutId] =
     useState<NodeJS.Timeout | null>(null);
+
+  const { setIsGuest, setUsername } = useGlobalContext();
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -82,7 +86,7 @@ export default function AuthPage({
     setShowUsernameInput(true);
     setErrorMessage('');
     setUsernameStatus('idle'); // Reset username status when showing input
-    setUsername(''); // Clear previous username
+    setCurrUsername(''); // Clear previous username
   };
 
   const checkUsernameAvailability = async (usernameToCheck: string) => {
@@ -126,7 +130,7 @@ export default function AuthPage({
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newUsername = e.target.value;
-    setUsername(newUsername);
+    setCurrUsername(newUsername);
 
     if (usernameTimeoutId) {
       clearTimeout(usernameTimeoutId);
@@ -164,7 +168,7 @@ export default function AuthPage({
       if (response.ok) {
         // Store user session or redirect
         localStorage.setItem('guestUser', JSON.stringify(data.user.id));
-        window.location.href = '/Dashboard'; // Redirect to dashboard after guest login
+        setUsername(username.trim());
       } else {
         setErrorMessage(data.error || 'Failed to create guest user.');
         if (data.error === 'Username already taken') {
@@ -172,9 +176,14 @@ export default function AuthPage({
         }
       }
     } catch (error) {
+      console.log(error);
+
       setErrorMessage('Network error. Please try again.');
     } finally {
       setIsCreatingUser(false);
+      setIsGuest(true);
+
+      redirect('/Dashboard');
     }
   };
 
