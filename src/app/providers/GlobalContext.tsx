@@ -1,4 +1,5 @@
 'use client';
+import { redirect } from 'next/navigation';
 import {
   useContext,
   createContext,
@@ -10,14 +11,22 @@ import {
 } from 'react';
 
 interface GlobalContextType {
-  username: string;
+  username: string|null;
   roomId: string;
   expires: string;
   setExpires: Dispatch<SetStateAction<string>>;
-  setUsername: Dispatch<SetStateAction<string>>;
+  setUsername: Dispatch<SetStateAction<string|null>>;
   setRoomId: Dispatch<SetStateAction<string>>;
   isGuest: boolean;
   setIsGuest: Dispatch<SetStateAction<boolean>>;
+  cookie: boolean;
+  setCookie: Dispatch<SetStateAction<boolean>>;
+  }
+
+type Cookie = {
+  guestUser:string|null,
+  createdAt: Date,
+  username: string,
 }
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
@@ -27,15 +36,18 @@ export default function GlobalContextProvider({
 }: {
   children: ReactNode;
 }) {
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState<string|null>('');
   const [roomId, setRoomId] = useState('');
   const [expires, setExpires] = useState('');
   const [isGuest, setIsGuest] = useState<boolean>(false);
+  const [cookie,setCookie] = useState<boolean>(false);
 
   useEffect(() => {
     if (localStorage.getItem('guestUser')) {
-      setIsGuest(true);
-    }
+        setCookie(true);
+        setUsername(localStorage.getItem('guestUsername'));
+        setIsGuest(true);
+      }
   }, []);
 
   const contextValue = {
@@ -47,6 +59,8 @@ export default function GlobalContextProvider({
     setExpires,
     isGuest,
     setIsGuest,
+    cookie,
+    setCookie
   };
 
   return (

@@ -140,7 +140,7 @@ export default function AuthPage({
     if (newUsername.trim().length >= 3) {
       const newTimeoutId = setTimeout(() => {
         checkUsernameAvailability(newUsername);
-      }, 1500);
+      }, 1000);
       setUsernameTimeoutId(newTimeoutId);
     } else {
       setUsernameStatus('idle'); // Reset status if username is too short
@@ -167,8 +167,9 @@ export default function AuthPage({
 
       if (response.ok) {
         // Store user session or redirect
-        localStorage.setItem('guestUser', JSON.stringify(data.user.id));
-        setUsername(username.trim());
+        localStorage.setItem('guestUser', data.user.id);
+        localStorage.setItem('guestUsername', data.user.name);
+        setUsername(data.user.name);
       } else {
         setErrorMessage(data.error || 'Failed to create guest user.');
         if (data.error === 'Username already taken') {
@@ -182,7 +183,6 @@ export default function AuthPage({
     } finally {
       setIsCreatingUser(false);
       setIsGuest(true);
-
       redirect('/Dashboard');
     }
   };
