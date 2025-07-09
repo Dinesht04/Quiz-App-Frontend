@@ -9,7 +9,11 @@ import {
   useEffect,
 } from 'react';
 
-import { checkMyCookie, getMyCookie } from '../actions/cookies';
+import {
+  checkAuthJsCookie,
+  checkMyCookie,
+  getMyCookie,
+} from '../actions/cookies';
 
 interface GlobalContextType {
   username: string | null;
@@ -22,6 +26,8 @@ interface GlobalContextType {
   setIsGuest: Dispatch<SetStateAction<boolean>>;
   cookie: boolean;
   setCookie: Dispatch<SetStateAction<boolean>>;
+  loggedIn: boolean;
+  setLoggedIn: Dispatch<SetStateAction<boolean>>;
 }
 
 // type Cookie = {
@@ -42,16 +48,24 @@ export default function GlobalContextProvider({
   const [expires, setExpires] = useState('');
   const [isGuest, setIsGuest] = useState<boolean>(false);
   const [cookie, setCookie] = useState<boolean>(false);
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
   useEffect(() => {
     async function loadGuestData() {
       const hasGuestCookie = await checkMyCookie();
-      setCookie(hasGuestCookie);
+      const hasAuthJsCookie = await checkAuthJsCookie();
 
       if (hasGuestCookie) {
         const guestData = await getMyCookie();
         setUsername(guestData.guestUsername);
         setIsGuest(true);
+        setLoggedIn(true);
+        setCookie(hasGuestCookie);
+      } else if (hasAuthJsCookie) {
+        // google sign in cookie
+        setIsGuest(false);
+        setLoggedIn(true);
+        setCookie(hasAuthJsCookie);
       } else {
         setUsername(null); // Ensure username is null if no guest cookie
         setIsGuest(false);
@@ -71,6 +85,8 @@ export default function GlobalContextProvider({
     setIsGuest,
     cookie,
     setCookie,
+    loggedIn,
+    setLoggedIn,
   };
 
   return (

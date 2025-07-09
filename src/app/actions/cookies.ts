@@ -7,6 +7,11 @@ type Data = {
   guestUsername: string;
 };
 
+export async function checkAuthJsCookie(): Promise<boolean> {
+  const cookieStore = await cookies();
+  return cookieStore.has('authjs.session-token');
+}
+
 export async function setMyCookie(data: Data) {
   const cookieStore = await cookies();
   const time = 60 * 60 * 24;

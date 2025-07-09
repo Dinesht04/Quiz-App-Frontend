@@ -10,6 +10,7 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const session = await auth();
+
   return (
     <div>
       <AuthGate session={session} />
