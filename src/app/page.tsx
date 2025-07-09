@@ -27,9 +27,11 @@ export default function SignInPage({
 
   const callbackUrl = `https://${process.env.NEXT_PUBLIC_FRONTEND_PRODUCTION_URL}/Dashboard/`;
 
-  if (cookie) {
-    redirect('/Dashboard');
-  }
+  useEffect(() => {
+    if (cookie) {
+      redirect('/Dashboard');
+    }
+  }, [cookie]);
 
   useEffect(() => {
     const fetchData = async () => {
