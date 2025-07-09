@@ -9,8 +9,9 @@ type Data = {
 
 export async function setMyCookie(data: Data) {
   const cookieStore = await cookies();
-  cookieStore.set('guestUser', data.guestUser);
-  cookieStore.set('guestUsername', data.guestUsername);
+  const time = 60 * 60 * 24;
+  cookieStore.set('guestUser', data.guestUser, { maxAge: time });
+  cookieStore.set('guestUsername', data.guestUsername, { maxAge: time });
 }
 
 export async function checkMyCookie(): Promise<boolean> {
