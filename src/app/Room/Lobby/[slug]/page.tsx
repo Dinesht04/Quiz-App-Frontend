@@ -1,7 +1,5 @@
 import RoomAuthGate from '@/app/components/auth/RoomAuthGate';
-import Room from '@/app/components/Cards/Room';
 import { auth } from '@/lib/auth';
-import { redirect } from 'next/navigation';
 
 export default async function Page({
   params,

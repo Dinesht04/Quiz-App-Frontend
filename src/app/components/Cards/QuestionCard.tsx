@@ -1,6 +1,5 @@
 'use client';
 
-import { useGlobalContext } from '@/app/providers/GlobalContext';
 import { Question, useQuizContext } from '@/app/providers/QuizContext';
 import { useSocket } from '@/app/providers/WebsocketContextProvider';
 import { Dispatch, SetStateAction, useState } from 'react';
@@ -8,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Brain, Zap, Clock } from 'lucide-react';
 
 type QuestionCardProps = {
-  username:string;
+  username: string;
   Question: Question;
   setCurrentQuestion: Dispatch<SetStateAction<string>>;
   roomId: string | undefined;

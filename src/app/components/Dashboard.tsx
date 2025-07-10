@@ -1,25 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import DashboardBackgroundAnimation from './DashboardBackgroundAnimation';
 import Statistics from './Statistics';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Tutorial from './Tutorial';
 import BattleStatistics from './BattleStatistics';
-import TrendingTopics from './TrendingTopics';
-import { Play, Plus, Rocket, Sparkles, Users, Zap } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import JoinRoomCard, { NewJoinRoomCard } from './Cards/JoinRoom';
 import { useGlobalContext } from '../providers/GlobalContext';
-import { useSession } from 'next-auth/react';
 
 type DashboardProps = {
   session: any;
@@ -29,10 +15,10 @@ type DashboardProps = {
 export default function Dashboard({ session, isGuest }: DashboardProps) {
   const { username } = useGlobalContext();
 
-  if(isGuest){
-    console.log("Guest is here")
-  } else{
-    console.log(session)
+  if (isGuest) {
+    console.log('Guest is here');
+  } else {
+    console.log(session);
   }
 
   return (
