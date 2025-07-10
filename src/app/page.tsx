@@ -19,7 +19,7 @@ export default function SignInPage({
 }: {
   searchParams: { callbackUrl?: string }; // searchParams is an object, no need for Promise.use
 }) {
-  const { cookie } = useGlobalContext();
+  const { cookie, setLoggedIn } = useGlobalContext();
   const [providers, setProviders] = useState<Record<string, Provider> | null>(
     null,
   );
@@ -29,6 +29,7 @@ export default function SignInPage({
 
   useEffect(() => {
     if (cookie) {
+      setLoggedIn(true);
       redirect('/Dashboard');
     }
   }, [cookie]);

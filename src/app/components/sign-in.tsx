@@ -59,7 +59,8 @@ export default function AuthPage({
   const [usernameTimeoutId, setUsernameTimeoutId] =
     useState<NodeJS.Timeout | null>(null);
 
-  const { setIsGuest, setUsername, setCookie } = useGlobalContext();
+  const { setIsGuest, setUsername, setCookie, setLoggedIn } =
+    useGlobalContext();
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -72,10 +73,12 @@ export default function AuthPage({
   const handleGoogleSignIn = async (providerId: string) => {
     setIsGoogleLoading(true);
     try {
+      setLoggedIn(true);
       await signIn(providerId, {
         redirectTo: `http://${process.env.NEXT_PUBLIC_FRONTEND_PRODUCTION_URL}/Dashboard`,
       });
     } catch (error) {
+      setLoggedIn(false);
       console.error('Google sign-in failed:', error);
       setErrorMessage('Google sign-in failed. Please try again.');
     } finally {
@@ -173,6 +176,7 @@ export default function AuthPage({
         setUsername(data.user.name);
         setIsGuest(true);
         setCookie(true);
+        setLoggedIn(true);
         redirect('/Dashboard');
       } else {
         setErrorMessage(data.error || 'Failed to create guest user.');

@@ -3,7 +3,6 @@
 import { Button } from '@/components/ui/button';
 import { Crown, Flame, LogOut, Settings } from 'lucide-react';
 import { useGlobalContext } from '../providers/GlobalContext';
-import { useSession } from 'next-auth/react';
 import { Badge } from '@/components/ui/badge';
 import { signOutAction } from '../actions/auth';
 import { deleteMyCookies } from '../actions/cookies';
@@ -18,7 +17,7 @@ export default function Statistics({ session }: any) {
     level: 12,
   };
 
-  const { username, isGuest, setIsGuest, setCookie, setUsername } =
+  const { username, isGuest, setIsGuest, setCookie, setUsername, setLoggedIn } =
     useGlobalContext();
 
   async function handleLogOut(isGuest: boolean) {
@@ -26,10 +25,11 @@ export default function Statistics({ session }: any) {
       await deleteMyCookies();
       setIsGuest(false);
       setUsername(null);
-      setCookie(false);
     } else {
       signOutAction();
     }
+    setCookie(false);
+    setLoggedIn(false);
   }
 
   return (

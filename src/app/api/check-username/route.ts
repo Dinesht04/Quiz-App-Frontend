@@ -16,9 +16,9 @@ export async function POST(request: NextRequest) {
 
     // Validate username format
     const trimmedUsername = username.trim();
-    if (trimmedUsername.length < 3 || trimmedUsername.length > 20) {
+    if (trimmedUsername.length < 5 || trimmedUsername.length > 20) {
       return NextResponse.json(
-        { error: 'Username must be between 3 and 20 characters' },
+        { error: 'Username must be between 5 and 20 characters' },
         { status: 400 },
       );
     }
