@@ -11,17 +11,21 @@ import { redirect } from 'next/navigation';
 import Dashboard from '../Dashboard';
 
 export default function AuthGate({ session }: { session: any }) {
-  const { isGuest } = useGlobalContext();
+  const { isGuest,username } = useGlobalContext();
 
-  if ((!session || !session.user || !session.user.name) && !isGuest) {
-    redirect('/');
+  if (isGuest) {
+    return(
+      <Dashboard
+      session={session}
+      isGuest={isGuest}
+    />
+    )
   }
-
 
   return (
     <Dashboard
       session={session}
-      isGuest={true}
+      isGuest={false}
     />
   );
 }

@@ -3,13 +3,16 @@
 
 import { useQuizContext } from '@/app/providers/QuizContext';
 import { redirect } from 'next/navigation';
-import { useState } from 'react';
+import { useState,useRef, useEffect } from 'react';
 import QuestionCard from '../Cards/QuestionCard';
 import { Badge, Crown, Star, Trophy, Users, Zap } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import LiveScores from './LiveScores';
 import { useGlobalContext } from '@/app/providers/GlobalContext';
+
+import { toPng } from 'html-to-image';
+
 
 type score = {
   username: string;
@@ -18,7 +21,7 @@ type score = {
 
 //finalScore is an array of score, ie, score[].
 
-export default function Quiz() {
+export default function Quiz({session}:any) {
   const {
     questions,
     joinedRoom,
@@ -30,7 +33,18 @@ export default function Quiz() {
   } = useQuizContext();
   const { username } = useGlobalContext();
 
+  const [user,setUser] = useState<string|null>();
   const [currentQuestion, setCurrentQuestion] = useState<string>('q1');
+  const leaderboardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(()=>{
+    if(!session){
+      setUser(username);
+    } else{
+      setUser(session.user.name)
+    }
+  },[])
+
 
   if (!joinedRoom || !quizStarted) {
     redirect('/');
@@ -62,7 +76,9 @@ export default function Quiz() {
           </div>
 
           {quizFinished ? (
-            <Card className="bg-white/90 backdrop-blur-sm shadow-2xl border-0 rounded-3xl overflow-hidden">
+            <Card
+              ref={leaderboardRef}
+            className="bg-white/90 backdrop-blur-sm shadow-2xl border-0 rounded-3xl overflow-hidden">
               <CardHeader className="bg-gradient-to-r from-purple-500 to-blue-500 text-white py-8">
                 <CardTitle className="text-3xl font-bold text-center flex items-center justify-center gap-3">
                   <Crown className="w-8 h-8 text-yellow-300" />
@@ -147,6 +163,22 @@ export default function Quiz() {
             </Card>
           )}
 
+          {quizFinished && <div className="flex justify-center mt-6">
+  <button
+    onClick={async () => {
+      if (!leaderboardRef.current) return;
+      const dataUrl = await toPng(leaderboardRef.current);
+      const link = document.createElement('a');
+      link.download = 'leaderboard.png';
+      link.href = dataUrl;
+      link.click();
+    }}
+    className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow"
+  >
+    Export Leaderboard as PNG
+  </button>
+</div>}
+
           {/* Floating Elements */}
           <div className="absolute top-20 left-20 w-16 h-16 bg-yellow-400/20 rounded-full animate-pulse"></div>
           <div className="absolute top-40 right-32 w-12 h-12 bg-purple-400/30 rounded-full animate-bounce delay-300"></div>
@@ -175,6 +207,7 @@ export default function Quiz() {
           if (currentQuestion === Question.id) {
             return (
               <QuestionCard
+                username={user}
                 key={Question.id}
                 Question={Question}
                 setCurrentQuestion={setCurrentQuestion}

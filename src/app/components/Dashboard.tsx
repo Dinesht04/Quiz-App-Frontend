@@ -14,9 +14,10 @@ import { Button } from "@/components/ui/button"
 import JoinRoomCard, { NewJoinRoomCard } from "./Cards/JoinRoom"
 import { useGlobalContext } from "../providers/GlobalContext"
 import { useSession } from "next-auth/react"
+import { redirect } from "next/navigation"
 
 type DashboardProps = {
-  session : any;
+  session? : any;
   isGuest : boolean;
 }
 
@@ -24,6 +25,12 @@ type DashboardProps = {
 export default function Dashboard({session,isGuest}:DashboardProps) {
 
   const {username} = useGlobalContext();
+
+  if(isGuest){
+    console.log("Guest is here")
+  } else{
+    console.log(session)
+  }
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">

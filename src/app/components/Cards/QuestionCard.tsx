@@ -8,12 +8,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Brain, Zap, Clock } from 'lucide-react';
 
 type QuestionCardProps = {
+  username:string;
   Question: Question;
   setCurrentQuestion: Dispatch<SetStateAction<string>>;
   roomId: string | undefined;
 };
 
 export default function QuestionCard({
+  username,
   Question,
   setCurrentQuestion,
   roomId,
@@ -22,7 +24,6 @@ export default function QuestionCard({
   const [isAnswered, setIsAnswered] = useState(false);
   const { socket } = useSocket();
   const { setQuestionsCompleted } = useQuizContext();
-  const { username } = useGlobalContext();
 
   function setNextQuestion(currentQues: string | null) {
     switch (currentQues) {
