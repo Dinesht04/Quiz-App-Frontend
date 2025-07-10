@@ -167,7 +167,10 @@ export default function Quiz({session}:any) {
   <button
     onClick={async () => {
       if (!leaderboardRef.current) return;
-      const dataUrl = await toPng(leaderboardRef.current);
+      const dataUrl = await toPng(leaderboardRef.current,{
+        backgroundColor: '#ffffff',
+        skipFonts:true
+      });
       const link = document.createElement('a');
       link.download = 'leaderboard.png';
       link.href = dataUrl;
