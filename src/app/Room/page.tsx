@@ -1,5 +1,3 @@
-import { auth } from '@/lib/auth';
-import RoomAuthGate from '../components/auth/RoomAuthGate';
 import { redirect } from 'next/navigation';
 
 // To Do

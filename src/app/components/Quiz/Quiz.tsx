@@ -3,7 +3,7 @@
 
 import { useQuizContext } from '@/app/providers/QuizContext';
 import { redirect } from 'next/navigation';
-import { useState,useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import QuestionCard from '../Cards/QuestionCard';
 import { Badge, Crown, Star, Trophy, Users, Zap } from 'lucide-react';
 
@@ -13,7 +13,6 @@ import { useGlobalContext } from '@/app/providers/GlobalContext';
 
 import { toPng } from 'html-to-image';
 
-
 type score = {
   username: string;
   score: string;
@@ -21,7 +20,7 @@ type score = {
 
 //finalScore is an array of score, ie, score[].
 
-export default function Quiz({session}:any) {
+export default function Quiz({ session }: any) {
   const {
     questions,
     joinedRoom,
@@ -33,18 +32,17 @@ export default function Quiz({session}:any) {
   } = useQuizContext();
   const { username } = useGlobalContext();
 
-  const [user,setUser] = useState<string|null>();
+  const [user, setUser] = useState<string | null>();
   const [currentQuestion, setCurrentQuestion] = useState<string>('q1');
   const leaderboardRef = useRef<HTMLDivElement>(null);
 
-  useEffect(()=>{
-    if(!session){
+  useEffect(() => {
+    if (!session) {
       setUser(username);
-    } else{
-      setUser(session.user.name)
+    } else {
+      setUser(session.user.name);
     }
-  },[])
-
+  }, []);
 
   if (!joinedRoom || !quizStarted) {
     redirect('/');
@@ -52,22 +50,22 @@ export default function Quiz({session}:any) {
 
   if (currentQuestion === 'over') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 flex items-center justify-center p-4">
-        <div className="w-full max-w-4xl">
+      <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+        <div className="w-full max-w-4xl mx-auto">
           {/* Celebration Header */}
-          <div className="text-center mb-8 space-y-4">
+          <div className="text-center mb-10 space-y-4 px-4 sm:px-0">
             <div className="flex justify-center mb-4">
               <div className="relative">
-                <Trophy className="w-20 h-20 text-yellow-400 animate-bounce" />
+                <Trophy className="w-24 h-24 text-yellow-400 animate-bounce" />
                 <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center animate-pulse">
                   <Star className="w-5 h-5 text-yellow-700" />
                 </div>
               </div>
             </div>
-            <h1 className="text-5xl md:text-6xl font-black text-white mb-4">
+            <h1 className="text-5xl md:text-6xl font-black text-white mb-4 drop-shadow-lg">
               Quiz Complete!
             </h1>
-            <div className="bg-white/20 backdrop-blur-sm rounded-full px-8 py-4 inline-block">
+            <div className="bg-white/20 backdrop-blur-sm rounded-full px-10 py-4 inline-block border border-white/30">
               <p className="text-2xl font-bold text-white flex items-center gap-2">
                 <Zap className="w-6 h-6 text-yellow-400" />
                 Your Score: {score}
@@ -78,22 +76,23 @@ export default function Quiz({session}:any) {
           {quizFinished ? (
             <Card
               ref={leaderboardRef}
-            className="bg-white/90 backdrop-blur-sm shadow-2xl border-0 rounded-3xl overflow-hidden">
-              <CardHeader className="bg-gradient-to-r from-purple-500 to-blue-500 text-white py-8">
+              className="bg-white/90 backdrop-blur-sm shadow-2xl border-0 rounded-3xl overflow-hidden mx-4 sm:mx-0"
+            >
+              <CardHeader className="bg-gradient-to-r from-purple-500 to-blue-500 text-white py-8 px-6 sm:px-8">
                 <CardTitle className="text-3xl font-bold text-center flex items-center justify-center gap-3">
                   <Crown className="w-8 h-8 text-yellow-300" />
                   Final Leaderboard
                   <Crown className="w-8 h-8 text-yellow-300" />
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-8">
+              <CardContent className="p-6 sm:p-8">
                 <div className="space-y-4">
                   {finalScore
                     .sort((a, b) => parseInt(b.score) - parseInt(a.score))
                     .map((player, index) => (
                       <div
                         key={`${player.username}-${index}`}
-                        className={`flex items-center justify-between p-6 rounded-2xl shadow-lg transform hover:scale-105 transition-all duration-300 ${
+                        className={`flex items-center justify-between p-4 sm:p-6 rounded-2xl shadow-lg transform hover:scale-105 transition-all duration-300 ${
                           index === 0
                             ? 'bg-gradient-to-r from-yellow-100 to-orange-100 border-2 border-yellow-300'
                             : index === 1
@@ -121,11 +120,13 @@ export default function Quiz({session}:any) {
                             <h3 className="text-xl font-bold text-gray-800">
                               {player.username}
                               {player.username === username ? (
-                                <span>(Me)</span>
+                                <span className="ml-2 text-gray-500 text-base font-normal">
+                                  (Me)
+                                </span>
                               ) : null}
                             </h3>
                             {index === 0 && (
-                              <Badge className="bg-yellow-200 text-yellow-800 border-yellow-300">
+                              <Badge className="mt-1 bg-yellow-200 text-yellow-800 border-yellow-300">
                                 🏆 Champion
                               </Badge>
                             )}
@@ -143,8 +144,8 @@ export default function Quiz({session}:any) {
               </CardContent>
             </Card>
           ) : (
-            <Card className="bg-white/90 backdrop-blur-sm shadow-2xl border-0 rounded-3xl">
-              <CardContent className="p-12 text-center">
+            <Card className="bg-white/90 backdrop-blur-sm shadow-2xl border-0 rounded-3xl mx-4 sm:mx-0">
+              <CardContent className="p-8 sm:p-12 text-center">
                 <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full flex items-center justify-center">
                   <Users className="w-8 h-8 text-white animate-pulse" />
                 </div>
@@ -163,26 +164,28 @@ export default function Quiz({session}:any) {
             </Card>
           )}
 
-          {quizFinished && <div className="flex justify-center mt-6">
-  <button
-    onClick={async () => {
-      if (!leaderboardRef.current) return;
-      const dataUrl = await toPng(leaderboardRef.current,{
-        backgroundColor: '#ffffff',
-        skipFonts:true
-      });
-      const link = document.createElement('a');
-      link.download = 'leaderboard.png';
-      link.href = dataUrl;
-      link.click();
-    }}
-    className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow"
-  >
-    Export Leaderboard as PNG
-  </button>
-</div>}
+          {quizFinished && (
+            <div className="flex justify-center mt-8 px-4 sm:px-0">
+              <button
+                onClick={async () => {
+                  if (!leaderboardRef.current) return;
+                  const dataUrl = await toPng(leaderboardRef.current, {
+                    backgroundColor: '#ffffff',
+                    skipFonts: true,
+                  });
+                  const link = document.createElement('a');
+                  link.download = 'leaderboard.png';
+                  link.href = dataUrl;
+                  link.click();
+                }}
+                className="bg-[#FFDF00] hover:bg-[#FFC000] text-gray-600 font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200"
+              >
+                Export Leaderboard as PNG
+              </button>
+            </div>
+          )}
 
-          {/* Floating Elements */}
+          {/* Floating Elements (Consider if these are still desired with improved layout) */}
           <div className="absolute top-20 left-20 w-16 h-16 bg-yellow-400/20 rounded-full animate-pulse"></div>
           <div className="absolute top-40 right-32 w-12 h-12 bg-purple-400/30 rounded-full animate-bounce delay-300"></div>
           <div className="absolute bottom-32 left-40 w-20 h-20 bg-blue-400/20 rounded-full animate-pulse delay-700"></div>
