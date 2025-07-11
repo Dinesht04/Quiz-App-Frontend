@@ -28,6 +28,7 @@ interface GlobalContextType {
   setCookie: Dispatch<SetStateAction<boolean>>;
   loggedIn: boolean;
   setLoggedIn: Dispatch<SetStateAction<boolean>>;
+  loading: boolean;
 }
 
 // type Cookie = {
@@ -49,6 +50,7 @@ export default function GlobalContextProvider({
   const [isGuest, setIsGuest] = useState<boolean>(false);
   const [cookie, setCookie] = useState<boolean>(false);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     async function loadGuestData() {
@@ -71,7 +73,14 @@ export default function GlobalContextProvider({
         setIsGuest(false);
       }
     }
-    loadGuestData();
+
+    try {
+      loadGuestData();
+    } catch (err) {
+      console.log('Global context error');
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   const contextValue = {
@@ -87,6 +96,7 @@ export default function GlobalContextProvider({
     setCookie,
     loggedIn,
     setLoggedIn,
+    loading,
   };
 
   return (

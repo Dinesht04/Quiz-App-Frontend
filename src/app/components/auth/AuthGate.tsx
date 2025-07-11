@@ -5,29 +5,30 @@ import { redirect } from 'next/navigation';
 import Dashboard from '../Dashboard';
 import { useEffect } from 'react';
 
+function LoadingSpinner() {
+  return <div>Loading...</div>;
+}
+
 export default function AuthGate({ session }: { session: any }) {
-  const { isGuest, cookie, loggedIn } = useGlobalContext();
+  const { isGuest, cookie, loggedIn, loading } = useGlobalContext();
 
   useEffect(() => {
-    if (!loggedIn) {
+    if (!loading && !loggedIn) {
       redirect('/');
     }
   }, [loggedIn]);
 
-  // user signed in with google
-  if (cookie && !isGuest) {
-    // we will pass session
-    return <Dashboard session={session} isGuest={false} />;
+  if (loading) {
+    return <LoadingSpinner />;
   }
 
-  // continue as guest
-  else {
-    // use username from global context
-
-    return <Dashboard session={null} isGuest={false} />;
+  if (loggedIn) {
+    if (cookie && !isGuest) {
+      return <Dashboard session={session} isGuest={false} />;
+    } else {
+      return <Dashboard session={null} isGuest={true} />;
+    }
   }
 
-  // if ((!session || !session.user || !session.user.name) && !isGuest) {
-  //   redirect('/');
-  // }
+  return <LoadingSpinner />;
 }

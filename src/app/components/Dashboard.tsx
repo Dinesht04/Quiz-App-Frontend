@@ -14,8 +14,6 @@ type DashboardProps = {
 };
 
 export default function Dashboard({ session, isGuest }: DashboardProps) {
-  const { username } = useGlobalContext();
-
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
       {/* Enhanced Cosmic Background */}
