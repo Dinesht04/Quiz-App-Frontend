@@ -33,7 +33,9 @@ export default function CosmicJoinRoom({ session }: CosmicRoomCardProps) {
       return;
     }
     setJoinLoading(true);
-    setUsername(username);
+    if (session) {
+      setUsername(session?.user?.name);
+    }
     redirect(`Room/Lobby/${roomIdRef.current?.value}`);
   };
 
@@ -42,7 +44,9 @@ export default function CosmicJoinRoom({ session }: CosmicRoomCardProps) {
     // Generating a random a room ID
 
     let r = (Math.random() + 1).toString(36).substring(7);
-    setUsername(username);
+    if (session) {
+      setUsername(session?.user?.name);
+    }
     redirect(`/Room/Lobby/${r}`);
   };
 

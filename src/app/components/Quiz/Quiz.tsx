@@ -44,7 +44,7 @@ export default function Quiz({ session }: any) {
         setUser(session.user.name);
       }
     } else {
-      null;
+      return;
     }
   }, []);
 
@@ -215,7 +215,6 @@ export default function Quiz({ session }: any) {
           if (currentQuestion === Question.id) {
             return (
               <QuestionCard
-                username={user}
                 key={Question.id}
                 Question={Question}
                 setCurrentQuestion={setCurrentQuestion}
