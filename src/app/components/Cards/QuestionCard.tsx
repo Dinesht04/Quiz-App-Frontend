@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Brain, Zap, Clock } from 'lucide-react';
 
 type QuestionCardProps = {
-  username: string;
+  username: string | null;
   Question: Question;
   setCurrentQuestion: Dispatch<SetStateAction<string>>;
   roomId: string | undefined;

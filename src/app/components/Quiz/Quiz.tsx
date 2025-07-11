@@ -3,7 +3,7 @@
 
 import { useQuizContext } from '@/app/providers/QuizContext';
 import { redirect } from 'next/navigation';
-import { useState,useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import QuestionCard from '../Cards/QuestionCard';
 import { Badge, Crown, Star, Trophy, Users, Zap } from 'lucide-react';
 
@@ -13,7 +13,6 @@ import { useGlobalContext } from '@/app/providers/GlobalContext';
 
 import { toPng } from 'html-to-image';
 
-
 type score = {
   username: string;
   score: string;
@@ -21,7 +20,7 @@ type score = {
 
 //finalScore is an array of score, ie, score[].
 
-export default function Quiz({session}:any) {
+export default function Quiz({ session }: any) {
   const {
     questions,
     joinedRoom,
@@ -33,18 +32,21 @@ export default function Quiz({session}:any) {
   } = useQuizContext();
   const { username } = useGlobalContext();
 
-  const [user,setUser] = useState<string|null>();
+  const [user, setUser] = useState<string | null>('');
   const [currentQuestion, setCurrentQuestion] = useState<string>('q1');
   const leaderboardRef = useRef<HTMLDivElement>(null);
 
-  useEffect(()=>{
-    if(!session){
-      setUser(username);
-    } else{
-      setUser(session.user.name)
+  useEffect(() => {
+    if (!username) {
+      if (!session) {
+        setUser(username);
+      } else {
+        setUser(session.user.name);
+      }
+    } else {
+      null;
     }
-  },[])
-
+  }, []);
 
   if (!joinedRoom || !quizStarted) {
     redirect('/');
@@ -78,7 +80,8 @@ export default function Quiz({session}:any) {
           {quizFinished ? (
             <Card
               ref={leaderboardRef}
-            className="bg-white/90 backdrop-blur-sm shadow-2xl border-0 rounded-3xl overflow-hidden">
+              className="bg-white/90 backdrop-blur-sm shadow-2xl border-0 rounded-3xl overflow-hidden"
+            >
               <CardHeader className="bg-gradient-to-r from-purple-500 to-blue-500 text-white py-8">
                 <CardTitle className="text-3xl font-bold text-center flex items-center justify-center gap-3">
                   <Crown className="w-8 h-8 text-yellow-300" />
@@ -163,24 +166,26 @@ export default function Quiz({session}:any) {
             </Card>
           )}
 
-          {quizFinished && <div className="flex justify-center mt-6">
-  <button
-    onClick={async () => {
-      if (!leaderboardRef.current) return;
-      const dataUrl = await toPng(leaderboardRef.current,{
-        backgroundColor: '#ffffff',
-        skipFonts:true
-      });
-      const link = document.createElement('a');
-      link.download = 'leaderboard.png';
-      link.href = dataUrl;
-      link.click();
-    }}
-    className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow"
-  >
-    Export Leaderboard as PNG
-  </button>
-</div>}
+          {quizFinished && (
+            <div className="flex justify-center mt-6">
+              <button
+                onClick={async () => {
+                  if (!leaderboardRef.current) return;
+                  const dataUrl = await toPng(leaderboardRef.current, {
+                    backgroundColor: '#ffffff',
+                    skipFonts: true,
+                  });
+                  const link = document.createElement('a');
+                  link.download = 'leaderboard.png';
+                  link.href = dataUrl;
+                  link.click();
+                }}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow"
+              >
+                Export Leaderboard as PNG
+              </button>
+            </div>
+          )}
 
           {/* Floating Elements */}
           <div className="absolute top-20 left-20 w-16 h-16 bg-yellow-400/20 rounded-full animate-pulse"></div>

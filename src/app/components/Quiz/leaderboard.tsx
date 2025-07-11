@@ -1,48 +1,80 @@
-"use client"
+'use client';
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Trophy, Medal, Award, Users, RotateCcw, Home } from "lucide-react"
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Trophy, Medal, Award, Users, RotateCcw, Home } from 'lucide-react';
 
 export default function Leaderboard() {
   const players = [
-    { id: 1, name: "Ziggy-Noodles-81", score: 2450, correct: 8, total: 10, avatar: "ZN", isCurrentUser: true },
-    { id: 2, name: "QuizMaster2024", score: 2200, correct: 7, total: 10, avatar: "QM", isCurrentUser: false },
-    { id: 3, name: "BrainBox", score: 1950, correct: 6, total: 10, avatar: "BB", isCurrentUser: false },
-    { id: 4, name: "SmartCookie", score: 1800, correct: 6, total: 10, avatar: "SC", isCurrentUser: false },
-  ]
+    {
+      id: 1,
+      name: 'Ziggy-Noodles-81',
+      score: 2450,
+      correct: 8,
+      total: 10,
+      avatar: 'ZN',
+      isCurrentUser: true,
+    },
+    {
+      id: 2,
+      name: 'QuizMaster2024',
+      score: 2200,
+      correct: 7,
+      total: 10,
+      avatar: 'QM',
+      isCurrentUser: false,
+    },
+    {
+      id: 3,
+      name: 'BrainBox',
+      score: 1950,
+      correct: 6,
+      total: 10,
+      avatar: 'BB',
+      isCurrentUser: false,
+    },
+    {
+      id: 4,
+      name: 'SmartCookie',
+      score: 1800,
+      correct: 6,
+      total: 10,
+      avatar: 'SC',
+      isCurrentUser: false,
+    },
+  ];
 
   const getRankIcon = (position: number) => {
     switch (position) {
       case 1:
-        return <Trophy className="w-6 h-6 text-yellow-500" />
+        return <Trophy className="w-6 h-6 text-yellow-500" />;
       case 2:
-        return <Medal className="w-6 h-6 text-gray-400" />
+        return <Medal className="w-6 h-6 text-gray-400" />;
       case 3:
-        return <Award className="w-6 h-6 text-amber-600" />
+        return <Award className="w-6 h-6 text-amber-600" />;
       default:
         return (
           <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-sm font-bold text-gray-600">
             {position}
           </div>
-        )
+        );
     }
-  }
+  };
 
   const getRankBadge = (position: number) => {
     switch (position) {
       case 1:
-        return "bg-gradient-to-r from-yellow-400 to-yellow-600 text-white"
+        return 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-white';
       case 2:
-        return "bg-gradient-to-r from-gray-300 to-gray-500 text-white"
+        return 'bg-gradient-to-r from-gray-300 to-gray-500 text-white';
       case 3:
-        return "bg-gradient-to-r from-amber-400 to-amber-600 text-white"
+        return 'bg-gradient-to-r from-amber-400 to-amber-600 text-white';
       default:
-        return "bg-gray-100 text-gray-700"
+        return 'bg-gray-100 text-gray-700';
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 relative overflow-hidden">
@@ -74,7 +106,9 @@ export default function Leaderboard() {
         <Card className="max-w-4xl mx-auto border-0 shadow-2xl bg-white/90 backdrop-blur-sm mb-8">
           <CardContent className="p-8">
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-black mb-2">Final Leaderboard</h2>
+              <h2 className="text-2xl font-bold text-black mb-2">
+                Final Leaderboard
+              </h2>
               <div className="w-24 h-1 bg-gradient-to-r from-[#A9F99E] to-[#84CC16] rounded-full mx-auto"></div>
             </div>
 
@@ -84,22 +118,26 @@ export default function Leaderboard() {
                   key={player.id}
                   className={`p-6 rounded-2xl border-2 transition-all duration-300 ${
                     player.isCurrentUser
-                      ? "border-[#A9F99E] bg-gradient-to-r from-[#A9F99E]/10 to-[#84CC16]/10 shadow-lg"
-                      : "border-gray-200 bg-white hover:shadow-md"
+                      ? 'border-[#A9F99E] bg-gradient-to-r from-[#A9F99E]/10 to-[#84CC16]/10 shadow-lg'
+                      : 'border-gray-200 bg-white hover:shadow-md'
                   }`}
                 >
                   <div className="flex items-center space-x-4">
                     {/* Rank */}
-                    <div className="flex-shrink-0">{getRankIcon(index + 1)}</div>
+                    <div className="flex-shrink-0">
+                      {getRankIcon(index + 1)}
+                    </div>
 
                     {/* Avatar */}
                     <Avatar
-                      className={`w-12 h-12 border-2 ${player.isCurrentUser ? "border-[#A9F99E]" : "border-gray-200"}`}
+                      className={`w-12 h-12 border-2 ${player.isCurrentUser ? 'border-[#A9F99E]' : 'border-gray-200'}`}
                     >
                       <AvatarImage src="/placeholder-user.jpg" />
                       <AvatarFallback
                         className={`font-semibold ${
-                          player.isCurrentUser ? "bg-[#A9F99E]/20 text-black" : "bg-gray-100 text-gray-700"
+                          player.isCurrentUser
+                            ? 'bg-[#A9F99E]/20 text-black'
+                            : 'bg-gray-100 text-gray-700'
                         }`}
                       >
                         {player.avatar}
@@ -109,9 +147,13 @@ export default function Leaderboard() {
                     {/* Player Info */}
                     <div className="flex-1">
                       <div className="flex items-center space-x-2 mb-1">
-                        <h3 className="font-bold text-lg text-black">{player.name}</h3>
+                        <h3 className="font-bold text-lg text-black">
+                          {player.name}
+                        </h3>
                         {player.isCurrentUser && (
-                          <Badge className="bg-[#84CC16]/20 text-[#84CC16] border-[#84CC16]/30 text-xs">You</Badge>
+                          <Badge className="bg-[#84CC16]/20 text-[#84CC16] border-[#84CC16]/30 text-xs">
+                            You
+                          </Badge>
                         )}
                       </div>
                       <p className="text-gray-600">
@@ -179,11 +221,15 @@ export default function Leaderboard() {
                 <div className="text-sm text-gray-600">Players</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-[#84CC16] mb-1">5:42</div>
+                <div className="text-2xl font-bold text-[#84CC16] mb-1">
+                  5:42
+                </div>
                 <div className="text-sm text-gray-600">Duration</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-[#84CC16] mb-1">Geography</div>
+                <div className="text-2xl font-bold text-[#84CC16] mb-1">
+                  Geography
+                </div>
                 <div className="text-sm text-gray-600">Topic</div>
               </div>
             </div>
@@ -191,5 +237,5 @@ export default function Leaderboard() {
         </Card>
       </div>
     </div>
-  )
+  );
 }

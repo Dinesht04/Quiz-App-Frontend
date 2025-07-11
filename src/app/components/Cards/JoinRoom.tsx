@@ -19,7 +19,7 @@ import { useGlobalContext } from '@/app/providers/GlobalContext';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs';
 
 type JoinRoomCardProps = {
-  username: string;
+  username: string | null;
   expires?: string;
   SignOut?: React.JSX.Element;
 };
@@ -122,26 +122,23 @@ export default function JoinRoomCard({
   );
 }
 
-
 export function NewJoinRoomCard({
   username,
   expires,
   SignOut,
-}: JoinRoomCardProps){
-
-  const [pulseAnimation, setPulseAnimation] = useState(false)
+}: JoinRoomCardProps) {
+  const [pulseAnimation, setPulseAnimation] = useState(false);
   const { setUsername } = useGlobalContext();
 
   const roomIdRef = useRef<HTMLInputElement>(null);
 
-
-    useEffect(() => {
-      const interval = setInterval(() => {
-        setPulseAnimation(true)
-        setTimeout(() => setPulseAnimation(false), 1000)
-      }, 3000)
-      return () => clearInterval(interval)
-    }, [])
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPulseAnimation(true);
+      setTimeout(() => setPulseAnimation(false), 1000);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleJoinRoom = (): void => {
     if (!roomIdRef.current?.value) {
@@ -159,75 +156,81 @@ export function NewJoinRoomCard({
     redirect(`/Room/Lobby/${r}`);
   };
 
-  return(
+  return (
     <Card className="bg-gradient-to-br from-gray-900/80 to-gray-800/80 border-gray-700/50 backdrop-blur-sm shadow-2xl shadow-[#A9F99E]/10">
-              <CardHeader className="pb-4">
-                <div className="flex items-center space-x-3">
-                  <div
-                    className={`w-10 h-10 bg-gradient-to-br from-[#A9F99E] to-cyan-400 rounded-xl flex items-center justify-center shadow-lg transition-all duration-300 ${pulseAnimation ? "scale-110 shadow-[#A9F99E]/50" : "shadow-[#A9F99E]/25"}`}
-                  >
-                    <Play className="w-5 h-5 text-black" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-2xl text-white">Ready to Dominate?</CardTitle>
-                    <CardDescription className="text-gray-400">Choose your battle mode</CardDescription>
-                  </div>
+      <CardHeader className="pb-4">
+        <div className="flex items-center space-x-3">
+          <div
+            className={`w-10 h-10 bg-gradient-to-br from-[#A9F99E] to-cyan-400 rounded-xl flex items-center justify-center shadow-lg transition-all duration-300 ${pulseAnimation ? 'scale-110 shadow-[#A9F99E]/50' : 'shadow-[#A9F99E]/25'}`}
+          >
+            <Play className="w-5 h-5 text-black" />
+          </div>
+          <div>
+            <CardTitle className="text-2xl text-white">
+              Ready to Dominate?
+            </CardTitle>
+            <CardDescription className="text-gray-400">
+              Choose your battle mode
+            </CardDescription>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <Tabs defaultValue="join" className="w-full">
+          <TabsList className="grid w-full grid-cols-2 bg-gray-800/50 p-1 rounded-xl">
+            <TabsTrigger
+              value="join"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#A9F99E] data-[state=active]:to-cyan-400 data-[state=active]:text-black rounded-lg transition-all duration-300"
+            >
+              <Users className="w-4 h-4 mr-2" />
+              Join Battle
+            </TabsTrigger>
+            <TabsTrigger
+              value="create"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#A9F99E] data-[state=active]:to-cyan-400 data-[state=active]:text-black rounded-lg transition-all duration-300"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Create Arena
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="join" className="space-y-6 mt-8">
+            <div className="flex space-x-3">
+              <div className="relative flex-1">
+                <Input
+                  placeholder="Enter Room Code..."
+                  ref={roomIdRef}
+                  className="bg-gray-800/50 border-gray-600 text-white placeholder:text-gray-500 focus:border-[#A9F99E] focus:ring-2 focus:ring-[#A9F99E]/20 h-12 text-lg rounded-xl"
+                />
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                  <Zap className="w-5 h-5 text-[#A9F99E]" />
                 </div>
-              </CardHeader>
-              <CardContent>
-                <Tabs defaultValue="join" className="w-full">
-                  <TabsList className="grid w-full grid-cols-2 bg-gray-800/50 p-1 rounded-xl">
-                    <TabsTrigger
-                      value="join"
-                      className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#A9F99E] data-[state=active]:to-cyan-400 data-[state=active]:text-black rounded-lg transition-all duration-300"
-                    >
-                      <Users className="w-4 h-4 mr-2" />
-                      Join Battle
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value="create"
-                      className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#A9F99E] data-[state=active]:to-cyan-400 data-[state=active]:text-black rounded-lg transition-all duration-300"
-                    >
-                      <Plus className="w-4 h-4 mr-2" />
-                      Create Arena
-                    </TabsTrigger>
-                  </TabsList>
+              </div>
+              <Button
+                onClick={handleJoinRoom}
+                className="bg-gradient-to-r from-[#A9F99E] to-cyan-400 text-black hover:from-[#A9F99E]/90 hover:to-cyan-400/90 h-12 px-8 rounded-xl font-semibold shadow-lg hover:shadow-[#A9F99E]/25 transition-all duration-300"
+              >
+                <Rocket className="w-4 h-4 mr-2" />
+                Launch!
+              </Button>
+            </div>
+          </TabsContent>
 
-                  <TabsContent value="join" className="space-y-6 mt-8">
-                    <div className="flex space-x-3">
-                      <div className="relative flex-1">
-                        <Input
-                          placeholder="Enter Room Code..."
-                          ref={roomIdRef}
-                          className="bg-gray-800/50 border-gray-600 text-white placeholder:text-gray-500 focus:border-[#A9F99E] focus:ring-2 focus:ring-[#A9F99E]/20 h-12 text-lg rounded-xl"
-                        />
-                        <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                          <Zap className="w-5 h-5 text-[#A9F99E]" />
-                        </div>
-                      </div>
-                      <Button
-                      onClick={handleJoinRoom}
-                      className="bg-gradient-to-r from-[#A9F99E] to-cyan-400 text-black hover:from-[#A9F99E]/90 hover:to-cyan-400/90 h-12 px-8 rounded-xl font-semibold shadow-lg hover:shadow-[#A9F99E]/25 transition-all duration-300">
-                        <Rocket className="w-4 h-4 mr-2" />
-                        Launch!
-                      </Button>
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="create" className="space-y-6 mt-8">
-                    <Button
-                    onClick={handleCreateRoom}
-                    className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 h-16 text-xl font-bold rounded-xl shadow-lg hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-105">
-                      <Plus className="w-6 h-6 mr-3" />
-                      Create New Arena
-                      <Sparkles
-                       className="w-5 h-5 ml-3" />
-                    </Button>
-                    <p className="text-center text-gray-400 text-sm">Topic & difficulty selection in lobby</p>
-                  </TabsContent>
-                </Tabs>
-              </CardContent>
-            </Card>
-
-  )
+          <TabsContent value="create" className="space-y-6 mt-8">
+            <Button
+              onClick={handleCreateRoom}
+              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 h-16 text-xl font-bold rounded-xl shadow-lg hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-105"
+            >
+              <Plus className="w-6 h-6 mr-3" />
+              Create New Arena
+              <Sparkles className="w-5 h-5 ml-3" />
+            </Button>
+            <p className="text-center text-gray-400 text-sm">
+              Topic & difficulty selection in lobby
+            </p>
+          </TabsContent>
+        </Tabs>
+      </CardContent>
+    </Card>
+  );
 }

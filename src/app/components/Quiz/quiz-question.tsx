@@ -1,49 +1,53 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
-import { Clock, Users, Trophy, CheckCircle } from "lucide-react"
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Clock, Users, Trophy, CheckCircle } from 'lucide-react';
 
 export default function QuizQuestion() {
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null)
-  const [timeLeft, setTimeLeft] = useState(15)
-  const [isAnswered, setIsAnswered] = useState(false)
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [timeLeft, setTimeLeft] = useState(15);
+  const [isAnswered, setIsAnswered] = useState(false);
 
-  const question = "What is the capital city of Japan?"
+  const question = 'What is the capital city of Japan?';
   const answers = [
-    { id: "a", text: "Tokyo", isCorrect: true },
-    { id: "b", text: "Osaka", isCorrect: false },
-    { id: "c", text: "Kyoto", isCorrect: false },
-    { id: "d", text: "Hiroshima", isCorrect: false },
-  ]
+    { id: 'a', text: 'Tokyo', isCorrect: true },
+    { id: 'b', text: 'Osaka', isCorrect: false },
+    { id: 'c', text: 'Kyoto', isCorrect: false },
+    { id: 'd', text: 'Hiroshima', isCorrect: false },
+  ];
 
   const handleAnswerSelect = (answerId: string) => {
     if (!isAnswered) {
-      setSelectedAnswer(answerId)
-      setIsAnswered(true)
+      setSelectedAnswer(answerId);
+      setIsAnswered(true);
     }
-  }
+  };
 
-  const getAnswerStyle = (answer: { id: string; text: string; isCorrect: boolean }) => {
+  const getAnswerStyle = (answer: {
+    id: string;
+    text: string;
+    isCorrect: boolean;
+  }) => {
     if (!isAnswered) {
       return selectedAnswer === answer.id
-        ? "border-[#A9F99E] bg-[#A9F99E]/20 shadow-lg transform scale-105"
-        : "border-gray-200 hover:border-[#A9F99E]/50 hover:bg-[#A9F99E]/10"
+        ? 'border-[#A9F99E] bg-[#A9F99E]/20 shadow-lg transform scale-105'
+        : 'border-gray-200 hover:border-[#A9F99E]/50 hover:bg-[#A9F99E]/10';
     }
 
     if (answer.isCorrect) {
-      return "border-green-500 bg-green-50 shadow-lg"
+      return 'border-green-500 bg-green-50 shadow-lg';
     }
 
     if (selectedAnswer === answer.id && !answer.isCorrect) {
-      return "border-red-500 bg-red-50 shadow-lg"
+      return 'border-red-500 bg-red-50 shadow-lg';
     }
 
-    return "border-gray-200 bg-gray-50"
-  }
+    return 'border-gray-200 bg-gray-50';
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 relative overflow-hidden">
@@ -59,7 +63,9 @@ export default function QuizQuestion() {
               <Users className="w-4 h-4 mr-2" />
               Room: 8kg57
             </Badge>
-            <Badge className="bg-black/10 text-black border-black/20 px-4 py-2">Question 3 of 10</Badge>
+            <Badge className="bg-black/10 text-black border-black/20 px-4 py-2">
+              Question 3 of 10
+            </Badge>
           </div>
 
           <div className="flex items-center space-x-4">
@@ -87,8 +93,12 @@ export default function QuizQuestion() {
         <Card className="max-w-4xl mx-auto border-0 shadow-2xl bg-white/90 backdrop-blur-sm mb-8">
           <CardContent className="p-8">
             <div className="text-center mb-8">
-              <Badge className="bg-[#A9F99E]/20 text-[#84CC16] border-[#A9F99E]/30 mb-4">Geography</Badge>
-              <h2 className="text-3xl font-bold text-black mb-4 leading-relaxed">{question}</h2>
+              <Badge className="bg-[#A9F99E]/20 text-[#84CC16] border-[#A9F99E]/30 mb-4">
+                Geography
+              </Badge>
+              <h2 className="text-3xl font-bold text-black mb-4 leading-relaxed">
+                {question}
+              </h2>
               <div className="w-24 h-1 bg-gradient-to-r from-[#A9F99E] to-[#84CC16] rounded-full mx-auto"></div>
             </div>
 
@@ -100,19 +110,23 @@ export default function QuizQuestion() {
                   onClick={() => handleAnswerSelect(answer.id)}
                   disabled={isAnswered}
                   className={`p-6 border-2 rounded-2xl text-left transition-all duration-300 ${getAnswerStyle(answer)} ${
-                    !isAnswered ? "hover:shadow-lg cursor-pointer" : "cursor-default"
+                    !isAnswered
+                      ? 'hover:shadow-lg cursor-pointer'
+                      : 'cursor-default'
                   }`}
                 >
                   <div className="flex items-center space-x-4">
                     <div
                       className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-white ${
                         isAnswered && answer.isCorrect
-                          ? "bg-green-500"
-                          : isAnswered && selectedAnswer === answer.id && !answer.isCorrect
-                            ? "bg-red-500"
+                          ? 'bg-green-500'
+                          : isAnswered &&
+                              selectedAnswer === answer.id &&
+                              !answer.isCorrect
+                            ? 'bg-red-500'
                             : selectedAnswer === answer.id
-                              ? "bg-[#84CC16]"
-                              : "bg-gray-400"
+                              ? 'bg-[#84CC16]'
+                              : 'bg-gray-400'
                       }`}
                     >
                       {isAnswered && answer.isCorrect ? (
@@ -121,7 +135,9 @@ export default function QuizQuestion() {
                         String.fromCharCode(65 + index)
                       )}
                     </div>
-                    <span className="text-lg font-medium text-black flex-1">{answer.text}</span>
+                    <span className="text-lg font-medium text-black flex-1">
+                      {answer.text}
+                    </span>
                   </div>
                 </button>
               ))}
@@ -150,18 +166,30 @@ export default function QuizQuestion() {
                     </div>
                   ) : (
                     <div className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center">
-                      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      <svg
+                        className="w-8 h-8 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M6 18L18 6M6 6l12 12"
+                        />
                       </svg>
                     </div>
                   )}
                 </div>
                 <h3 className="text-2xl font-bold text-black mb-2">
-                  {selectedAnswer === answers.find((a) => a.isCorrect)?.id ? "Correct!" : "Incorrect!"}
+                  {selectedAnswer === answers.find((a) => a.isCorrect)?.id
+                    ? 'Correct!'
+                    : 'Incorrect!'}
                 </h3>
                 <p className="text-gray-600 mb-4">
                   {selectedAnswer === answers.find((a) => a.isCorrect)?.id
-                    ? "Great job! You earned 500 points."
+                    ? 'Great job! You earned 500 points.'
                     : `The correct answer was ${answers.find((a) => a.isCorrect)?.text}.`}
                 </p>
                 <Button
@@ -182,11 +210,15 @@ export default function QuizQuestion() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
                   <Users className="w-5 h-5 text-[#84CC16]" />
-                  <span className="font-semibold text-black">Players: 3/4 answered</span>
+                  <span className="font-semibold text-black">
+                    Players: 3/4 answered
+                  </span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span className="text-sm text-gray-600">Waiting for others...</span>
+                  <span className="text-sm text-gray-600">
+                    Waiting for others...
+                  </span>
                 </div>
               </div>
             </CardContent>
@@ -194,5 +226,5 @@ export default function QuizQuestion() {
         </div>
       </div>
     </div>
-  )
+  );
 }

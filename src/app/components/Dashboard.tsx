@@ -6,6 +6,7 @@ import Tutorial from './Tutorial';
 import BattleStatistics from './BattleStatistics';
 import JoinRoomCard, { NewJoinRoomCard } from './Cards/JoinRoom';
 import { useGlobalContext } from '../providers/GlobalContext';
+import CosmicJoinRoom from './Cards/CosmicJoinRoom';
 
 type DashboardProps = {
   session: any;
@@ -14,12 +15,6 @@ type DashboardProps = {
 
 export default function Dashboard({ session, isGuest }: DashboardProps) {
   const { username } = useGlobalContext();
-
-  if (isGuest) {
-    console.log('Guest is here');
-  } else {
-    console.log(session);
-  }
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
@@ -40,21 +35,20 @@ export default function Dashboard({ session, isGuest }: DashboardProps) {
           <div className="lg:col-span-2 space-y-8">
             {/* Enhanced Quick Actions */}
             {/* checking if guest user or not, if session exists then not. setting username accordingly. */}
-            {session && session.data?.user?.name ? (
-              <JoinRoomCard username={session.data?.user?.name} />
-            ) : (
-              <JoinRoomCard username={username} />
-            )}
 
             {/* How It Works Tutorial */}
+
             <Tutorial />
+            <BattleStatistics />
           </div>
 
           {/* Enhanced Sidebar */}
           <div className="space-y-6">
-            {/* Enhanced User Stats */}
-            <BattleStatistics />
-            {/* Enhanced Trending Topics */}
+            {!isGuest ? (
+              <CosmicJoinRoom session={session} />
+            ) : (
+              <CosmicJoinRoom session={session} />
+            )}
             {/* <TrendingTopics/> */}
           </div>
         </div>
