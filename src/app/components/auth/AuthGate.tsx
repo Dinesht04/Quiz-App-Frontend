@@ -1,74 +1,95 @@
 'use client';
 
-import SignInCard from './SignInCard';
-import { Button } from '@/components/ui/button';
-import { Clock, Play, Users, Zap } from 'lucide-react';
-import JoinRoomCard from '../Cards/JoinRoom';
-import { SignOut } from './AuthFunctions';
 import { useGlobalContext } from '@/app/providers/GlobalContext';
-import GuestComponent from '../GuestComponent';
+import { redirect } from 'next/navigation';
+import Dashboard from '../Dashboard';
+import { useEffect } from 'react';
 
-export default function AuthGate({ session }: { session: any }) {
-  const { isGuest } = useGlobalContext();
-
-  if ((!session || !session.user || !session.user.name) && !isGuest) {
-    return <SignInCard />;
-  }
-
-  if (isGuest) {
-    return <GuestComponent />;
-  }
-
+function LoadingSpinner() {
   return (
-    <div className="flex justify-center items-center space-x-8 h-screen">
-      <div className="space-y-8 text-center lg:text-left">
-        <div className="space-y-4">
-          <h1 className="text-5xl lg:text-7xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent leading-tight">
-            Quiz
-            <span className="block text-4xl lg:text-6xl">Together</span>
-          </h1>
-          <p className="text-xl lg:text-2xl text-gray-600 max-w-lg mx-auto lg:mx-0">
-            Join the ultimate real-time quiz experience. Create rooms, challenge
-            friends, and test your knowledge together on{' '}
-            <span className="text-amber-700">ANY TOPIC</span> you want!
-          </p>
-        </div>
+    <div className="min-h-screen bg-gray-900 text-white p-4 sm:p-6 lg:p-8 animate-pulse">
+      <div className="max-w-7xl mx-auto">
+        {/* Top Nav Skeleton */}
+        <header className="flex justify-between items-center mb-8">
+          <div className="flex items-center gap-4">
+            <div className="h-8 w-8 bg-gray-700 rounded-full"></div>
+            <div className="h-6 w-24 bg-gray-700 rounded-md"></div>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="h-8 w-20 bg-gray-700 rounded-md"></div>
+            <div className="h-8 w-32 bg-gray-700 rounded-md"></div>
+          </div>
+        </header>
 
-        <div className="space-y-4">
-          <Button
-            size="lg"
-            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-6 text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
-          >
-            <Play className="w-6 h-6 mr-2" />
-            Play Now
-          </Button>
+        {/* Main Content Skeleton */}
+        <main className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* How It Works Skeleton */}
+            <div className="bg-gray-800 p-6 rounded-lg">
+              <div className="h-7 w-1/3 bg-gray-700 rounded-md mb-6"></div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="h-24 bg-gray-700 rounded-lg"></div>
+                <div className="h-24 bg-gray-700 rounded-lg"></div>
+                <div className="h-24 bg-gray-700 rounded-lg"></div>
+                <div className="h-24 bg-gray-700 rounded-lg"></div>
+              </div>
+            </div>
 
-          <div className="flex items-center justify-center lg:justify-start space-x-6 text-sm text-gray-500">
-            <div className="flex items-center space-x-2">
-              <Clock className="w-4 h-4" />
-              <span>Real-time</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Users className="w-4 h-4" />
-              <span>Multiplayer</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Zap className="w-4 h-4" />
-              <span>Instant</span>
+            {/* Battle Stats Skeleton */}
+            <div className="bg-gray-800 p-6 rounded-lg">
+              <div className="h-7 w-1/4 bg-gray-700 rounded-md mb-6"></div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="h-16 bg-gray-700 rounded-lg"></div>
+                <div className="h-16 bg-gray-700 rounded-lg"></div>
+                <div className="h-16 bg-gray-700 rounded-lg col-span-1 md:col-span-3"></div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div id="roomCard" className="">
-        {/* <h1>Hey {session?.user?.name}</h1> */}
-        <JoinRoomCard
-          username={session.user.name}
-          SignOut={<SignOut />}
-          expires={session.expires}
-        />
-        {/* <ConnectionStatus/> */}
+          {/* Right Column Skeleton */}
+          <div className="lg:col-span-1">
+            <div className="bg-gray-800 p-6 rounded-lg h-full flex flex-col justify-between">
+              <div>
+                <div className="h-10 w-10 bg-green-500/50 rounded-lg mx-auto mb-4"></div>
+                <div className="h-8 w-3/4 bg-gray-700 rounded-md mx-auto mb-3"></div>
+                <div className="h-4 w-full bg-gray-700 rounded-md mb-1"></div>
+                <div className="h-4 w-5/6 bg-gray-700 rounded-md mx-auto mb-8"></div>
+              </div>
+              <div>
+                <div className="h-6 w-1/3 bg-gray-700 rounded-md mb-4"></div>
+                <div className="h-12 w-full bg-gray-700 rounded-lg mb-4"></div>
+                <div className="h-2 w-12 bg-gray-700 rounded-md mx-auto mb-4"></div>
+                <div className="h-12 w-full bg-green-500/50 rounded-lg"></div>
+              </div>
+            </div>
+          </div>
+        </main>
       </div>
     </div>
   );
+}
+
+export default function AuthGate({ session }: { session: any }) {
+  const { isGuest, cookie, loggedIn, loading } = useGlobalContext();
+
+  useEffect(() => {
+    if (!loading && !loggedIn) {
+      redirect('/');
+    }
+  }, [loggedIn]);
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
+  if (loggedIn) {
+    if (cookie && !isGuest) {
+      return <Dashboard session={session} isGuest={false} />;
+    } else {
+      return <Dashboard session={null} isGuest={true} />;
+    }
+  }
+
+  return <LoadingSpinner />;
 }

@@ -13,6 +13,8 @@ export default function LiveScores() {
       questionsAnswered: Number(questionsAnswered),
     })) || [];
 
+  console.log(liveScore);
+
   // Sort players by progress (descending)
   const sortedPlayers = [...players].sort(
     (a, b) => b.questionsAnswered - a.questionsAnswered,

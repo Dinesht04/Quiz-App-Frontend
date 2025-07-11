@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useGlobalContext } from '@/app/providers/GlobalContext';
 import { getGuestExpires, guestUsernameGenerator } from '@/lib/GuestLogin';
 import { redirect } from 'next/navigation';
-import { LogIn } from 'lucide-react';
+import { LogIn, Users } from 'lucide-react';
 
 type SignInAsGuestProps = {
   callbackUrl: string;
@@ -19,17 +19,19 @@ export function SignInAsGuest({ callbackUrl }: SignInAsGuestProps) {
         setUsername(guestUsernameGenerator());
         setExpires(getGuestExpires());
         setIsGuest(true);
-        redirect(callbackUrl);
+        redirect('/Dashboard');
       }}
+      className="flex justify-center"
     >
       <Button
-        type="submit"
         variant="outline"
-        size="lg"
-        className="border-2 border-gray-300 hover:border-red-400 hover:bg-red-50 text-gray-700 hover:text-red-600 rounded-full shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 font-medium"
+        type="submit"
+        className="w-full mx-12 py-4 border-2 border-[#A9F99E] text-[#A9F99E] hover:bg-[#A9F99E] hover:text-black font-semibold rounded-xl text-lg bg-transparent transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
       >
-        <LogIn className="w-5 h-5 mr-2" />
-        Continue as Guest
+        <>
+          <Users className="w-5 h-5 mr-3" />
+          Continue as Guest
+        </>
       </Button>
     </form>
   );

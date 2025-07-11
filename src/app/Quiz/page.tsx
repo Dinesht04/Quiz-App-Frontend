@@ -1,9 +1,12 @@
+import { auth } from '@/lib/auth';
 import Quiz from '../components/Quiz/Quiz';
 
-export default function () {
+export default async function () {
+  const session = await auth();
+
   return (
     <div>
-      <Quiz />
+      <Quiz session={session} />
     </div>
   );
 }

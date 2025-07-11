@@ -6,18 +6,36 @@ import {
   useState,
   Dispatch,
   SetStateAction,
+  useEffect,
 } from 'react';
 
+import {
+  checkAuthJsCookie,
+  checkMyCookie,
+  getMyCookie,
+} from '../actions/cookies';
+
 interface GlobalContextType {
-  username: string;
+  username: string | null;
   roomId: string;
   expires: string;
   setExpires: Dispatch<SetStateAction<string>>;
-  setUsername: Dispatch<SetStateAction<string>>;
+  setUsername: Dispatch<SetStateAction<string | null>>;
   setRoomId: Dispatch<SetStateAction<string>>;
   isGuest: boolean;
   setIsGuest: Dispatch<SetStateAction<boolean>>;
+  cookie: boolean;
+  setCookie: Dispatch<SetStateAction<boolean>>;
+  loggedIn: boolean;
+  setLoggedIn: Dispatch<SetStateAction<boolean>>;
+  loading: boolean;
 }
+
+// type Cookie = {
+//   guestUser:string|null,
+//   createdAt: Date,
+//   username: string,
+// }
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
 
@@ -26,10 +44,44 @@ export default function GlobalContextProvider({
 }: {
   children: ReactNode;
 }) {
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState<string | null>(null); // Initialize with null
   const [roomId, setRoomId] = useState('');
   const [expires, setExpires] = useState('');
   const [isGuest, setIsGuest] = useState<boolean>(false);
+  const [cookie, setCookie] = useState<boolean>(false);
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    async function loadGuestData() {
+      const hasGuestCookie = await checkMyCookie();
+      const hasAuthJsCookie = await checkAuthJsCookie();
+
+      if (hasGuestCookie) {
+        const guestData = await getMyCookie();
+        setUsername(guestData.guestUsername);
+        setIsGuest(true);
+        setLoggedIn(true);
+        setCookie(hasGuestCookie);
+      } else if (hasAuthJsCookie) {
+        // google sign in cookie
+        setIsGuest(false);
+        setLoggedIn(true);
+        setCookie(hasAuthJsCookie);
+      } else {
+        setUsername(null); // Ensure username is null if no guest cookie
+        setIsGuest(false);
+      }
+    }
+
+    try {
+      loadGuestData();
+    } catch (err) {
+      console.log('Global context error');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   const contextValue = {
     username,
@@ -40,6 +92,11 @@ export default function GlobalContextProvider({
     setExpires,
     isGuest,
     setIsGuest,
+    cookie,
+    setCookie,
+    loggedIn,
+    setLoggedIn,
+    loading,
   };
 
   return (
@@ -49,11 +106,12 @@ export default function GlobalContextProvider({
   );
 }
 
-// Custom hook to consume the WebSocket context
 export const useGlobalContext = () => {
   const context = useContext(GlobalContext);
   if (context === undefined) {
-    throw new Error('useWebSocket must be used within a WebSocketProvider');
+    throw new Error(
+      'useGlobalContext must be used within a GlobalContextProvider',
+    );
   }
   return context;
 };

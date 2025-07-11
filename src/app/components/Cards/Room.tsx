@@ -25,6 +25,7 @@ import {
   MessageCircle,
   BookOpen,
   Send,
+  MoveLeft,
 } from 'lucide-react';
 import { Session } from 'next-auth';
 import { redirect } from 'next/navigation';
@@ -381,226 +382,325 @@ export default function ({ roomid, session }: Props) {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 px-4 py-8">
-      <Card className="w-full max-w-2xl bg-white/80 backdrop-blur-sm shadow-2xl border border-white/20 rounded-3xl overflow-hidden">
-        <CardHeader className="text-center space-y-4 pb-6">
-          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-            <Users className="w-8 h-8 text-white" />
-          </div>
-          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent">
-            Room: {roomid}
-          </CardTitle>
-          <CardDescription className="text-gray-600 text-lg">
-            {joinedRoom
-              ? clientList.length == 1
-                ? "You're in the room! Waiting for other players..."
-                : "You're in the room! Waiting host to start the game..."
-              : 'Ready to join the quiz room?'}
-            <br />
-            <CopyButton
-              className="mt-4"
-              text={`${process.env.NEXT_PUBLIC_FRONTEND_PRODUCTION_URL}/Room/Lobby/${roomid}`}
-            />
-          </CardDescription>
+    <div className="flex justify-center items-center min-h-screen bg-black relative overflow-hidden px-4 py-8">
+      {/* Subtle Cosmic Background */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black"></div>
 
-          {/* Connection Status */}
-          <div className="flex items-center justify-center space-x-2">
-            {isConnected ? (
-              <>
-                <Wifi className="w-5 h-5 text-green-500" />
-                <Badge
-                  variant="secondary"
-                  className="bg-green-100 text-green-700 border-green-200"
-                >
-                  Connected
-                </Badge>
-              </>
-            ) : (
-              <>
-                <WifiOff className="w-5 h-5 text-red-500" />
-                <Badge
-                  variant="secondary"
-                  className="bg-red-100 text-red-700 border-red-200"
-                >
-                  Disconnected
-                </Badge>
-                <Badge
-                  onClick={() => {
-                    window.location.reload();
-                  }}
-                  variant="destructive"
-                  className="bg-red-100 text-red-700 border-red-200 shadow-lg hover:shadow-xl hover:cursor-pointer transform hover:scale-105 transition-all duration-300 "
-                >
-                  Refresh
-                  <RefreshCcw className="w-5 h-5 text-green-800" />
-                </Badge>
-              </>
-            )}
-          </div>
-        </CardHeader>
+        {/* Refined floating elements */}
+        <div className="absolute top-20 left-10 w-2 h-2 bg-[#A9F99E] rounded-full animate-pulse opacity-60"></div>
+        <div className="absolute top-40 right-20 w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse delay-1000 opacity-40"></div>
+        <div className="absolute bottom-32 left-1/4 w-2 h-2 bg-purple-400 rounded-full animate-pulse delay-500 opacity-50"></div>
+        <div className="absolute bottom-20 right-10 w-1.5 h-1.5 bg-cyan-300 rounded-full animate-pulse delay-300 opacity-60"></div>
 
-        <CardContent className="space-y-6 px-8">
-          {joinedRoom ? (
-            isHost ? (
-              <div className="space-y-4">
-                {/* Topic and Difficulty Section */}
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="topic"
-                    className="text-sm font-semibold text-gray-700 flex items-center"
-                  >
-                    <BookOpen className="w-4 h-4 mr-2 text-purple-500" />
-                    Quiz Topic
-                  </Label>
-                  <Input
-                    id="topic"
-                    ref={topicRef}
-                    placeholder="Enter your niche quiz topic (e.g., Japanese Motorsport History, 9/11, Anant Ambani...)"
-                    className="h-12 rounded-full border-2 border-purple-200 focus:border-purple-400 bg-white/70"
-                  />
+        {/* Subtle orbs */}
+        <div className="absolute top-1/4 left-1/3 w-32 h-32 bg-gradient-to-r from-[#A9F99E]/10 to-cyan-400/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-40 h-40 bg-gradient-to-r from-purple-500/8 to-pink-500/8 rounded-full blur-3xl"></div>
+
+        {/* Subtle grid */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(169,249,158,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(169,249,158,0.02)_1px,transparent_1px)] bg-[size:60px_60px]"></div>
+      </div>
+
+      <div className="relative z-10 w-full  flex justify-center space-x-8">
+        <div className='min-w-4xl'>
+          {/* Main Card with refined cosmic styling */}
+        <div className="relative">
+          {/* Subtle outer glow */}
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-[#A9F99E]/20 via-cyan-400/20 to-purple-500/20 rounded-3xl blur-sm opacity-50"></div>
+
+          <Card className="relative bg-gray-900/95 backdrop-blur-xl border border-gray-700/50 rounded-3xl overflow-hidden shadow-2xl">
+            {/* Subtle inner cosmic effects */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#A9F99E]/3 via-transparent to-purple-500/3"></div>
+            <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-cyan-400/5 to-transparent rounded-full blur-2xl"></div>
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-br from-[#A9F99E]/5 to-transparent rounded-full blur-xl"></div>
+            <div className="relative z-10">
+              <CardHeader className="text-center space-y-6 pb-8 pt-8">
+                {/* Refined room icon */}
+                <div className='flex items-center pr-8 pl-4'>
+                    <Button
+                    className='hover:bg-gray-800 hover:cursor-pointer'
+                    onClick={()=>{
+                      LeaveRoom();
+                      redirect('/Dashboard')
+                    }}
+                    >
+                      <MoveLeft className='w-5 h-5' />
+                    </Button>
+                  </div>
+                <div className="relative mx-auto">
+
+                  <div className="absolute -inset-1 bg-gradient-to-r from-[#A9F99E] to-cyan-400 rounded-full blur-md opacity-30"></div>
+                  <div className="relative w-16 h-16 bg-gradient-to-br from-[#A9F99E] to-cyan-400 rounded-full flex items-center justify-center shadow-lg shadow-[#A9F99E]/25">
+                    <Users className="w-8 h-8 text-black" />
+                  </div>
                 </div>
 
                 <div className="space-y-3">
-                  <Label className="text-sm font-semibold text-gray-700">
-                    Difficulty Level:
-                  </Label>
+                  <CardTitle className="text-3xl font-bold bg-gradient-to-r from-[#A9F99E] via-cyan-400 to-purple-400 bg-clip-text text-transparent">
+                    Room: {roomid}
+                  </CardTitle>
+                  <CardDescription className="text-gray-300 text-lg leading-relaxed">
+                    {joinedRoom
+                      ? clientList.length == 1
+                        ? "You're in the room! Waiting for other players..."
+                        : "You're in the room! Waiting host to start the game..."
+                      : "Ready to join the quiz room?"}
+                    <br />
+                    <div className="mt-4">
+                      <CopyButton
+                        className="mt-4 text-black hover:text-gray-600 hover:cursor-pointer"
+                        text={`${process.env.NEXT_PUBLIC_FRONTEND_PRODUCTION_URL}/Room/Lobby/${roomid}`}
+                      />
+                    </div>
+                  </CardDescription>
+                </div>
 
-                  <div className="px-3">
-                    <Slider
-                      // value={[difficulty]}
-                      onValueChange={(value) => {
-                        value[0] > 0 && value[0] < 20
-                          ? setDifficulty(1)
-                          : value[0] >= 20 && value[0] < 40
-                            ? setDifficulty(2)
-                            : value[0] >= 40 && value[0] < 60
-                              ? setDifficulty(3)
-                              : value[0] >= 60 && value[0] < 80
-                                ? setDifficulty(4)
-                                : setDifficulty(5);
-                      }}
-                      defaultValue={[40]}
-                      max={100}
-                      min={1}
-                      step={1}
-                      className={`w-full `}
-                      // @ts-ignore
-                      sliderColor={sliderDifficultyColors[difficulty - 1]}
-                    />
-
-                    <div className="flex justify-center text-md text-gray-500 mt-2">
-                      {difficulty > 0 && (
-                        <span
-                          className={`ml-2 font-bold ${difficultyColors[difficulty - 1]}`}
+                {/* Refined Connection Status */}
+                <div className="flex items-center justify-center space-x-3">
+                  {isConnected ? (
+                    <>
+                      <div className="flex items-center space-x-2 px-4 py-2  rounded-full ">
+                        <Wifi className="w-4 h-4 text-green-400" />
+                        <Badge
+                          variant="secondary"
+                          className="bg-green-500/20 text-green-300 border-green-500/30 text-sm"
                         >
-                          {difficultyNames[difficulty - 1]}
-                        </span>
+                          Connected
+                        </Badge>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex items-center space-x-2 px-4 py-2  rounded-full ">
+                        <WifiOff className="w-4 h-4 text-red-400" />
+                        <Badge variant="secondary" className="bg-red-500/20 text-red-300 border-red-500/30 text-sm">
+                          Disconnected
+                        </Badge>
+                      </div>
+                      <Badge
+                        onClick={() => {
+                          window.location.reload()
+                        }}
+                        variant="destructive"
+                        className="bg-red-500/20 text-red-300 border-red-500/30 shadow-lg hover:shadow-xl hover:cursor-pointer transform hover:scale-105 transition-all duration-300 px-3 py-1"
+                      >
+                        <RefreshCcw className="w-4 h-4 mr-1" />
+                        Refresh
+                      </Badge>
+                    </>
+                  )}
+                </div>
+              </CardHeader>
+
+              {isConnected && (
+                  <CardContent className="space-y-8 px-8 pb-8">
+                  {/* Content based on room state */}
+                  {joinedRoom ? (
+                    isHost ? (
+                      <div className="space-y-6">
+                        {/* Topic Section */}
+                        <div className="space-y-3">
+                          <Label htmlFor="topic" className="text-sm font-semibold text-gray-300 flex items-center">
+                            <div className="w-5 h-5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mr-2">
+                              <BookOpen className="w-3 h-3 text-white" />
+                            </div>
+                            Quiz Topic
+                          </Label>
+                          <div className="relative">
+                            <div className="absolute -inset-0.5 bg-gradient-to-r from-[#A9F99E]/30 to-cyan-400/30 rounded-2xl blur-sm opacity-30"></div>
+                            <Input
+                              id="topic"
+                              ref={topicRef}
+                              placeholder="Enter your niche quiz topic (e.g., Japanese Motorsport History, 9/11, Anant Ambani...)"
+                              className="relative h-12 rounded-2xl border border-gray-600/50 bg-gray-800/50 text-white placeholder:text-gray-400 focus:border-[#A9F99E] focus:ring-2 focus:ring-[#A9F99E]/20 backdrop-blur-sm"
+                            />
+                          </div>
+                        </div>
+
+                        {/* Difficulty Section */}
+                        <div className="space-y-4">
+                          <Label className="text-sm font-semibold text-gray-300">Difficulty Level:</Label>
+                          <div className="px-4 py-4 bg-gray-800/30 rounded-2xl border border-gray-700/50">
+                            <Slider
+                              onValueChange={(value) => {
+                                value[0] > 0 && value[0] < 20
+                                  ? setDifficulty(1)
+                                  : value[0] >= 20 && value[0] < 40
+                                    ? setDifficulty(2)
+                                    : value[0] >= 40 && value[0] < 60
+                                      ? setDifficulty(3)
+                                      : value[0] >= 60 && value[0] < 80
+                                        ? setDifficulty(4)
+                                        : setDifficulty(5)
+                              }}
+                              defaultValue={[40]}
+                              max={100}
+                              min={1}
+                              step={1}
+                              className="w-full"
+                              // @ts-ignore
+                              sliderColor={sliderDifficultyColors[difficulty - 1]}
+                            />
+                            <div className="flex justify-center text-lg text-gray-300 mt-3">
+                              {difficulty > 0 && (
+                                <span className={`font-bold ${difficultyColors[difficulty - 1]}`}>
+                                  {difficultyNames[difficulty - 1]}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-center py-8">
+                        <div className="w-12 h-12 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <Trophy className="w-6 h-6 text-white" />
+                        </div>
+                        <p className="text-gray-300 text-lg">
+                          The Host is choosing the Topic and Difficulty, Kindly remain Patient.
+                        </p>
+                      </div>
+                    )
+                  ) : (
+                    <div className="text-center py-8">
+                      <p className="text-gray-300 text-xl font-medium">Join the Room!</p>
+                    </div>
+                  )}
+
+                  {/* Action Buttons */}
+                  <div className="space-y-4">
+                    {!joinedRoom ? (
+                      <div className="relative">
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-[#A9F99E] to-cyan-400 rounded-2xl blur-sm opacity-50"></div>
+                        <Button
+                          onClick={joinRoom}
+                          disabled={!isConnected}
+                          size="lg"
+                          className="relative w-full h-14 bg-gradient-to-r from-[#A9F99E] to-cyan-400 hover:from-[#A9F99E]/90 hover:to-cyan-400/90 disabled:from-gray-600 disabled:to-gray-700 text-black font-semibold text-lg rounded-2xl shadow-lg transition-all duration-300 transform hover:scale-105"
+                        >
+                          <UserPlus className="w-5 h-5 mr-3" />
+                          Join Room
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="relative">
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-red-500/50 to-pink-500/50 rounded-2xl blur-sm opacity-50"></div>
+                        <Button
+                          onClick={LeaveRoom}
+                          disabled={!isConnected}
+                          size="lg"
+                          className="relative w-full h-14 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold text-lg rounded-2xl shadow-lg transition-all duration-300 transform hover:scale-105"
+                        >
+                          <LogOut className="w-5 h-5 mr-3" />
+                          Leave Room
+                        </Button>
+                      </div>
+                    )}
+
+                    {/* Secondary Actions */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <Button
+                        onClick={joinRoom}
+                        disabled={!isConnected}
+                        variant="outline"
+                        size="lg"
+                        className="h-12 border-2 border-gray-600/50 hover:border-[#A9F99E]/50 hover:bg-[#A9F99E]/10 text-gray-300 hover:text-[#A9F99E] rounded-2xl shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 font-medium bg-gray-800/30"
+                      >
+                        <UserPlus className="w-4 h-4 mr-2" />
+                        Rejoin
+                      </Button>
+
+                      {isHost && (
+                        <div>
+                          {loading ? (
+                            <LoadingButton />
+                          ) : (
+                            <div className="relative">
+                              <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-500/50 to-indigo-500/50 rounded-2xl blur-sm opacity-50"></div>
+                              <Button
+                                onClick={startQuiz}
+                                disabled={!isConnected || !joinedRoom}
+                                size="lg"
+                                className="relative h-12 w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 disabled:from-gray-600 disabled:to-gray-700 text-white rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 font-semibold"
+                              >
+                                <Trophy className="w-4 h-4 mr-2" />
+                                Start Quiz
+                              </Button>
+                            </div>
+                          )}
+                        </div>
                       )}
                     </div>
                   </div>
-                </div>
-              </div>
-            ) : (
-              <div>
-                The Host is choosing the Topic and Difficulty, Kindly remain
-                Patient.
-              </div>
-            )
-          ) : (
-            <div>Join the Room!</div>
-          )}
 
-          {/* Main Action Button */}
-          {!joinedRoom ? (
-            <Button
-              onClick={joinRoom}
-              disabled={!isConnected}
-              size="lg"
-              className="w-full h-14 bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 disabled:from-gray-400 disabled:to-gray-500 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 font-semibold text-lg"
-            >
-              <UserPlus className="w-6 h-6 mr-3" />
-              Join Room
-            </Button>
-          ) : (
-            <Button
-              onClick={LeaveRoom}
-              disabled={!isConnected}
-              size="lg"
-              className="w-full h-14 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 disabled:from-gray-400 disabled:to-gray-500 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 font-semibold text-lg"
-            >
-              <LogOut className="w-6 h-6 mr-3" />
-              Leave Room
-            </Button>
-          )}
 
-          {/* Secondary Actions */}
-          <div className="grid grid-cols-2 gap-4">
-            <Button
-              onClick={joinRoom}
-              disabled={!isConnected}
-              variant="outline"
-              size="lg"
-              className="h-12 border-2 border-blue-300 hover:border-blue-500 hover:bg-blue-50 text-blue-600 hover:text-blue-700 rounded-full shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 font-medium"
-            >
-              <UserPlus className="w-5 h-5 mr-2" />
-              Rejoin
-            </Button>
-            {isHost && (
-              <div>
-                {loading ? (
-                  <LoadingButton />
-                ) : (
-                  <Button
-                    onClick={startQuiz}
-                    disabled={!isConnected || !joinedRoom}
-                    size="lg"
-                    className="h-12 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 disabled:from-gray-400 disabled:to-gray-500 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 font-semibold"
-                  >
-                    <Trophy className="w-5 h-5 mr-2" />
-                    Start Quiz
-                  </Button>
+                </CardContent>
+              )}
+
+            </div>
+
+            {/* Refined floating elements */}
+            <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-yellow-400/30 to-orange-500/30 rounded-full opacity-60 animate-pulse"></div>
+            <div className="absolute -bottom-3 -left-3 w-6 h-6 bg-gradient-to-br from-[#A9F99E]/30 to-cyan-500/30 rounded-full opacity-60 animate-pulse delay-1000"></div>
+          </Card>
+        </div>
+
+        </div>
+
+        <div className='flex flex-col min-w-xl'>
+          {/* clientList */}
+          <div>
+
+                {clientList && clientList.length > 0 && (
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-white flex items-center">
+                      <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mr-3">
+                        <Users className="w-3 h-3 text-white" />
+                      </div>
+                      Players in Room ({clientList.length})
+                    </h3>
+                    <div className="bg-gray-800/30 rounded-2xl p-4 space-y-3 max-h-40 overflow-y-auto border border-gray-700/50 backdrop-blur-sm">
+                      {clientList.map((client, index) => (
+                        <div
+                          key={`${client}-${index}`}
+                          className="flex items-center space-x-3 p-3 bg-gray-700/30 rounded-xl border border-gray-600/30 hover:bg-gray-700/50 transition-colors"
+                        >
+                          <div className="w-8 h-8 bg-gradient-to-br from-[#A9F99E] to-cyan-400 rounded-full flex items-center justify-center text-black font-bold text-sm">
+                            {client.charAt(0).toUpperCase()}
+                          </div>
+                          <span className="text-gray-200 font-medium flex-1">{client}</span>
+                          {index === 0 && (
+                            <Badge
+                              variant="secondary"
+                              className="bg-yellow-500/20 text-yellow-300 border-yellow-500/30 text-xs"
+                            >
+                              Host
+                            </Badge>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 )}
-              </div>
-            )}
+
           </div>
 
-          {/* Members List */}
-          {clientList && clientList.length > 0 && (
-            <div className="space-y-3">
-              <h3 className="text-lg font-semibold text-gray-800 flex items-center">
-                <Users className="w-5 h-5 mr-2 text-blue-500" />
-                Players in Room ({clientList.length})
-              </h3>
-              <div className="bg-gray-50 rounded-2xl p-4 space-y-2 max-h-40 overflow-y-auto">
-                {clientList.map((client, index) => (
-                  <div
-                    key={`${client}-${index}`}
-                    className="flex items-center space-x-3 p-2 bg-white rounded-lg shadow-sm"
-                  >
-                    <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                      {client}
-                    </div>
-                    <span className="text-gray-700 font-medium">{client}</span>
-                    {index === 0 && (
-                      <Badge
-                        variant="secondary"
-                        className="bg-yellow-100 text-yellow-700 border-yellow-200 text-xs"
-                      >
-                        Host
-                      </Badge>
-                    )}
-                  </div>
-                ))}
+          <div>
+              {/* Chat Card */}
+            {joinedRoom && (
+              <div className="mt-6 min-w-xl">
+                <ChatCard roomid={roomid} session={session} />
               </div>
-            </div>
-          )}
-        </CardContent>
+            )}
+        </div>
 
-        {/* Floating Elements */}
-        <div className="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-6 -left-6 w-12 h-12 bg-gradient-to-br from-green-400 to-blue-500 rounded-full opacity-20 animate-pulse delay-1000"></div>
-      </Card>
-      {joinedRoom && <ChatCard roomid={roomid} session={session} />}
+        </div>
+
+
+
+
+      </div>
     </div>
+
   );
 }
