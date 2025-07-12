@@ -29,7 +29,7 @@ export default function ChatCard({ session, roomid }: Props) {
 
   function sendMessage() {
     if (messageInputRef.current?.value === "" || messageInputRef.current?.value === null) {
-      toast("Cannot send Empty Messages", {
+      toast.error("Cannot send Empty Messages", {
         position: "top-right",
         richColors: true,
       })

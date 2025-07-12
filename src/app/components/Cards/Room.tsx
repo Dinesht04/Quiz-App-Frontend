@@ -11,8 +11,6 @@ import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
-import { Textarea } from '@/components/ui/textarea';
-import { ScrollArea } from '@radix-ui/react-scroll-area';
 import {
   Users,
   Play,
@@ -40,6 +38,7 @@ import { toast } from 'sonner';
 import ChatCard from './ChatCard';
 import { LoadingButton } from '@/components/ui/LoadingButton';
 import { CopyButton } from '@/components/CopyButton';
+import { useGlobalContext } from '@/app/providers/GlobalContext';
 
 export type Message = {
   type: string;
@@ -79,16 +78,16 @@ const sliderDifficultyColors = [
 
 export default function ({ roomid, session }: Props) {
   if (!session) {
-    console.log('No Session');
-    redirect('/');
+    redirect('/Dashboard');
   }
+
 
   const topicRef = useRef<HTMLInputElement>(null);
   const [difficulty, setDifficulty] = useState<number>(2);
   const [loading, setLoading] = useState(false);
-
   const [clientList, setClientList] = useState<string[]>([]);
   const [displayQuizTImer, setDisplayQuizTimer] = useState(false);
+  const {username} = useGlobalContext()
   const { socket, isConnected } = useSocket();
   const {
     joinedRoom,
@@ -115,7 +114,7 @@ export default function ({ roomid, session }: Props) {
       const message: Message = JSON.parse(e.data);
       if (message.type === 'join') {
         if (message.status === 'successful') {
-          toast(`✅ Joined Room ${roomid} Successfully`, {
+          toast.success(`Joined Room ${roomid} Successfully`, {
             position: 'top-right',
             richColors: true,
             description: new Date()
@@ -137,7 +136,7 @@ export default function ({ roomid, session }: Props) {
             setIsHost(true);
           }
         } else {
-          toast(`Sorry! Couldn't join Room ${roomid} Successfully!`, {
+          toast.error(`Sorry! Couldn't join Room ${roomid} Successfully!`, {
             position: 'top-right',
             richColors: true,
             description: new Date()
@@ -158,7 +157,7 @@ export default function ({ roomid, session }: Props) {
       if (message.type === 'client-list') {
         //Can I write logic such that it doesn't on initial render?
         if (clientList.length !== 0) {
-          toast(`Lobby List Updated!`, {
+          toast.info(`Lobby List Updated!`, {
             position: 'top-right',
             richColors: true,
             description: new Date()
@@ -184,7 +183,7 @@ export default function ({ roomid, session }: Props) {
         setLoading(false);
       }
       if (message.type === 'unauthorised') {
-        toast(`message.payload.message`, {
+        toast.error(`message.payload.message`, {
           position: 'top-right',
           richColors: true,
           description: new Date()
@@ -204,7 +203,7 @@ export default function ({ roomid, session }: Props) {
 
       if (message.type === 'leave') {
         if (message.status === 'successful') {
-          toast(`Left Room ${roomid} successfully`, {
+          toast.success(`Left Room ${roomid} successfully`, {
             position: 'top-right',
             richColors: true,
             description: new Date()
@@ -233,7 +232,7 @@ export default function ({ roomid, session }: Props) {
       if (message.type === 'answer') {
         if (message.payload.Correct) {
           //TO-DO Toast here?
-          toast(`Correct Answer!!`, {
+          toast.success(`Correct Answer!!`, {
             position: 'top-right',
             richColors: true,
           });
@@ -258,7 +257,7 @@ export default function ({ roomid, session }: Props) {
         console.log('Final score of the quiz', message.payload.finalScores);
         setFinalScore(message.payload.finalScores);
         setQuizFinished(true);
-        toast(`Quiz has Ended!`, {
+        toast.info(`Quiz has Ended!`, {
           position: 'top-right',
           richColors: true,
           description: new Date()
@@ -280,7 +279,7 @@ export default function ({ roomid, session }: Props) {
 
   function joinRoom() {
     if (joinedRoom) {
-      toast(`Already in the Room!`, {
+      toast.warning(`Already in the Room!`, {
         position: 'top-right',
         richColors: true,
       });
@@ -320,7 +319,7 @@ export default function ({ roomid, session }: Props) {
 
   function startQuiz() {
     if (!isHost) {
-      toast(`Only the Host can start the Game!`, {
+      toast.warning(`Only the Host can start the Game!`, {
         position: 'top-right',
         richColors: true,
       });
@@ -328,7 +327,7 @@ export default function ({ roomid, session }: Props) {
     }
 
     if (!topicRef.current?.value) {
-      toast(`Enter a Topic First`, {
+      toast.warning(`Enter a Topic First`, {
         position: 'top-right',
         richColors: true,
       });
@@ -347,7 +346,7 @@ export default function ({ roomid, session }: Props) {
         },
       };
       socket.send(JSON.stringify(payload));
-      toast(`✅ Request for questions Sent!, Please Wait`, {
+      toast.loading(` Request for questions Sent!, Please Wait`, {
         position: 'top-right',
         richColors: true,
         description: new Date()
@@ -366,7 +365,7 @@ export default function ({ roomid, session }: Props) {
       setLoading(true);
     } else {
       console.warn('WebSocket not open or username input is not ready.');
-      toast(`Not connected to the server. Please wait or refresh.`, {
+      toast.error(`Not connected to the server. Please wait or refresh.`, {
         position: 'top-right',
         richColors: true,
       });
@@ -668,7 +667,7 @@ export default function ({ roomid, session }: Props) {
                           <div className="w-8 h-8 bg-gradient-to-br from-[#A9F99E] to-cyan-400 rounded-full flex items-center justify-center text-black font-bold text-sm">
                             {client.charAt(0).toUpperCase()}
                           </div>
-                          <span className="text-gray-200 font-medium flex-1">{client}</span>
+                          <span className="text-gray-200 font-medium flex-1">{client} {client === username ? '(Me)':null} </span>
                           {index === 0 && (
                             <Badge
                               variant="secondary"

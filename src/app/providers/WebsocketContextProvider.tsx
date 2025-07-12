@@ -32,7 +32,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
     ws.onopen = () => {
       console.log('✅ Connected to WebSocket');
-      toast('✅ Connected to Server', {
+      toast.success('Connected to Server', {
         position: 'top-right',
         richColors: true,
         description: new Date()
@@ -55,7 +55,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
     ws.onclose = () => {
       console.log('❌ Disconnected from WebSocket');
-      toast('❌ Disconnected from Server', {
+      toast.error('❌ Disconnected from Server', {
         position: 'top-right',
         richColors: true,
         description: new Date()

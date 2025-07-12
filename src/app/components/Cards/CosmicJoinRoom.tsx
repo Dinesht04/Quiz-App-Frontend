@@ -13,6 +13,7 @@ import { redirect } from 'next/navigation';
 import { useRef, useState } from 'react';
 import JoinRoomCard from './JoinRoom';
 import { LoadingButton } from '@/components/ui/LoadingButton';
+import { toast } from 'sonner';
 
 type CosmicRoomCardProps = {
   expires?: string;
@@ -29,7 +30,10 @@ export default function CosmicJoinRoom({ session }: CosmicRoomCardProps) {
 
   const handleJoinRoom = (): void => {
     if (!roomIdRef.current?.value) {
-      alert('Enter a Room ID first');
+      toast.warning(`Please enter a valid Room ID`, {
+        position: 'top-right',
+        richColors: true,
+      });
       return;
     }
     setJoinLoading(true);
