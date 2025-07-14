@@ -83,10 +83,7 @@ export default function RoomAuthGate({
   roomid: string;
 }) {
   const { isGuest, username, expires } = useGlobalContext();
-
-  useEffect(() => {
-    console.log('hee');
-  }, []);
+  console.log("hi")
 
   if ((!session || !session.user || !session.user.name) && !isGuest) {
     return <LoadingSpinner />;
@@ -99,6 +96,7 @@ export default function RoomAuthGate({
       },
       expires: expires,
     };
+    console.log(session)
     return <Room session={session} roomid={roomid} />;
   }
 
