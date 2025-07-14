@@ -12,6 +12,9 @@ import LiveScores from './LiveScores';
 import { useGlobalContext } from '@/app/providers/GlobalContext';
 
 import { toPng } from 'html-to-image';
+import { useSocket } from '@/app/providers/WebsocketContextProvider';
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
 
 type score = {
   username: string;
@@ -33,10 +36,21 @@ export default function Quiz({ session }: any) {
   const { username } = useGlobalContext();
 
   const [user, setUser] = useState<string | null>('');
+  const [returnToDashboard,setReturnToDashboard] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState<string>('q1');
   const leaderboardRef = useRef<HTMLDivElement>(null);
+  const {socket} = useSocket();
 
   useEffect(() => {
+
+    if(quizFinished){
+      setCurrentQuestion("over");
+    }
+
+    if(returnToDashboard){
+      redirect('/Dashboard')
+    }
+
     if (!username) {
       if (!session) {
         setUser(username);
@@ -51,6 +65,41 @@ export default function Quiz({ session }: any) {
   if (!joinedRoom || !quizStarted) {
     redirect('/');
   }
+
+  function LeaveRoom() {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      const payload = {
+        type: 'leave',
+        payload: {
+          roomId: roomId,
+          userName: session?.user?.name,
+          expires: session?.expires,
+        },
+      };
+      socket.send(JSON.stringify(payload));
+    } else {
+      console.warn('WebSocket not open or username input is not ready.');
+      //alert('Not connected to the server. Please wait or refresh.');
+      // ----------------------------
+      toast.error(`Sorry! Couldn't join Room ${roomId} Successfully!`, {
+        position: 'top-right',
+        richColors: true,
+        description: new Date()
+          .toLocaleString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: '2-digit',
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true,
+          })
+          .replace(',', '')
+          .replace(',', ' at'),
+      });
+    }
+  }
+
 
   if (currentQuestion === 'over') {
     return (
@@ -184,6 +233,16 @@ export default function Quiz({ session }: any) {
               >
                 Export Leaderboard as PNG
               </button>
+              <Button
+                onClick={()=>{
+                  LeaveRoom();
+                  setReturnToDashboard(true)
+                }}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow"
+              >
+                Return to Dashboard
+              </Button>
+
             </div>
           )}
 

@@ -101,6 +101,7 @@ export default function ({ roomid, session }: Props) {
     setFinalScore,
     setQuizFinished,
     setLiveScore,
+    setQuizStarted
   } = useQuizContext();
 
   useEffect(() => {
@@ -299,7 +300,7 @@ export default function ({ roomid, session }: Props) {
     }
   }
 
-  function LeaveRoom() {
+   function LeaveRoom() {
     if (socket && socket.readyState === WebSocket.OPEN) {
       const payload = {
         type: 'leave',
@@ -361,8 +362,8 @@ export default function ({ roomid, session }: Props) {
           difficulty: difficulty,
         },
       };
-      socket.send(JSON.stringify(payload));
-      toast.loading(` Request for questions Sent!, Please Wait`, {
+      const promise  =  new Promise(()=>socket.send(JSON.stringify(payload)));
+      toast.info(`Request for questions Sent!, Please Wait`, {
         position: 'top-right',
         richColors: true,
         description: new Date()
