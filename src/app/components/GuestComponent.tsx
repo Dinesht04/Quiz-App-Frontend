@@ -3,7 +3,6 @@
 import { Button } from '@/components/ui/button';
 import { Clock, LogOut, Play, Users, Zap } from 'lucide-react';
 import { useGlobalContext } from '@/app/providers/GlobalContext';
-import { SignOut } from './auth/AuthFunctions';
 import JoinRoomCard from './Cards/JoinRoom';
 
 export default function GuestComponent() {

@@ -1,4 +1,4 @@
-// components/JoinRoomCard.tsx
+
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -14,7 +14,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Users, Plus, Play, Zap, Rocket, Sparkles } from 'lucide-react';
 import { redirect } from 'next/navigation';
-import { SignOut } from '../auth/AuthFunctions';
 import { useGlobalContext } from '@/app/providers/GlobalContext';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs';
 
@@ -26,8 +25,7 @@ type JoinRoomCardProps = {
 
 export default function JoinRoomCard({
   username,
-  expires,
-  SignOut,
+
 }: JoinRoomCardProps) {
   const { setUsername } = useGlobalContext();
 
@@ -44,7 +42,7 @@ export default function JoinRoomCard({
 
   const handleCreateRoom = (): void => {
     // Generating a random a room ID
-    let r = (Math.random() + 1).toString(36).substring(7);
+    const r = (Math.random() + 1).toString(36).substring(7);
     setUsername(username);
     redirect(`/Room/Lobby/${r}`);
   };

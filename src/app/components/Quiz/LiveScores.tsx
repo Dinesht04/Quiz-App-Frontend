@@ -10,7 +10,7 @@ export default function LiveScores() {
   const { username } = useGlobalContext()
 
   const players =
-    //@ts-ignore
+    //@ts-expect-error
     liveScore?.map(([username, questionsAnswered]) => ({
       username,
       questionsAnswered: Number(questionsAnswered),

@@ -13,24 +13,23 @@ import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import {
   Users,
-  Play,
   LogOut,
   UserPlus,
   Wifi,
   WifiOff,
   Trophy,
   RefreshCcw,
-  MessageCircle,
+
   BookOpen,
-  Send,
+
   MoveLeft,
 } from 'lucide-react';
 import { Session } from 'next-auth';
 import { redirect } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import MembersList from './MembersList';
+
 import { useSocket } from '@/app/providers/WebsocketContextProvider';
-import ConnectionStatus from '../Websocket/ConnectionStatus';
+
 import QuizStartTimer from '../Quiz/QuizStartTimer';
 import { useQuizContext } from '@/app/providers/QuizContext';
 import Quiz from '../Quiz/Quiz';
@@ -50,7 +49,8 @@ export type Message = {
 type Props = {
   session: Session | null;
   roomid?: string;
-};
+}
+
 
 const difficultyNames = [
   'Kiddie Pool', // 1
@@ -76,7 +76,7 @@ const sliderDifficultyColors = [
   'bg-red-600', // 5 - Hard
 ];
 
-export default function ({ roomid, session }: Props) {
+export default function Room({ roomid, session }: Props) {
   if (!session) {
     redirect('/Dashboard');
   }
@@ -101,7 +101,7 @@ export default function ({ roomid, session }: Props) {
     setFinalScore,
     setQuizFinished,
     setLiveScore,
-    setQuizStarted
+
   } = useQuizContext();
 
   useEffect(() => {
@@ -275,7 +275,7 @@ export default function ({ roomid, session }: Props) {
         });
       }
     };
-  }, [socket]);
+  }, [socket, clientList.length , joinRoom, roomid, setChatMessages, setFinalScore, setIsHost, setJoinedRoom, setLiveScore, setQuestions, setQuizFinished, setRoomId,  setScore]);
 
   function joinRoom() {
     if (joinedRoom) {
@@ -362,7 +362,9 @@ export default function ({ roomid, session }: Props) {
           difficulty: difficulty,
         },
       };
-      const promise  =  new Promise(()=>socket.send(JSON.stringify(payload)));
+
+      socket.send(JSON.stringify(payload));
+
       toast.info(`Request for questions Sent!, Please Wait`, {
         position: 'top-right',
         richColors: true,
@@ -390,7 +392,7 @@ export default function ({ roomid, session }: Props) {
   }
 
   if (quizStarted) {
-    return <Quiz />;
+    return <Quiz  session={session}/>;
   }
 
   if (displayQuizTImer) {
@@ -561,7 +563,7 @@ export default function ({ roomid, session }: Props) {
                                 min={1}
                                 step={1}
                                 className="w-full"
-                                // @ts-ignore
+                                // @ts-expect-error
                                 sliderColor={
                                   sliderDifficultyColors[difficulty - 1]
                                 }

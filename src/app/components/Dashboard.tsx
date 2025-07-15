@@ -4,12 +4,12 @@ import DashboardBackgroundAnimation from './DashboardBackgroundAnimation';
 import Statistics from './Statistics';
 import Tutorial from './Tutorial';
 import BattleStatistics from './BattleStatistics';
-import JoinRoomCard, { NewJoinRoomCard } from './Cards/JoinRoom';
-import { useGlobalContext } from '../providers/GlobalContext';
+
 import CosmicJoinRoom from './Cards/CosmicJoinRoom';
+import { Session } from 'next-auth';
 
 type DashboardProps = {
-  session: any;
+  session: Session;
   isGuest: boolean;
 };
 

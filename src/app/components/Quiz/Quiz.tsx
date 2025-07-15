@@ -13,18 +13,20 @@ import { useSocket } from "@/app/providers/WebsocketContextProvider"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Session } from "next-auth"
 
-type score = {
-  username: string
-  score: string
+
+type QuizProps = {
+  session : Session | null
 }
 
+
+
 //finalScore is an array of score, ie, score[].
-export default function Quiz({ session }: any) {
+export default function Quiz({ session  } : QuizProps ) {
   const { questions, joinedRoom, quizStarted, score, roomId, finalScore, quizFinished, setQuizStarted } =
     useQuizContext()
   const { username } = useGlobalContext()
-  const [user, setUser] = useState<string | null>("")
   const [returnToDashboard, setReturnToDashboard] = useState(false)
   const [currentQuestion, setCurrentQuestion] = useState<string>("q1")
   const leaderboardRef = useRef<HTMLDivElement>(null)
@@ -37,16 +39,8 @@ export default function Quiz({ session }: any) {
     if (returnToDashboard) {
       redirect("/")
     }
-    if (!username) {
-      if (!session) {
-        setUser(username)
-      } else {
-        setUser(session.user.name)
-      }
-    } else {
-      return
-    }
-  }, [])
+
+  }, [quizFinished, returnToDashboard, session, username])
 
   if (!joinedRoom || !quizStarted) {
     redirect("/")

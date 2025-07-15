@@ -83,7 +83,7 @@ export default function RoomAuthGate({
   roomid: string;
 }) {
   const { isGuest, username, expires } = useGlobalContext();
-  console.log("hi")
+
 
   if ((!session || !session.user || !session.user.name) && !isGuest) {
     return <LoadingSpinner />;
