@@ -24,8 +24,8 @@ import {
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { redirect } from 'next/navigation';
-import { useGlobalContext } from '../providers/GlobalContext';
-import { setMyCookie } from '../actions/cookies';
+import { useGlobalContext } from '../../providers/GlobalContext';
+import { setMyCookie } from '../../actions/cookies';
 
 interface Provider {
   id: string;

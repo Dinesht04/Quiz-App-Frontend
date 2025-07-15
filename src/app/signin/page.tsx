@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { getProviders, getCsrfToken } from 'next-auth/react';
-import AuthPage from '../components/sign-in'; // Adjust path if necessary
+import AuthPage from '../components/Auth/sign-in'; // Adjust path if necessary
 
 interface Provider {
   id: string;

@@ -567,7 +567,6 @@ export default function Room({ roomid, session }: Props) {
                                 min={1}
                                 step={1}
                                 className="w-full"
-                                // @ts-expect-error because it is an external addition component
                                 sliderColor={
                                   sliderDifficultyColors[difficulty - 1]
                                 }

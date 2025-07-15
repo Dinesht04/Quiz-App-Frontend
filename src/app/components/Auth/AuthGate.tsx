@@ -2,7 +2,7 @@
 
 import { useGlobalContext } from '@/app/providers/GlobalContext';
 import { redirect } from 'next/navigation';
-import Dashboard from '../Dashboard';
+import Dashboard from '../../Dashboard/Dashboard';
 import { useEffect } from 'react';
 import { Session } from 'next-auth';
 

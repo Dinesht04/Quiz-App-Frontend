@@ -2,10 +2,10 @@
 
 import { Button } from '@/components/ui/button';
 import { Crown, Flame, LogOut } from 'lucide-react';
-import { useGlobalContext } from '../providers/GlobalContext';
+import { useGlobalContext } from '../../providers/GlobalContext';
 import { Badge } from '@/components/ui/badge';
-import { signOutAction } from '../actions/auth';
-import { deleteMyCookies } from '../actions/cookies';
+import { signOutAction } from '../../actions/auth';
+import { deleteMyCookies } from '../../actions/cookies';
 import { Session } from 'next-auth';
 
 export default function Statistics({ session }: {session : Session | null}) {
