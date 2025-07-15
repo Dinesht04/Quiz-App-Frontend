@@ -10,7 +10,7 @@ export default function LiveScores() {
   const { username } = useGlobalContext()
 
   const players =
-    //@ts-expect-error
+    //@ts-expect-error because live score type is copied from final score but it is actually different --> we are lazy
     liveScore?.map(([username, questionsAnswered]) => ({
       username,
       questionsAnswered: Number(questionsAnswered),

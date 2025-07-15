@@ -41,6 +41,7 @@ import { useGlobalContext } from '@/app/providers/GlobalContext';
 
 export type Message = {
   type: string;
+  // eslint-disable-next-line
   payload: any;
   status: string;
   host?: boolean;
@@ -275,7 +276,8 @@ export default function Room({ roomid, session }: Props) {
         });
       }
     };
-  }, [socket, clientList.length , joinRoom, roomid, setChatMessages, setFinalScore, setIsHost, setJoinedRoom, setLiveScore, setQuestions, setQuizFinished, setRoomId,  setScore]);
+    // eslint-disable-next-line
+  }, [socket]);
 
   function joinRoom() {
     if (joinedRoom) {
@@ -547,6 +549,7 @@ export default function Room({ roomid, session }: Props) {
                             </Label>
                             <div className="px-4 py-4 bg-gray-800/30 rounded-2xl border border-gray-700/50">
                               <Slider
+                              /* eslint-disable */
                                 onValueChange={(value) => {
                                   value[0] > 0 && value[0] < 20
                                     ? setDifficulty(1)
@@ -558,12 +561,13 @@ export default function Room({ roomid, session }: Props) {
                                           ? setDifficulty(4)
                                           : setDifficulty(5);
                                 }}
+                              /* eslint-enable */
                                 defaultValue={[40]}
                                 max={100}
                                 min={1}
                                 step={1}
                                 className="w-full"
-                                // @ts-expect-error
+                                // @ts-expect-error because it is an external addition component
                                 sliderColor={
                                   sliderDifficultyColors[difficulty - 1]
                                 }

@@ -4,13 +4,13 @@ import { Button } from '@/components/ui/button';
 import { useGlobalContext } from '@/app/providers/GlobalContext';
 import { getGuestExpires, guestUsernameGenerator } from '@/lib/GuestLogin';
 import { redirect } from 'next/navigation';
-import { LogIn, Users } from 'lucide-react';
+import {  Users } from 'lucide-react';
 
-type SignInAsGuestProps = {
-  callbackUrl: string;
-};
+// type SignInAsGuestProps = {
+//   callbackUrl: string;
+// };
 
-export function SignInAsGuest({ callbackUrl }: SignInAsGuestProps) {
+export function SignInAsGuest() {
   const { setUsername, setExpires, setIsGuest } = useGlobalContext();
 
   return (

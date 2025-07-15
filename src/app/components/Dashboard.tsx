@@ -9,7 +9,7 @@ import CosmicJoinRoom from './Cards/CosmicJoinRoom';
 import { Session } from 'next-auth';
 
 type DashboardProps = {
-  session: Session;
+  session: Session | null;
   isGuest: boolean;
 };
 

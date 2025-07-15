@@ -77,7 +77,7 @@ export default function GlobalContextProvider({
     try {
       loadGuestData();
     } catch (err) {
-      console.log('Global context error');
+      console.log('Global context error' + err);
     } finally {
       setLoading(false);
     }

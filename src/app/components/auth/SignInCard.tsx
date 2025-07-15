@@ -5,8 +5,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { LogIn, Play, Users, Zap } from 'lucide-react';
+
+import {  Play, Users, Zap } from 'lucide-react';
 import { SignIn } from './AuthFunctions';
 
 export default function SignInCard() {

@@ -1,14 +1,11 @@
 'use client';
 
-import SignInCard from './SignInCard';
-import { Button } from '@/components/ui/button';
-import { Clock, Play, Users, Zap } from 'lucide-react';
-import JoinRoomCard from '../Cards/JoinRoom';
-import { SignOut } from './AuthFunctions';
+
 import { useGlobalContext } from '@/app/providers/GlobalContext';
-import GuestComponent from '../GuestComponent';
+
 import Room from '../Cards/Room';
-import { useEffect } from 'react';
+import { Session } from 'next-auth';
+
 
 function LoadingSpinner() {
   return (
@@ -79,7 +76,7 @@ export default function RoomAuthGate({
   session,
   roomid,
 }: {
-  session: any;
+  session: Session | null;
   roomid: string;
 }) {
   const { isGuest, username, expires } = useGlobalContext();

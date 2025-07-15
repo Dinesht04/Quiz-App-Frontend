@@ -19,8 +19,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs';
 
 type JoinRoomCardProps = {
   username: string | null;
-  expires?: string;
-  SignOut?: React.JSX.Element;
+
 };
 
 export default function JoinRoomCard({
@@ -122,8 +121,7 @@ export default function JoinRoomCard({
 
 export function NewJoinRoomCard({
   username,
-  expires,
-  SignOut,
+
 }: JoinRoomCardProps) {
   const [pulseAnimation, setPulseAnimation] = useState(false);
   const { setUsername } = useGlobalContext();
@@ -149,7 +147,7 @@ export function NewJoinRoomCard({
 
   const handleCreateRoom = (): void => {
     // Generating a random a room ID
-    let r = (Math.random() + 1).toString(36).substring(7);
+    const r = (Math.random() + 1).toString(36).substring(7);
     setUsername(username);
     redirect(`/Room/Lobby/${r}`);
   };

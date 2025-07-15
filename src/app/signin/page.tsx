@@ -12,11 +12,7 @@ interface Provider {
   callbackUrl: string;
 }
 
-export default function SignInPage({
-  searchParams,
-}: {
-  searchParams: { callbackUrl?: string }; // searchParams is an object, no need for Promise.use
-}) {
+export default function SignInPage() {
   const [providers, setProviders] = useState<Record<string, Provider> | null>(
     null,
   );
