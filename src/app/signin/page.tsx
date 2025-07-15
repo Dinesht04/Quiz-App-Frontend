@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { getProviders, getCsrfToken } from 'next-auth/react';
-import AuthPage from '../components/sign-in'; // Adjust path if necessary
+import AuthPage from '../components/Auth/sign-in'; // Adjust path if necessary
 
 interface Provider {
   id: string;
@@ -12,11 +12,7 @@ interface Provider {
   callbackUrl: string;
 }
 
-export default function SignInPage({
-  searchParams,
-}: {
-  searchParams: { callbackUrl?: string }; // searchParams is an object, no need for Promise.use
-}) {
+export default function SignInPage() {
   const [providers, setProviders] = useState<Record<string, Provider> | null>(
     null,
   );

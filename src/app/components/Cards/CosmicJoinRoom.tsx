@@ -11,13 +11,15 @@ import { Input } from '@/components/ui/input';
 import { Play, Plus, Users } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { useRef, useState } from 'react';
-import JoinRoomCard from './JoinRoom';
+
 import { LoadingButton } from '@/components/ui/LoadingButton';
+import { toast } from 'sonner';
+import { Session } from 'next-auth';
 
 type CosmicRoomCardProps = {
   expires?: string;
   SignOut?: React.JSX.Element;
-  session: any;
+  session: Session | null;
 };
 
 export default function CosmicJoinRoom({ session }: CosmicRoomCardProps) {
@@ -29,11 +31,14 @@ export default function CosmicJoinRoom({ session }: CosmicRoomCardProps) {
 
   const handleJoinRoom = (): void => {
     if (!roomIdRef.current?.value) {
-      alert('Enter a Room ID first');
+      toast.warning(`Please enter a valid Room ID`, {
+        position: 'top-right',
+        richColors: true,
+      });
       return;
     }
     setJoinLoading(true);
-    if (session) {
+    if (session && session.user?.name) {
       setUsername(session?.user?.name);
     }
     redirect(`Room/Lobby/${roomIdRef.current?.value}`);
@@ -43,8 +48,8 @@ export default function CosmicJoinRoom({ session }: CosmicRoomCardProps) {
     setCreateLoading(true);
     // Generating a random a room ID
 
-    let r = (Math.random() + 1).toString(36).substring(7);
-    if (session) {
+    const r = (Math.random() + 1).toString(36).substring(7);
+    if (session && session.user?.name) {
       setUsername(session?.user?.name);
     }
     redirect(`/Room/Lobby/${r}`);

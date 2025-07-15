@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 
 type WebSocketContextType = {
   socket: WebSocket | null;
-  isConnected: Boolean;
+  isConnected: boolean;
 };
 
 const WebSocketContext = createContext<WebSocketContextType>({
@@ -24,15 +24,15 @@ export const useSocket = () => useContext(WebSocketContext);
 
 export function WebSocketProvider({ children }: { children: ReactNode }) {
   const [socket, setSocket] = useState<WebSocket | null>(null);
-  const [isConnected, setIsConnected] = useState<Boolean>(false);
+  const [isConnected, setIsConnected] = useState<boolean>(false);
   const socketRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    let ws = getSocket();
+    const ws = getSocket();
 
     ws.onopen = () => {
       console.log('✅ Connected to WebSocket');
-      toast('✅ Connected to Server', {
+      toast.success('Connected to Server', {
         position: 'top-right',
         richColors: true,
         description: new Date()
@@ -55,7 +55,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
     ws.onclose = () => {
       console.log('❌ Disconnected from WebSocket');
-      toast('❌ Disconnected from Server', {
+      toast.error('❌ Disconnected from Server', {
         position: 'top-right',
         richColors: true,
         description: new Date()

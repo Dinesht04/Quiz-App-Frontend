@@ -3,12 +3,14 @@
 import { useEffect, useState } from 'react';
 import { Brain, Zap, Star, Trophy, Target } from 'lucide-react';
 
+
 export default function FloatingElements() {
   const [elements, setElements] = useState<
     Array<{
       id: number;
       x: number;
       y: number;
+      // eslint-disable-next-line
       icon: any;
       size: number;
       speed: number;

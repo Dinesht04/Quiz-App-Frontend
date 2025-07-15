@@ -1,15 +1,15 @@
 'use client';
 
-import DashboardBackgroundAnimation from './DashboardBackgroundAnimation';
-import Statistics from './Statistics';
-import Tutorial from './Tutorial';
-import BattleStatistics from './BattleStatistics';
-import JoinRoomCard, { NewJoinRoomCard } from './Cards/JoinRoom';
-import { useGlobalContext } from '../providers/GlobalContext';
-import CosmicJoinRoom from './Cards/CosmicJoinRoom';
+import DashboardBackgroundAnimation from '../components/Backgrounds/DashboardBackgroundAnimation';
+import Statistics from '../components/Cards/Statistics';
+import Tutorial from '../components/Cards/Tutorial';
+import BattleStatistics from '../components/Cards/BattleStatistics';
+
+import CosmicJoinRoom from '../components/Cards/CosmicJoinRoom';
+import { Session } from 'next-auth';
 
 type DashboardProps = {
-  session: any;
+  session: Session | null;
   isGuest: boolean;
 };
 

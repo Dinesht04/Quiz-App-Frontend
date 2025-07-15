@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, JSX } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -18,14 +18,14 @@ import {
   Check,
   X,
   Loader2,
-  User,
+
   LogIn,
 } from 'lucide-react';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { redirect } from 'next/navigation';
-import { useGlobalContext } from '../providers/GlobalContext';
-import { setMyCookie } from '../actions/cookies';
+import { useGlobalContext } from '../../providers/GlobalContext';
+import { setMyCookie } from '../../actions/cookies';
 
 interface Provider {
   id: string;
@@ -44,7 +44,7 @@ type AuthPageProps = {
 export default function AuthPage({
   providers,
   csrfToken,
-  callbackUrl,
+
 }: AuthPageProps) {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
@@ -126,7 +126,7 @@ export default function AuthPage({
       }
     } catch (error) {
       setUsernameStatus('error');
-      setErrorMessage('Network error. Please try again.');
+      setErrorMessage('Network error. Please try again.' + error);
     } finally {
       setIsCheckingUsername(false);
     }

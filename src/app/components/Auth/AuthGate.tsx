@@ -2,8 +2,9 @@
 
 import { useGlobalContext } from '@/app/providers/GlobalContext';
 import { redirect } from 'next/navigation';
-import Dashboard from '../Dashboard';
+import Dashboard from '../../Dashboard/Dashboard';
 import { useEffect } from 'react';
+import { Session } from 'next-auth';
 
 function LoadingSpinner() {
   return (
@@ -70,7 +71,7 @@ function LoadingSpinner() {
   );
 }
 
-export default function AuthGate({ session }: { session: any }) {
+export default function AuthGate({ session }: { session: Session | null }) {
   const { isGuest, cookie, loggedIn, loading } = useGlobalContext();
 
   useEffect(() => {

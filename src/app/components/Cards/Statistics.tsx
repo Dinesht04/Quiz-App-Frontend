@@ -1,13 +1,14 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Crown, Flame, LogOut, Settings } from 'lucide-react';
-import { useGlobalContext } from '../providers/GlobalContext';
+import { Crown, Flame, LogOut } from 'lucide-react';
+import { useGlobalContext } from '../../providers/GlobalContext';
 import { Badge } from '@/components/ui/badge';
-import { signOutAction } from '../actions/auth';
-import { deleteMyCookies } from '../actions/cookies';
+import { signOutAction } from '../../actions/auth';
+import { deleteMyCookies } from '../../actions/cookies';
+import { Session } from 'next-auth';
 
-export default function Statistics({ session }: any) {
+export default function Statistics({ session }: {session : Session | null}) {
   const userStats = {
     gamesPlayed: 47,
     winRate: 73,

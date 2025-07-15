@@ -66,7 +66,7 @@ export default function TrendingTopics() {
                 </div>
               </div>
               <Badge
-                //@ts-ignore
+
                 variant="outline"
                 className="border-[#A9F99E]/30 text-[#A9F99E] bg-[#A9F99E]/10 font-semibold"
               >

@@ -7,12 +7,17 @@ type Data = {
   guestUsername: string;
 };
 
+type MyCookieData = {
+  guestUser: string | null;
+  guestUsername: string | null;
+};
+
 export async function checkAuthJsCookie(): Promise<boolean> {
   const cookieStore = await cookies();
   return cookieStore.has('authjs.session-token');
 }
 
-export async function setMyCookie(data: Data) {
+export async function setMyCookie(data: Data)  {
   const cookieStore = await cookies();
   const time = 60 * 60 * 24;
   cookieStore.set('guestUser', data.guestUser, { maxAge: time });
@@ -24,7 +29,7 @@ export async function checkMyCookie(): Promise<boolean> {
   return cookieStore.has('guestUser');
 }
 
-export async function getMyCookie(): Promise<any> {
+export async function getMyCookie(): Promise<MyCookieData> {
   const cookieStore = await cookies();
 
   const guestUser = cookieStore.get('guestUser');

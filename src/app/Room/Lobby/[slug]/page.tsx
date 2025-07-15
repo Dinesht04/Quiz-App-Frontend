@@ -1,4 +1,4 @@
-import RoomAuthGate from '@/app/components/auth/RoomAuthGate';
+import RoomAuthGate from '@/app/components/Auth/RoomAuthGate';
 import { auth } from '@/lib/auth';
 
 export default async function Page({
