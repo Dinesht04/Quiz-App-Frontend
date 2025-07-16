@@ -255,7 +255,6 @@ export default function Room({ roomid, session }: Props) {
       }
 
       if (message.type === 'final-score') {
-        console.log('Final score of the quiz', message.payload.finalScores);
         setFinalScore(message.payload.finalScores);
         setQuizFinished(true);
         toast.info(`Quiz has Ended!`, {

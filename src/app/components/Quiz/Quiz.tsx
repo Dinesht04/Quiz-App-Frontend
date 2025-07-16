@@ -304,7 +304,7 @@ export default function Quiz({ session  } : QuizProps ) {
           <div className="relative inline-block">
             <div className="absolute -inset-1 bg-gradient-to-r from-[#A9F99E]/50 to-cyan-400/50 rounded-2xl blur-sm opacity-60 animate-pulse"></div>
             <div className="relative bg-gray-900/90 backdrop-blur-xl border border-gray-700/50 rounded-2xl px-8 py-4 shadow-lg">
-              <p className="text-xl font-bold text-white flex items-center justify-center gap-3">
+              <div className="text-xl font-bold text-white flex items-center justify-center gap-3">
                 <div className="w-6 h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center animate-pulse">
                   <Star className="w-4 h-4 text-white" />
                 </div>
@@ -312,7 +312,7 @@ export default function Quiz({ session  } : QuizProps ) {
                 <div className="w-6 h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center animate-pulse">
                   <Star className="w-4 h-4 text-white" />
                 </div>
-              </p>
+              </div>
             </div>
           </div>
         </div>
