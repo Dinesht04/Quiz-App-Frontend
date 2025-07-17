@@ -81,6 +81,8 @@ export default function AuthGate({ session }: { session: Session | null }) {
   }, [loggedIn]);
 
   if (loading) {
+    console.log("loading:",loading)
+    console.log("loggedIn",loggedIn)
     return <LoadingSpinner />;
   }
 

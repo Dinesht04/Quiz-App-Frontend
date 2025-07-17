@@ -65,9 +65,11 @@ export default function GlobalContextProvider({
         setCookie(hasGuestCookie);
       } else if (hasAuthJsCookie) {
         // google sign in cookie
+        console.log("google sign in detected")
         setIsGuest(false);
         setLoggedIn(true);
         setCookie(hasAuthJsCookie);
+        
       } else {
         setUsername(null); // Ensure username is null if no guest cookie
         setIsGuest(false);
