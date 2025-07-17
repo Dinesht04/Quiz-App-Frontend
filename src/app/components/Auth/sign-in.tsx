@@ -75,7 +75,7 @@ export default function AuthPage({
     try {
       setLoggedIn(true);
       await signIn(providerId, {
-        redirectTo: `${process.env.NEXT_PUBLIC_FRONTEND_PRODUCTION_URL}`,
+        redirectTo: `${process.env.NEXT_PUBLIC_FRONTEND_PRODUCTION_URL}/Dashboard`,
       });
     } catch (error) {
       setLoggedIn(false);
