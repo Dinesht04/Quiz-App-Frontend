@@ -93,7 +93,6 @@ export default function RoomAuthGate({
       },
       expires: expires,
     };
-    console.log(session)
     return <Room session={session} roomid={roomid} />;
   }
 
