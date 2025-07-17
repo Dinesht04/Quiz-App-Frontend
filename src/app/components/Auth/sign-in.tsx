@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -38,7 +38,6 @@ interface Provider {
 type AuthPageProps = {
   providers: Record<string, Provider> | null;
   csrfToken: string | null;
-  callbackUrl: string;
 };
 
 export default function AuthPage({
@@ -58,6 +57,7 @@ export default function AuthPage({
   const [errorMessage, setErrorMessage] = useState('');
   const [usernameTimeoutId, setUsernameTimeoutId] =
     useState<NodeJS.Timeout | null>(null);
+  const UsernameInputRef = useRef<HTMLInputElement>(null);
 
   const { setIsGuest, setUsername, setCookie, setLoggedIn } =
     useGlobalContext();
@@ -75,7 +75,7 @@ export default function AuthPage({
     try {
       setLoggedIn(true);
       await signIn(providerId, {
-        redirectTo: `http://${process.env.NEXT_PUBLIC_FRONTEND_PRODUCTION_URL}/Dashboard`,
+        redirectTo: `${process.env.NEXT_PUBLIC_FRONTEND_PRODUCTION_URL}`,
       });
     } catch (error) {
       setLoggedIn(false);
@@ -87,6 +87,9 @@ export default function AuthPage({
   };
 
   const handleGuestClick = () => {
+    if(UsernameInputRef.current){
+      UsernameInputRef.current.focus();
+    }
     setShowUsernameInput(true);
     setErrorMessage('');
     setUsernameStatus('idle');
@@ -442,6 +445,7 @@ export default function AuthPage({
                           <input
                             id="guest-username"
                             type="text"
+                            ref={UsernameInputRef}
                             placeholder="Choose a guest username (min 5 chars)"
                             value={username}
                             onChange={handleUsernameChange}

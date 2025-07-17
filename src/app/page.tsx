@@ -21,8 +21,6 @@ export default function SignInPage() {
   );
   const [csrfToken, setCsrfToken] = useState<string | null>(null);
 
-  const callbackUrl = `https://${process.env.NEXT_PUBLIC_FRONTEND_PRODUCTION_URL}/Dashboard/`;
-
   useEffect(() => {
     if (cookie) {
       setLoggedIn(true);
@@ -50,7 +48,6 @@ export default function SignInPage() {
     <AuthPage
       providers={providers}
       csrfToken={csrfToken}
-      callbackUrl={callbackUrl}
     />
   );
 }
