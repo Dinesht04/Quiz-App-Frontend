@@ -14,7 +14,7 @@ type MyCookieData = {
 };
 
 export async function checkAuthJsCookie(): Promise<boolean> {
-  const cookieStore = await cookies();
+  // const cookieStore = await cookies();
   // return cookieStore.has('authjs.session-token'); -> for dec
   // return cookieStore.has('_Secure-authjs.session-token'); //-> for prod
   const session = await auth();
