@@ -77,6 +77,8 @@ export default function AuthPage({
       await signIn(providerId, {
         redirectTo: `${process.env.NEXT_PUBLIC_FRONTEND_PRODUCTION_URL}/Dashboard`,
       });
+      setCookie(true);
+      setLoggedIn(true);
     } catch (error) {
       setLoggedIn(false);
       console.error('Google sign-in failed:', error);
