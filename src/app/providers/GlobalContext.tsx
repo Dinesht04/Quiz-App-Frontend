@@ -58,6 +58,7 @@ export default function GlobalContextProvider({
       const hasAuthJsCookie = await checkAuthJsCookie();
 
       if (hasGuestCookie) {
+        console.log("Guest sign in detected")
         const guestData = await getMyCookie();
         setUsername(guestData.guestUsername);
         setIsGuest(true);
@@ -71,6 +72,7 @@ export default function GlobalContextProvider({
         setCookie(hasAuthJsCookie);
         
       } else {
+        console.log("No sign in detected")
         setUsername(null); // Ensure username is null if no guest cookie
         setIsGuest(false);
       }
