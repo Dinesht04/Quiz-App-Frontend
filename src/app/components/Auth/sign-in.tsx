@@ -87,11 +87,13 @@ export default function AuthPage({
     }
   };
 
-  const handleGuestClick = () => {
-    if(UsernameInputRef.current){
-      UsernameInputRef.current.focus();
-    }
+  const handleGuestClick = () => {    
     setShowUsernameInput(true);
+    setTimeout(() => {
+      if (UsernameInputRef.current) {
+        UsernameInputRef.current.focus();
+      }
+    }, 0);
     setErrorMessage('');
     setUsernameStatus('idle');
     setCurrUsername('');
