@@ -15,6 +15,7 @@ import { useRef, useState } from 'react';
 import { LoadingButton } from '@/components/ui/LoadingButton';
 import { toast } from 'sonner';
 import { Session } from 'next-auth';
+import { CheckRoomCode, generateRoomCode } from '@/lib/RoomCode';
 
 type CosmicRoomCardProps = {
   expires?: string;
@@ -30,7 +31,7 @@ export default function CosmicJoinRoom({ session }: CosmicRoomCardProps) {
   const roomIdRef = useRef<HTMLInputElement>(null);
 
   const handleJoinRoom = (): void => {
-    if (!roomIdRef.current?.value) {
+    if(!roomIdRef.current?.value || !CheckRoomCode(roomIdRef.current?.value)){
       toast.warning(`Please enter a valid Room ID`, {
         position: 'top-right',
         richColors: true,
@@ -47,8 +48,7 @@ export default function CosmicJoinRoom({ session }: CosmicRoomCardProps) {
   const handleCreateRoom = (): void => {
     setCreateLoading(true);
     // Generating a random a room ID
-
-    const r = (Math.random() + 1).toString(36).substring(7);
+    const r = generateRoomCode();
     if (session && session.user?.name) {
       setUsername(session?.user?.name);
     }
