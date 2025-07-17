@@ -1,6 +1,7 @@
 'use server';
 
 import { cookies } from 'next/headers';
+import { auth } from '@/lib/auth';
 
 type Data = {
   guestUser: string;
@@ -15,7 +16,9 @@ type MyCookieData = {
 export async function checkAuthJsCookie(): Promise<boolean> {
   const cookieStore = await cookies();
   // return cookieStore.has('authjs.session-token'); -> for dec
-  return cookieStore.has('_Secure-authjs.session-token'); //-> for prod
+  // return cookieStore.has('_Secure-authjs.session-token'); //-> for prod
+  const session = await auth();
+  return !!session;
 }
 
 export async function setMyCookie(data: Data)  {
