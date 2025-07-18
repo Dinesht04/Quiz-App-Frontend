@@ -16,14 +16,14 @@ import { Badge } from "@/components/ui/badge"
 import { Session } from "next-auth"
 
 
-type QuizProps = {
-  session : Session | null
-}
+// type QuizProps = {
+//   session : Session | null
+// }
 
 
 
 //finalScore is an array of score, ie, score[].
-export default function Quiz({ session  } : QuizProps ) {
+export default function Quiz() {
   const { questions, joinedRoom, quizStarted, score, roomId, finalScore, quizFinished, setQuizStarted } =
     useQuizContext()
   const { username,expires } = useGlobalContext()
