@@ -392,7 +392,7 @@ export default function Room({ roomid, session }: Props) {
   }
 
   if (quizStarted) {
-    return <Quiz  session={session}/>;
+    return <Quiz />;
   }
 
   if (displayQuizTImer) {
@@ -566,7 +566,6 @@ export default function Room({ roomid, session }: Props) {
                               min={1}
                               step={1}
                               className="w-full"
-                                // @ts-expect-error added externally
                                 sliderColor={
                                   sliderDifficultyColors[difficulty - 1]
                                 }

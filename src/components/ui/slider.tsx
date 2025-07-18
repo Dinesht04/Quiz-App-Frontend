@@ -11,7 +11,6 @@ function Slider({
   value,
   min = 0,
   max = 100,
-  // @ts-expect-error added externally
   sliderColor,
   ...props
 }: React.ComponentProps<typeof SliderPrimitive.Root>) {
