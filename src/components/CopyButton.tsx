@@ -80,7 +80,7 @@ export function CopyButton({
       {...props}
     >
       <Copy className="mr-2 h-4 w-4" />
-      {copied ? 'Invite Link Copied!' : 'Copy Invite Link'}
+      {copied ? 'Invite Code Copied!' : 'Copy Invite Code'}
     </Button>
   );
 }

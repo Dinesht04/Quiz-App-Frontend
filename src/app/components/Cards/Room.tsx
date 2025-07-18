@@ -471,7 +471,7 @@ export default function Room({ roomid, session }: Props) {
                     <div className="mt-3 sm:mt-4">
                       <CopyButton
                         className="text-black hover:text-gray-600 hover:cursor-pointer text-xs sm:text-sm"
-                        text={`${process.env.NEXT_PUBLIC_FRONTEND_PRODUCTION_URL}Room/Lobby/${roomid}`}
+                        text={`${roomid}`}
                       />
                     </div>
                   </CardDescription>
