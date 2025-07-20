@@ -37,9 +37,11 @@ import { LoadingButton } from '@/components/ui/LoadingButton';
 import { CopyButton } from '@/components/CopyButton';
 import { useGlobalContext } from '@/app/providers/GlobalContext';
 import RoomMembers from './RoomMembers';
+import QuizTypeSelector from '../Quiz/QuizTypeSelector';
 
 export type Message = {
   type: string;
+  roomType:'Quiz'|'Lightning';
   // eslint-disable-next-line
   payload: any;
   status: string;
@@ -101,7 +103,12 @@ export default function Room({ roomid, session }: Props) {
     setFinalScore,
     setQuizFinished,
     setLiveScore,
-
+    roomType,
+    setCurrentQuestion,
+    setQuestionsCompleted,
+    currentQuestion,
+    resetAfterRound,
+    setRoomType
   } = useQuizContext();
 
   useEffect(() => {
@@ -179,6 +186,7 @@ export default function Room({ roomid, session }: Props) {
 
       if (message.type === 'questions') {
         setQuestions(message.payload);
+        setRoomType(message.roomType);
         setDisplayQuizTimer(true);
         setLoading(false);
       }
@@ -273,6 +281,63 @@ export default function Room({ roomid, session }: Props) {
             .replace(',', ' at'),
         });
       }
+
+      //FAstest-1
+      if(message.type === 'move-to-next-question'){
+        console.log("----------------");
+
+
+        console.log(message)
+
+        if(message.payload.everyoneAnsweredCorrectly === false){
+          toast.warning(`Everyone Answered Incorrectly!`, {
+            position: `top-center`,
+            richColors: true,
+            description: 'Get Ready for the Next Question!'
+          });
+        }
+        else{
+          toast.info(`${message.payload.answeredCorrectlyBy} Answered Correctly`, {
+            position: 'top-center',
+            richColors: true,
+            description: `Get Ready for the Next Question!`,
+          });
+        }
+
+        //setNextQuestion(currentQuestion);
+        console.log("---------------------------------");
+
+        console.log(currentQuestion);
+
+           setCurrentQuestion(prevQuestion => {
+        console.log("Current question before switch:", prevQuestion); // Logs the correct, current state
+        switch (prevQuestion) {
+            case "q1":
+                console.log("Transitioning from q1 to q2");
+                return "q2";
+            case "q2":
+                console.log("Transitioning from q2 to q3");
+                return "q3";
+            case "q3":
+                console.log("Transitioning from q3 to q4");
+                return "q4";
+            case "q4":
+                console.log("Transitioning from q4 to q5");
+                return "q5";
+            case "q5":
+                console.log("Transitioning from q5 to over, finishing quiz");
+                finishQuiz();
+                setQuestionsCompleted(true);
+                return "over";
+            default:
+                console.log("Unknown current question, setting to idk:", prevQuestion);
+                return "idk";
+        }
+    });
+
+
+      }
+
     };
     // eslint-disable-next-line
   }, [socket]);
@@ -360,6 +425,8 @@ export default function Room({ roomid, session }: Props) {
           expires: session?.expires,
           topic: topicRef.current.value,
           difficulty: difficulty,
+          roomType: roomType
+
         },
       };
 
@@ -390,6 +457,20 @@ export default function Room({ roomid, session }: Props) {
       });
     }
   }
+
+        //FAstest-1
+
+
+  function finishQuiz() {
+    const payload = {
+      type: "finish",
+      payload: {
+        roomId: roomid,
+      },
+    }
+    socket?.send(JSON.stringify(payload))
+  }
+
 
   if (quizStarted) {
     return <Quiz />;
@@ -441,6 +522,7 @@ export default function Room({ roomid, session }: Props) {
                     className="hover:bg-gray-800 hover:cursor-pointer"
                     onClick={() => {
                       LeaveRoom()
+                      resetAfterRound();
                       redirect("/Dashboard")
                     }}
                   >
@@ -519,6 +601,8 @@ export default function Room({ roomid, session }: Props) {
                   {joinedRoom ? (
                     isHost ? (
                       <div className="space-y-4 sm:space-y-6">
+
+                        <QuizTypeSelector />
                         {/* Topic Section */}
                         <div className="space-y-2 sm:space-y-3">
                           <Label

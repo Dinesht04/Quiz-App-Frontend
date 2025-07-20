@@ -19,11 +19,10 @@ import { Badge } from "@/components/ui/badge"
 
 //finalScore is an array of score, ie, score[].
 export default function Quiz() {
-  const { questions, joinedRoom, quizStarted, score, roomId, finalScore, quizFinished, setQuizStarted } =
+  const { questions, joinedRoom, quizStarted, score, roomId, finalScore, quizFinished, resetAfterRound,roomType,currentQuestion,setCurrentQuestion } =
     useQuizContext()
   const { username,expires } = useGlobalContext()
   const [returnToDashboard, setReturnToDashboard] = useState(false)
-  const [currentQuestion, setCurrentQuestion] = useState<string>("q1")
   const leaderboardRef = useRef<HTMLDivElement>(null)
   const { socket } = useSocket()
 
@@ -106,19 +105,19 @@ export default function Quiz() {
               </div>
 
               <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black bg-gradient-to-r from-[#A9F99E] via-cyan-400 to-purple-400 bg-clip-text text-transparent mb-4 sm:mb-6 leading-tight">
-                Quiz Complete!
+                Round Complete!
               </h1>
 
               <div className="relative inline-block">
                 <div className="absolute -inset-0.5 sm:-inset-1 bg-gradient-to-r from-[#A9F99E]/50 to-cyan-400/50 rounded-xl sm:rounded-2xl blur-sm opacity-60"></div>
                 <div className="relative bg-gray-900/90 backdrop-blur-xl border border-gray-700/50 rounded-xl sm:rounded-2xl px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
-                  <p className="text-lg sm:text-xl lg:text-2xl font-bold text-white flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
+                  <div className="text-lg sm:text-xl lg:text-2xl font-bold text-white flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
                     <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
                       <Zap className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                     </div>
                     <span className="text-sm sm:text-base lg:text-lg">Your Score:</span>
                     <span className="text-[#A9F99E] text-xl sm:text-2xl">{score}</span>
-                  </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -267,7 +266,7 @@ export default function Quiz() {
                   <Button
                     onClick={() => {
                       LeaveRoom()
-                      setQuizStarted(false)
+                      resetAfterRound();
                       setReturnToDashboard(true)
                     }}
                     className="relative w-full sm:w-auto bg-gradient-to-r from-[#A9F99E] to-cyan-400 hover:from-[#A9F99E]/90 hover:to-cyan-400/90 text-black font-bold py-2.5 sm:py-3 px-4 sm:px-6 rounded-xl sm:rounded-2xl shadow-lg transition-all duration-300 transform hover:scale-105 text-sm sm:text-base"
@@ -319,29 +318,51 @@ export default function Quiz() {
           </div>
         </div>
 
-        {/* Question Container - Mobile Responsive Layout */}
-        <div className="flex flex-col lg:flex-row justify-center gap-4 sm:gap-6 lg:gap-8">
-          {/* Main Question Area */}
-          <div className="flex-1 max-w-4xl">
-            {questions?.map((Question) => {
-              if (currentQuestion === Question.id) {
-                return (
-                  <QuestionCard
-                    key={Question.id}
-                    Question={Question}
-                    setCurrentQuestion={setCurrentQuestion}
-                    roomId={roomId}
-                  />
-                )
-              }
-            })}
-          </div>
+        { roomType === 'Quiz' ?
+                //Normal QUiz ROind
+                <div className="flex flex-col lg:flex-row justify-center gap-4 sm:gap-6 lg:gap-8">
+                {/* Main Question Area */}
+                <div className="flex-1 max-w-4xl">
+                  {questions?.map((Question) => {
+                    if (currentQuestion === Question.id) {
+                      return (
+                        <QuestionCard
+                          key={Question.id}
+                          Question={Question}
+                          roomId={roomId}
+                        />
+                      )
+                    }
+                  })}
+                </div>
 
-          {/* Live Scores Sidebar - Stacks below on mobile */}
-          <div className="w-full lg:w-80 xl:w-96">
-            <LiveScores />
-          </div>
-        </div>
+                {/* Live Scores Sidebar - Stacks below on mobile */}
+                <div className="w-full lg:w-80 xl:w-96">
+                  <LiveScores  />
+                </div>
+                </div>
+
+         :
+         //Fastest FInger Frst
+            <div className="flex flex-col lg:flex-row justify-center gap-4 sm:gap-6 lg:gap-8">
+            {/* Main Question Area */}
+            <div className="flex-1 max-w-4xl">
+                      {questions?.map((Question) => {
+                        if (currentQuestion === Question.id) {
+                          return (
+                            <QuestionCard
+                              key={Question.id}
+                              Question={Question}
+                              roomId={roomId}
+                            />
+                          )
+                        }
+                      })}
+                    </div>
+            </div>
+        }
+
+
       </div>
     </div>
   )

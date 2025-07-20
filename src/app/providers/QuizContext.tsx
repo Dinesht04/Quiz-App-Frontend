@@ -7,6 +7,7 @@ import {
   useState,
   Dispatch,
   SetStateAction,
+  useEffect,
 } from 'react';
 import { chatMessage } from '../components/Cards/ChatCard';
 
@@ -21,6 +22,8 @@ export type score = {
   username: string;
   score: string;
 };
+
+type ResetFunction = () => void;
 
 interface QuizContextType {
   joinedRoom: boolean;
@@ -45,6 +48,11 @@ interface QuizContextType {
   setFinalScore: Dispatch<SetStateAction<score[]>>;
   liveScore: score[];
   setLiveScore: Dispatch<SetStateAction<score[]>>;
+  roomType: 'Quiz'|'Lightning',
+  setRoomType:Dispatch<SetStateAction<'Quiz'|'Lightning'>>;
+  currentQuestion: 'q1'|'q2'|'q3'|'q4'|'q5'|'over'|'idk';
+  setCurrentQuestion: Dispatch<SetStateAction<'q1'|'q2'|'q3'|'q4'|'q5'|'over'|'idk'>>;
+  resetAfterRound:ResetFunction
 }
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
@@ -65,6 +73,29 @@ export default function QuizContextProvider({
   const [isHost, setIsHost] = useState<boolean>(false);
   const [finalScore, setFinalScore] = useState<score[]>([]);
   const [liveScore, setLiveScore] = useState<score[]>([]);
+  const [roomType,setRoomType] =  useState<'Quiz'|'Lightning'>('Quiz');
+  const [currentQuestion, setCurrentQuestion] = useState<'q1'|'q2'|'q3'|'q4'|'q5'|'over'|'idk'>('q1')
+
+  function resetAfterRound():void{
+    setRoomId(undefined);
+    setJoinedRoom(false);
+    setQuizStarted(false)
+    setQuizFinished(false);
+    setQuestionsCompleted(false);
+    setChatMessages([]);
+    setIsHost(false);
+    setFinalScore([]);
+    setLiveScore([]);
+    setRoomType('Quiz');
+    setScore(0);
+    setCurrentQuestion('q1')
+  }
+
+  useEffect(()=>{
+    return(
+      resetAfterRound()
+    )
+  },[])
 
   const contextValue = {
     joinedRoom,
@@ -89,6 +120,11 @@ export default function QuizContextProvider({
     setQuestionsCompleted,
     liveScore,
     setLiveScore,
+    roomType,
+    setRoomType,
+    currentQuestion,
+    setCurrentQuestion,
+    resetAfterRound
   };
 
   return (
