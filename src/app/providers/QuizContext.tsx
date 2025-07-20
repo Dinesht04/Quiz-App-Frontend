@@ -86,6 +86,7 @@ export default function QuizContextProvider({
     setLiveScore([]);
     setRoomType('Quiz');
     setScore(0);
+    setCurrentQuestion('q1')
   }
 
   useEffect(()=>{

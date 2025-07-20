@@ -284,6 +284,8 @@ export default function Room({ roomid, session }: Props) {
 
       //FAstest-1
       if(message.type === 'move-to-next-question'){
+        console.log("----------------");
+
 
         console.log(message)
 
@@ -301,7 +303,39 @@ export default function Room({ roomid, session }: Props) {
             description: `Get Ready for the Next Question!`,
           });
         }
-        setNextQuestion(currentQuestion);
+
+        //setNextQuestion(currentQuestion);
+        console.log("---------------------------------");
+
+        console.log(currentQuestion);
+
+           setCurrentQuestion(prevQuestion => {
+        console.log("Current question before switch:", prevQuestion); // Logs the correct, current state
+        switch (prevQuestion) {
+            case "q1":
+                console.log("Transitioning from q1 to q2");
+                return "q2";
+            case "q2":
+                console.log("Transitioning from q2 to q3");
+                return "q3";
+            case "q3":
+                console.log("Transitioning from q3 to q4");
+                return "q4";
+            case "q4":
+                console.log("Transitioning from q4 to q5");
+                return "q5";
+            case "q5":
+                console.log("Transitioning from q5 to over, finishing quiz");
+                finishQuiz();
+                setQuestionsCompleted(true);
+                return "over";
+            default:
+                console.log("Unknown current question, setting to idk:", prevQuestion);
+                return "idk";
+        }
+    });
+
+
       }
 
     };
@@ -425,37 +459,7 @@ export default function Room({ roomid, session }: Props) {
   }
 
         //FAstest-1
-  function setNextQuestion(currentQues: string | null) {
-    console.log("Current question before switch:", currentQues); // Log the initial currentQues
-    switch (currentQues) {
-      case "q1":
-        console.log("Transitioning from q1 to q2"); // Debug log for q1
-        setCurrentQuestion("q2");
-        break;
-      case "q2":
-        console.log("Transitioning from q2 to q3"); // Debug log for q2
-        setCurrentQuestion("q3");
-        break;
-      case "q3":
-        console.log("Transitioning from q3 to q4"); // Debug log for q3
-        setCurrentQuestion("q4");
-        break;
-      case "q4":
-        console.log("Transitioning from q4 to q5"); // Debug log for q4
-        setCurrentQuestion("q5");
-        break;
-      case "q5":
-        console.log("Transitioning from q5 to over, finishing quiz"); // Debug log for q5
-        setCurrentQuestion("over");
-        finishQuiz();
-        setQuestionsCompleted(true);
-        break;
-      default:
-        console.log("Unknown current question, setting to idk:", currentQues); // Debug log for default
-        setCurrentQuestion("idk");
-        break;
-    }
-  }
+
 
   function finishQuiz() {
     const payload = {
