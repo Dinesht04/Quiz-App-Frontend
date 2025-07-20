@@ -282,9 +282,12 @@ export default function Room({ roomid, session }: Props) {
         });
       }
 
+      //FAstest-1
       if(message.type === 'move-to-next-question'){
 
-        if(!message.payload.answeredCorrectlyBy){
+        console.log(message)
+
+        if(message.payload.everyoneAnsweredCorrectly === false){
           toast.warning(`Everyone Answered Incorrectly!`, {
             position: `top-center`,
             richColors: true,
@@ -298,7 +301,7 @@ export default function Room({ roomid, session }: Props) {
             description: `Get Ready for the Next Question!`,
           });
         }
-         setNextQuestion(currentQuestion);
+        setNextQuestion(currentQuestion);
       }
 
     };
@@ -421,6 +424,7 @@ export default function Room({ roomid, session }: Props) {
     }
   }
 
+        //FAstest-1
   function setNextQuestion(currentQues: string | null) {
     console.log("Current question before switch:", currentQues); // Log the initial currentQues
     switch (currentQues) {

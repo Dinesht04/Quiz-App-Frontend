@@ -16,11 +16,12 @@ export default function QuestionCard({ Question, roomId }: QuestionCardProps) {
   const [selectedOption, setSelectedOption] = useState<string | null>(null)
   const [isAnswered, setIsAnswered] = useState(false)
   const { socket } = useSocket()
-  const { setQuestionsCompleted,setCurrentQuestion,roomType } = useQuizContext()
+  const { setQuestionsCompleted,setCurrentQuestion,roomType,currentQuestion } = useQuizContext()
   const { username } = useGlobalContext()
 
   const isLightningRound = roomType === "Lightning";
 
+  console.log("in quiz card, current ques is", currentQuestion)
 
   function setNextQuestion(currentQues: string | null) {
     switch (currentQues) {

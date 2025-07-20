@@ -7,6 +7,7 @@ import {
   useState,
   Dispatch,
   SetStateAction,
+  useEffect,
 } from 'react';
 import { chatMessage } from '../components/Cards/ChatCard';
 
@@ -84,9 +85,14 @@ export default function QuizContextProvider({
     setFinalScore([]);
     setLiveScore([]);
     setRoomType('Quiz');
-    setCurrentQuestion('q1');
     setScore(0);
   }
+
+  useEffect(()=>{
+    return(
+      resetAfterRound()
+    )
+  },[])
 
   const contextValue = {
     joinedRoom,
