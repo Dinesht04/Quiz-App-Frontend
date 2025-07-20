@@ -112,13 +112,13 @@ export default function Quiz() {
               <div className="relative inline-block">
                 <div className="absolute -inset-0.5 sm:-inset-1 bg-gradient-to-r from-[#A9F99E]/50 to-cyan-400/50 rounded-xl sm:rounded-2xl blur-sm opacity-60"></div>
                 <div className="relative bg-gray-900/90 backdrop-blur-xl border border-gray-700/50 rounded-xl sm:rounded-2xl px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
-                  <p className="text-lg sm:text-xl lg:text-2xl font-bold text-white flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
+                  <div className="text-lg sm:text-xl lg:text-2xl font-bold text-white flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
                     <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
                       <Zap className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                     </div>
                     <span className="text-sm sm:text-base lg:text-lg">Your Score:</span>
                     <span className="text-[#A9F99E] text-xl sm:text-2xl">{score}</span>
-                  </p>
+                  </div>
                 </div>
               </div>
             </div>
