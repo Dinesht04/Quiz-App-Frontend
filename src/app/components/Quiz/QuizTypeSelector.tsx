@@ -2,11 +2,8 @@ import { useQuizContext } from '@/app/providers/QuizContext';
 import { ToggleGroup, ToggleGroupItem } from '@radix-ui/react-toggle-group';
 import React from 'react';
 
-interface QuizRoundSelectorProps {
 
-}
-
-const QuizTypeSelector: React.FC<QuizRoundSelectorProps> = ({  }) => {
+export default function QuizTypeSelector(){
 
   const {roomType,setRoomType} = useQuizContext();
 
@@ -62,5 +59,3 @@ const QuizTypeSelector: React.FC<QuizRoundSelectorProps> = ({  }) => {
     </div>
   );
 };
-
-export default QuizTypeSelector;

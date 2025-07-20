@@ -23,6 +23,8 @@ export type score = {
   score: string;
 };
 
+type ResetFunction = () => void;
+
 interface QuizContextType {
   joinedRoom: boolean;
   setJoinedRoom: Dispatch<SetStateAction<boolean>>;
@@ -50,7 +52,7 @@ interface QuizContextType {
   setRoomType:Dispatch<SetStateAction<'Quiz'|'Lightning'>>;
   currentQuestion: 'q1'|'q2'|'q3'|'q4'|'q5'|'over'|'idk';
   setCurrentQuestion: Dispatch<SetStateAction<'q1'|'q2'|'q3'|'q4'|'q5'|'over'|'idk'>>;
-  resetAfterRound:Function
+  resetAfterRound:ResetFunction
 }
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
@@ -74,7 +76,7 @@ export default function QuizContextProvider({
   const [roomType,setRoomType] =  useState<'Quiz'|'Lightning'>('Quiz');
   const [currentQuestion, setCurrentQuestion] = useState<'q1'|'q2'|'q3'|'q4'|'q5'|'over'|'idk'>('q1')
 
-  function resetAfterRound(){
+  function resetAfterRound():void{
     setRoomId(undefined);
     setJoinedRoom(false);
     setQuizStarted(false)
