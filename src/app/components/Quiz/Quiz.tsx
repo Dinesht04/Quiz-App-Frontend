@@ -13,17 +13,17 @@ import { useSocket } from "@/app/providers/WebsocketContextProvider"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import LightningRound from "../Lightning/LightningRound"
 
 
 
 
 //finalScore is an array of score, ie, score[].
 export default function Quiz() {
-  const { questions, joinedRoom, quizStarted, score, roomId, finalScore, quizFinished, setQuizStarted } =
+  const { questions, joinedRoom, quizStarted, score, roomId, finalScore, quizFinished, resetAfterRound,roomType,currentQuestion,setCurrentQuestion } =
     useQuizContext()
   const { username,expires } = useGlobalContext()
   const [returnToDashboard, setReturnToDashboard] = useState(false)
-  const [currentQuestion, setCurrentQuestion] = useState<string>("q1")
   const leaderboardRef = useRef<HTMLDivElement>(null)
   const { socket } = useSocket()
 
@@ -106,7 +106,7 @@ export default function Quiz() {
               </div>
 
               <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black bg-gradient-to-r from-[#A9F99E] via-cyan-400 to-purple-400 bg-clip-text text-transparent mb-4 sm:mb-6 leading-tight">
-                Quiz Complete!
+                Round Complete!
               </h1>
 
               <div className="relative inline-block">
@@ -267,7 +267,7 @@ export default function Quiz() {
                   <Button
                     onClick={() => {
                       LeaveRoom()
-                      setQuizStarted(false)
+                      resetAfterRound();
                       setReturnToDashboard(true)
                     }}
                     className="relative w-full sm:w-auto bg-gradient-to-r from-[#A9F99E] to-cyan-400 hover:from-[#A9F99E]/90 hover:to-cyan-400/90 text-black font-bold py-2.5 sm:py-3 px-4 sm:px-6 rounded-xl sm:rounded-2xl shadow-lg transition-all duration-300 transform hover:scale-105 text-sm sm:text-base"
@@ -319,29 +319,51 @@ export default function Quiz() {
           </div>
         </div>
 
-        {/* Question Container - Mobile Responsive Layout */}
-        <div className="flex flex-col lg:flex-row justify-center gap-4 sm:gap-6 lg:gap-8">
-          {/* Main Question Area */}
-          <div className="flex-1 max-w-4xl">
-            {questions?.map((Question) => {
-              if (currentQuestion === Question.id) {
-                return (
-                  <QuestionCard
-                    key={Question.id}
-                    Question={Question}
-                    setCurrentQuestion={setCurrentQuestion}
-                    roomId={roomId}
-                  />
-                )
-              }
-            })}
-          </div>
+        { roomType === 'Quiz' ?
+                //Normal QUiz ROind
+                <div className="flex flex-col lg:flex-row justify-center gap-4 sm:gap-6 lg:gap-8">
+                {/* Main Question Area */}
+                <div className="flex-1 max-w-4xl">
+                  {questions?.map((Question) => {
+                    if (currentQuestion === Question.id) {
+                      return (
+                        <QuestionCard
+                          key={Question.id}
+                          Question={Question}
+                          roomId={roomId}
+                        />
+                      )
+                    }
+                  })}
+                </div>
 
-          {/* Live Scores Sidebar - Stacks below on mobile */}
-          <div className="w-full lg:w-80 xl:w-96">
-            <LiveScores />
-          </div>
-        </div>
+                {/* Live Scores Sidebar - Stacks below on mobile */}
+                <div className="w-full lg:w-80 xl:w-96">
+                  <LiveScores  />
+                </div>
+                </div>
+
+         :
+         //Fastest FInger Frst
+            <div className="flex flex-col lg:flex-row justify-center gap-4 sm:gap-6 lg:gap-8">
+            {/* Main Question Area */}
+            <div className="flex-1 max-w-4xl">
+                      {questions?.map((Question) => {
+                        if (currentQuestion === Question.id) {
+                          return (
+                            <QuestionCard
+                              key={Question.id}
+                              Question={Question}
+                              roomId={roomId}
+                            />
+                          )
+                        }
+                      })}
+                    </div>
+            </div>
+        }
+
+
       </div>
     </div>
   )
