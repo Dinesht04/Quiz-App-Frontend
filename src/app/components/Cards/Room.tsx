@@ -106,7 +106,6 @@ export default function Room({ roomid, session }: Props) {
     roomType,
     setCurrentQuestion,
     setQuestionsCompleted,
-    currentQuestion,
     resetAfterRound,
     setRoomType
   } = useQuizContext();

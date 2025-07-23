@@ -1,69 +1,78 @@
-'use client';
+"use client"
 
-import { useSocket } from '@/app/providers/WebsocketContextProvider';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Textarea } from '@/components/ui/textarea';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { MessageCircle, Send } from 'lucide-react';
-import { useRef } from 'react';
-import { toast } from 'sonner';
-import type { Session } from 'next-auth';
-import { useQuizContext } from '@/app/providers/QuizContext';
+import { useSocket } from "@/app/providers/WebsocketContextProvider"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Textarea } from "@/components/ui/textarea"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { MessageCircle, Send } from "lucide-react"
+import { useRef, useEffect } from "react"
+import { toast } from "sonner"
+import type { Session } from "next-auth"
+import { useQuizContext } from "@/app/providers/QuizContext"
 
 type Props = {
-  session: Session | null;
-  roomid?: string;
-};
+  session: Session | null
+  roomid?: string
+}
 
 export type chatMessage = {
-  username: string;
-  message: string;
-  time: string;
-};
+  username: string
+  message: string
+  time: string
+}
 
 export default function ChatCard({ session, roomid }: Props) {
-  const { socket, isConnected } = useSocket();
-  const { chatMessages } = useQuizContext();
-  const messageInputRef = useRef<HTMLTextAreaElement>(null);
+  const { socket, isConnected } = useSocket()
+  const { chatMessages } = useQuizContext()
+  const messageInputRef = useRef<HTMLTextAreaElement>(null)
+  const lastMessageRef = useRef<HTMLDivElement>(null)
+
+  // Auto-scroll to the last message when chatMessages changes
+  useEffect(() => {
+    if (lastMessageRef.current && chatMessages.length > 0) {
+      lastMessageRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      })
+    }
+  }, [chatMessages])
 
   function sendMessage() {
-    if (
-      messageInputRef.current?.value === '' ||
-      messageInputRef.current?.value === null
-    ) {
-      toast.error('Cannot send Empty Messages', {
-        position: 'top-right',
+    if (messageInputRef.current?.value === "" || messageInputRef.current?.value === null) {
+      toast.error("Cannot send Empty Messages", {
+        position: "top-right",
         richColors: true,
-      });
-      messageInputRef.current.focus();
-      return;
+      })
+      messageInputRef.current.focus()
+      return
     }
 
     if (socket && socket.readyState === WebSocket.OPEN) {
       const payload = {
-        type: 'message',
+        type: "message",
         payload: {
           roomId: roomid,
           username: session?.user?.name,
           message: messageInputRef.current?.value,
           time: new Date()
-            .toLocaleString('en-US', {
-              hour: 'numeric',
-              minute: '2-digit',
+            .toLocaleString("en-US", {
+              hour: "numeric",
+              minute: "2-digit",
               hour12: true,
             })
             .toLowerCase(),
           expires: session?.expires,
         },
-      };
-      socket.send(JSON.stringify(payload));
+      }
+
+      socket.send(JSON.stringify(payload))
       if (messageInputRef.current) {
-        messageInputRef.current.value = '';
+        messageInputRef.current.value = ""
       }
     } else {
-      console.warn('WebSocket not open or inputs are not ready.');
-      alert('Not connected to the server. Please wait or refresh.');
+      console.warn("WebSocket not open or inputs are not ready.")
+      alert("Not connected to the server. Please wait or refresh.")
     }
   }
 
@@ -86,19 +95,20 @@ export default function ChatCard({ session, roomid }: Props) {
                 <MessageCircle className="w-4 h-4 text-black" />
               </div>
               <span className="text-xl font-semibold">Room Chat</span>
+
               {/* Connection Status */}
               <div className="flex items-center justify-center">
                 <div
                   className={`flex items-center space-x-2 px-3 py-1 rounded-full text-xs ${
                     isConnected
-                      ? 'bg-green-500/20 text-green-300 border border-green-500/30'
-                      : 'bg-red-500/20 text-red-300 border border-red-500/30'
+                      ? "bg-green-500/20 text-green-300 border border-green-500/30"
+                      : "bg-red-500/20 text-red-300 border border-red-500/30"
                   }`}
                 >
                   <div
-                    className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-400' : 'bg-red-400'} animate-pulse`}
+                    className={`w-2 h-2 rounded-full ${isConnected ? "bg-green-400" : "bg-red-400"} animate-pulse`}
                   ></div>
-                  <span>{isConnected ? 'Connected' : 'Disconnected'}</span>
+                  <span>{isConnected ? "Connected" : "Disconnected"}</span>
                 </div>
               </div>
             </CardTitle>
@@ -108,6 +118,7 @@ export default function ChatCard({ session, roomid }: Props) {
             {/* Chat Messages with visible scrollbar */}
             <div className="relative">
               <div className="absolute -inset-0.5 bg-gradient-to-r from-gray-700/30 to-gray-600/30 rounded-2xl blur-sm opacity-50"></div>
+
               <ScrollArea className="relative max-h-[450px] h-[300px] w-full rounded-2xl border border-gray-700/50 bg-gray-800/30 backdrop-blur-sm p-4">
                 {/* Custom scrollbar styling */}
                 <style jsx global>{`
@@ -137,34 +148,28 @@ export default function ChatCard({ session, roomid }: Props) {
                       <div className="w-12 h-12 bg-gradient-to-r from-gray-600 to-gray-500 rounded-full flex items-center justify-center mx-auto mb-3 opacity-50">
                         <MessageCircle className="w-6 h-6 text-gray-300" />
                       </div>
-                      <p className="text-gray-400 text-sm">
-                        No messages yet. Start the conversation!
-                      </p>
+                      <p className="text-gray-400 text-sm">No messages yet. Start the conversation!</p>
                     </div>
                   ) : (
                     chatMessages.map((msg, index) => (
-                      <div key={index} className="space-y-2">
+                      <div
+                        key={index}
+                        className="space-y-2"
+                        ref={index === chatMessages.length - 1 ? lastMessageRef : null}
+                      >
                         {/* Message header */}
                         <div className="flex items-center space-x-2">
                           <div className="w-6 h-6 bg-gradient-to-br from-[#A9F99E] to-cyan-400 rounded-full flex items-center justify-center">
-                            <span className="text-black text-xs font-bold">
-                              {msg.username.charAt(0).toUpperCase()}
-                            </span>
+                            <span className="text-black text-xs font-bold">{msg.username.charAt(0).toUpperCase()}</span>
                           </div>
-                          <span className="font-medium text-[#A9F99E] text-sm">
-                            {msg.username}
-                          </span>
-                          <span className="text-gray-500 text-xs">
-                            {msg.time}
-                          </span>
+                          <span className="font-medium text-[#A9F99E] text-sm">{msg.username}</span>
+                          <span className="text-gray-500 text-xs">{msg.time}</span>
                         </div>
 
                         {/* Message content */}
                         <div className="ml-8">
                           <div className="bg-gray-700/50 rounded-xl p-3 border border-gray-600/30 backdrop-blur-sm">
-                            <p className="text-gray-200 text-sm leading-relaxed">
-                              {msg.message}
-                            </p>
+                            <p className="text-gray-200 text-sm leading-relaxed">{msg.message}</p>
                           </div>
                         </div>
                       </div>
@@ -183,9 +188,9 @@ export default function ChatCard({ session, roomid }: Props) {
                   placeholder="Type your message..."
                   className="relative flex-1 min-h-[48px] max-h-[120px] resize-none rounded-2xl border border-gray-600/50 bg-gray-800/50 text-white placeholder:text-gray-400 focus:border-[#A9F99E] focus:ring-2 focus:ring-[#A9F99E]/20 backdrop-blur-sm px-4 py-3"
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      sendMessage();
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault()
+                      sendMessage()
                     }
                   }}
                 />
@@ -193,7 +198,7 @@ export default function ChatCard({ session, roomid }: Props) {
 
               {/* Send Button */}
               <div className="relative">
-                <div className=" rounded-2xl blur-sm opacity-50"></div>
+                <div className="rounded-2xl blur-sm opacity-50"></div>
                 <Button
                   onClick={sendMessage}
                   disabled={!isConnected}
@@ -212,5 +217,5 @@ export default function ChatCard({ session, roomid }: Props) {
         <div className="absolute -bottom-2 -left-2 w-3 h-3 bg-gradient-to-br from-[#A9F99E]/40 to-cyan-500/40 rounded-full opacity-60 animate-pulse delay-1000"></div>
       </Card>
     </div>
-  );
+  )
 }
