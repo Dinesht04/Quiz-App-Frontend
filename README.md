@@ -173,7 +173,7 @@ Here's how to use the Quiz-Verse application:
 
 Here are some planned features and improvements for Quiz-Verse:
 
-* [ ] **Rejoin Room:** Implement the ability for players to rejoin a room after a quiz finishes.
+* [X] **Rejoin Room:** Implement the ability for players to rejoin a room after a quiz finishes.
 * [ ] **Change Host:** Allow the current host to transfer host privileges to another player in the room.
 * [ ] **Auto-Focus in Chat:** Auto-focus on the most recent message in chat, slide down to it automatically.
 * [ ] **Enhance UI/UX:** Continuous improvements to the user interface and user experience.
