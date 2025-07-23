@@ -228,7 +228,10 @@ export default function Room({ roomid, session }: Props) {
               .replace(',', ' at'),
             action: {
               label: 'Re-Join',
-              onClick: () => joinRoom(),
+              // onClick: () =>  joinRoom(),
+              onClick: () => {
+                redirect(`Room/Lobby/${roomid}`);
+              }
             },
           });
           setClientList([]);
@@ -282,12 +285,26 @@ export default function Room({ roomid, session }: Props) {
         });
       }
 
-      //FAstest-1
+      if(message.type === 'set-host'){
+        if(message.payload.setHost === true){
+          setIsHost(true)
+          toast.info(`You have been made the host`, {
+            position: 'top-center',
+            richColors: true,
+            description: `You jave the access to the room controls now!`,
+          });
+        }
+        if(message.payload.setHost === false){
+          toast.warning(`You have been removed as the Room Host`, {
+            position: 'top-center',
+            richColors: true,
+          });
+          setIsHost(false)
+        }
+      }
+
       if(message.type === 'move-to-next-question'){
-        console.log("----------------");
 
-
-        console.log(message)
 
         if(message.payload.everyoneAnsweredCorrectly === false){
           toast.warning(`Everyone Answered Incorrectly!`, {
@@ -304,13 +321,7 @@ export default function Room({ roomid, session }: Props) {
           });
         }
 
-        //setNextQuestion(currentQuestion);
-        console.log("---------------------------------");
-
-        console.log(currentQuestion);
-
-           setCurrentQuestion(prevQuestion => {
-        console.log("Current question before switch:", prevQuestion); // Logs the correct, current state
+        setCurrentQuestion(prevQuestion => {
         switch (prevQuestion) {
             case "q1":
                 console.log("Transitioning from q1 to q2");
