@@ -29,6 +29,8 @@
 
 ---
 
+## UI WAS MADE BY V0. Auth and states were configured by us.
+
 ## About The Project
 
 Quiz-Verse is an open-source real-time quiz application that supports rooms with up to 100 players. The main motive behind creating this app is to provide a ready-to-use solution for:
